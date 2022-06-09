@@ -1,34 +1,59 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Vector.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
+/*   Updated: 2022/06/09 22:05:55 by rkaufman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #pragma once
+#include <iterator>
+#include <memory>
 
 namespace ft {
 
-template < class T, class Alloc = allocator<T> >
+template < class T, class Alloc = std::allocator<T> >
 class vector
 {
+
 	public:
 		typedef	T									value_type;
 		typedef	Alloc								allocator_type;				//defaults to: allocator<value_type>
-		typedef	allocator_type::reference			reference;					//for the default allocator: value_type&
-		typedef	allocator_type::const_reference		const_reference;			//for the default allocator: const value_type&
-		typedef	allocator_type::pointer				pointer;					//for the default allocator: value_type*
-		typedef	allocator_type::const_pointer		const_pointer;				//for the default allocator: const value_type*
-		typedef	std::<T>::iterator					iterator;					//a random access iterator to value_type convertible to const_iterator
-		typedef	std::<T>::const_iterator			const_iterator;				//a random access iterator to const value_type
-		typedef	std::<T>::reverse_iterator			reverse_iterator;			//reverse_iterator<iterator>;
-		typedef	std::<T>::const_reverse_iterator	const_reverse_iterator;		//reverse_iterator<const_iterator>;
-		typedef	allocator_type::ptrdiff_t			difference_type;			//a signed integral type, identical to: usually the same as ptrdiff_t
-		typedef	allocator_type::size_t				size_type;					//an unsigned integral type that can represent any non-negative value of difference_type usually the same as size_t
+		typedef	typename allocator_type::reference			reference;					//for the default allocator: value_type&
+		typedef	typename allocator_type::const_reference		const_reference;			//for the default allocator: const value_type&
+		typedef	typename allocator_type::pointer				pointer;					//for the default allocator: value_type*
+		typedef	typename allocator_type::const_pointer		const_pointer;				//for the default allocator: const value_type*
+		typedef	typename std::iterator<std::random_access_iterator_tag, T>					iterator;					//a random access iterator to value_type convertible to const_iterator
+		typedef	typename std::iterator<std::random_access_iterator_tag, T>			const_iterator;				//a random access iterator to const value_type
+		typedef	std::reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>;
+		typedef	std::reverse_iterator<const_iterator>	const_reverse_iterator;		//reverse_iterator<const_iterator>;
+		typedef	typename allocator_type::difference_type			difference_type;			//a signed integral type, identical to: usually the same as ptrdiff_t
+		typedef	typename allocator_type::size_type				size_type;					//an unsigned integral type that can represent any non-negative value of difference_type usually the same as size_t
 	
+	protected:
+		allocator_type	mem_control;
+		pointer			mem_start;
+		size_type		mem_size;
+		size_type		mem_cap;
+
+	public:
 	//Member functions
 	//Construct vector (public member function )
-		explicit vector (const allocator_type & alloc = allocator_type());
+		explicit vector (const allocator_type & alloc = allocator_type()) : mem_control(alloc), mem_start(NULL), mem_size(0), mem_cap(0)
+		{
+			std::cout << "default constructor called\n";
+		}
 		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type());
 
 		template <class InputIterator>
 		vector (InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type());
 		vector (const vector & x);
 	//Vector destructor (public member function )
-		~vector(void);
+		~vector(void) { std::cout << "deconstructor called\n"; }
 	//Assign content (public member function )
 		vector & operator= (const vector & x);
 
@@ -118,20 +143,20 @@ class vector
 
 	//Non-member function overloads
 	//Relational operators for vector (function template )
-		template <class T, class Alloc>
-		bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		template <class T, class Alloc>
-		bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		template <class T, class Alloc>
-		bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		template <class T, class Alloc>
-		bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		template <class T, class Alloc>
-		bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		template <class T, class Alloc>
-		bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		//template <class T, class Alloc>
+		friend bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		//template <class T, class Alloc>
+		friend bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		//template <class T, class Alloc>
+		friend bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		//template <class T, class Alloc>
+		friend bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		//template <class T, class Alloc>
+		friend bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		//template <class T, class Alloc>
+		friend bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
 	//Exchange contents of vectors (function template )
-		template <class T, class Alloc>
+		//template <class T, class Alloc>
 		void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
 };
 }
