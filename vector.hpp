@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Vector.hpp                                         :+:      :+:    :+:   */
+/*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/09 22:05:55 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/10 22:24:10 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#include <iterator>
+#include <iostream>
+#include "iterator.hpp"
 #include <memory>
+#include "colors.h"
 
 namespace ft {
 
@@ -27,8 +29,8 @@ class vector
 		typedef	typename allocator_type::const_reference		const_reference;			//for the default allocator: const value_type&
 		typedef	typename allocator_type::pointer				pointer;					//for the default allocator: value_type*
 		typedef	typename allocator_type::const_pointer		const_pointer;				//for the default allocator: const value_type*
-		typedef	typename std::iterator<std::random_access_iterator_tag, T>					iterator;					//a random access iterator to value_type convertible to const_iterator
-		typedef	typename std::iterator<std::random_access_iterator_tag, T>			const_iterator;				//a random access iterator to const value_type
+		typedef	typename ft::iterator<T>					iterator;					//a random access iterator to value_type convertible to const_iterator
+		typedef	typename ft::iterator<T>			const_iterator;				//a random access iterator to const value_type
 		typedef	std::reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>;
 		typedef	std::reverse_iterator<const_iterator>	const_reverse_iterator;		//reverse_iterator<const_iterator>;
 		typedef	typename allocator_type::difference_type			difference_type;			//a signed integral type, identical to: usually the same as ptrdiff_t
@@ -43,33 +45,110 @@ class vector
 	public:
 	//Member functions
 	//Construct vector (public member function )
-		explicit vector (const allocator_type & alloc = allocator_type()) : mem_control(alloc), mem_start(NULL), mem_size(0), mem_cap(0)
+		explicit vector (const allocator_type & alloc = allocator_type())
+		: mem_control(alloc), mem_start(NULL), mem_size(0), mem_cap(0)
 		{
-			std::cout << "default constructor called\n";
+			#if DEBUG
+				std::cout << COLOR_GREEN << "[vector] default constructor called.\n" << COLOR_DEFAULT;
+			#endif
 		}
-		explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type());
+		explicit vector (size_type n, const value_type & val = value_type(), const allocator_type& alloc = allocator_type())
+		: mem_control(alloc), mem_start(NULL), mem_size(n), mem_cap(n)
+		{
+			mem_start = mem_control.allocate(mem_cap);
+			for (size_t i = 0; i < this->mem_size; i++)
+				mem_control.construct(mem_start + i, val);
+			#if DEBUG
+				std::cout << COLOR_GREEN << "[vector] argument constructor called. Size: " << n << " Sizeof T: " << sizeof(val) << " Pointer: " << mem_start << "\n" << COLOR_DEFAULT;
+			#endif
+		}
 
 		template <class InputIterator>
 		vector (InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type());
-		vector (const vector & x);
+		vector (const vector & x)
+		: mem_control(x.mem_control), mem_start(NULL), mem_size(x.mem_size), mem_cap(x.mem_cap)
+		{
+			mem_start = mem_control.allocate(mem_cap);
+			for (size_t i = 0; i < this->mem_size; i++)
+				mem_control.construct(mem_start + i, x[i]);
+			#if DEBUG
+				std::cout << COLOR_GREEN << "[vector] copy constructor called. Size: " << mem_size << " Sizeof T: " << sizeof(x[0]) << " Pointer: " << mem_start << "\n" << COLOR_DEFAULT;
+			#endif
+		}
 	//Vector destructor (public member function )
-		~vector(void) { std::cout << "deconstructor called\n"; }
+		~vector(void)
+		{
+			for (size_t i = 0; i < this->mem_size; i++)
+				mem_control.destroy(this->mem_start + i);
+			mem_control.deallocate(mem_start, mem_cap);
+			#if DEBUG
+				std::cout << COLOR_RED << "[vector] deconstructor called.\n" << COLOR_DEFAULT;
+			#endif
+		}
 	//Assign content (public member function )
 		vector & operator= (const vector & x);
 
 	//Iterators:
 	//Return iterator to beginning (public member function )
-		iterator begin(void);
-		const_iterator begin(void) const;
+		iterator begin(void)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] iterator begin called.\n" << COLOR_DEFAULT;
+			#endif
+			return (iterator(this->mem_start));
+		}
+		const_iterator begin(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] const_iterator begin called.\n" << COLOR_DEFAULT;
+			#endif
+			return (const_iterator(this->mem_start));
+		}
 	//Return iterator to end (public member function )
-		iterator end(void);
-		const_iterator end(void) const;
+		iterator end(void)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] iterator end called.\n" << COLOR_DEFAULT;
+			#endif
+			return (iterator(this->mem_start + this->mem_size));
+		}
+		const_iterator end(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] const_iterator end called.\n" << COLOR_DEFAULT;
+			#endif
+			return (const_iterator(this->mem_start + this->mem_size));
+		}
 	//Return reverse iterator to reverse beginning (public member function )
-		reverse_iterator rbegin(void);
-		const_reverse_iterator rbegin(void) const;
+		reverse_iterator rbegin(void)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] reverse_iterator rbegin called.\n" << COLOR_DEFAULT;
+			#endif
+			return (reverse_iterator(this->mem_start));
+		}
+		const_reverse_iterator rbegin(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] const_reverse_iterator rbegin called.\n" << COLOR_DEFAULT;
+			#endif
+			return (const_reverse_iterator(this->mem_start));
+		}
 	//Return reverse iterator to reverse end (public member function )
-		reverse_iterator rend(void);
-		const_reverse_iterator rend(void) const;
+		reverse_iterator rend(void)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] reverse_iterator rend called.\n" << COLOR_DEFAULT;
+			#endif
+			return (reverse_iterator(this->mem_start + this->mem_size));
+		}
+		const_reverse_iterator rend(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] const_reverse_iterator rend called.\n" << COLOR_DEFAULT;
+			#endif
+			return (const_reverse_iterator(this->mem_start + this->mem_size));
+		}
 	//Return const_iterator to beginning (public member function )
 		//C++11
 	//Return const_iterator to end (public member function )
@@ -81,15 +160,42 @@ class vector
 
 	//Capacity:
 	//Return size (public member function )
-		size_type size(void) const;
+		size_type size(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] size called.\n" << COLOR_DEFAULT;
+			#endif
+			return (mem_size);
+		}
 	//Return maximum size (public member function )
-		size_type max_size(void) const;
+		size_type max_size(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] max_size called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_control.max_size());
+		}
 	//Change size (public member function )
-		void resize (size_type n, value_type val = value_type());
+		// void resize (size_type n, value_type val = value_type())
+		// {
+		// 	for (size_t = )
+		// }
 	//Return size of allocated storage capacity (public member function )
-		size_type capacity(void) const;
+		size_type capacity(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] capacity called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_cap);
+		}
 	//Test whether vector is empty (public member function )
-		bool empty(void) const;
+		bool empty(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] empty called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_size == 0);
+		}
 	//Request a change in capacity (public member function )
 		void reserve (size_type n);
 	//Shrink to fit (public member function )
@@ -97,19 +203,84 @@ class vector
 
 	//Element access:
 	//Access element (public member function )
-		reference operator[] (size_type n);
-		const_reference operator[] (size_type n) const;
+		reference operator[] (size_type n)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] reference operator[] called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_start[n]);
+		}
+		const_reference operator[] (size_type n) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] const_reference operator[] called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_start[n]);
+		}
 	//Access element (public member function )
-		reference at (size_type n);
-		const_reference at (size_type n) const;
+		reference at (size_type n)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] reference at called.\n" << COLOR_DEFAULT;
+			#endif
+			if (n >= this->mem_size)
+				throw std::out_of_range("vector::Index out of bounds!");
+			return (this->mem_start[n]);
+		}
+		const_reference at (size_type n) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] const_reference at called.\n" << COLOR_DEFAULT;
+			#endif
+			if (n >= this->mem_size)
+				throw std::out_of_range("vector::Index out of bounds!");
+			return (this->mem_start[n]);
+		}
 	//Access first element (public member function )
-		reference front(void);
-		const_reference front(void) const;
+		reference front(void)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] reference front called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_start[0]);
+		}
+		const_reference front(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] const_reference front called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_start[0]);
+		}
 	//Access last element (public member function )
-		reference back(void);
-		const_reference back(void) const;
+		reference back(void)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] reference back called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_start[this->mem_size - 1]);
+		}
+		const_reference back(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] const_reference back called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_start[this->mem_size - 1]);
+		}
 	//Access data (public member function )
-		//C++11
+		pointer data()
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] pointer data called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_start);
+		}
+		const_pointer data() const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] const_pointer data called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_start);
+		}
 
 	//Modifiers:
 	//Assign vector content (public member function )
@@ -126,7 +297,20 @@ class vector
 		template <class InputIterator>
 		void insert (iterator position, InputIterator first, InputIterator last);
 	//Erase elements (public member function )
-		iterator erase (iterator position);
+		iterator erase (iterator position)
+		{
+			this->mem_control.destroy(position.address());
+			iterator it = position;
+			iterator ite = this->end();
+			while (it != ite)
+			{
+				it++;
+				this->mem_control.construct(it.address() - 1, *it);
+				this->mem_control.destroy(it.address());
+			}
+			this->mem_size--;
+			return (position);
+		}
 		iterator erase (iterator first, iterator last);
 	//Swap content (public member function )
 		void swap (vector& x);
@@ -159,4 +343,5 @@ class vector
 		//template <class T, class Alloc>
 		void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
 };
+	
 }
