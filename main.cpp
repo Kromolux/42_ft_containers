@@ -6,13 +6,15 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/10 22:25:17 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/11 15:53:21 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <string>
 #include <deque>
+#include "template.hpp"
+
 #ifndef TEST
 # define TEST 0
 #endif
@@ -28,6 +30,7 @@
 #endif
 
 #include <stdlib.h>
+
 
 #define MAX_RAM 4294967296
 #define BUFFER_SIZE 4096
@@ -60,28 +63,15 @@ public:
 };
 */
 
+typedef int myType;
 int	main(void)
 {
-	ft::vector<int> vec(5);
+	ft::vector<myType> vec(5);
 
-	//template < class T>
-	//void	details(ft::vector<int> const & vec)
-	//{
-	#if TEST
-		std::cout << "std";
-	#else
-		std::cout << "ft";
-	#endif
-	std::cout	<< "::vector<int> details\n"
-				<< "Capacity: " << vec.capacity() << "\n"
-				<< "Size    : " << vec.size() << "\n"
-				<< "Max Size: " << vec.max_size() << "\n"
-				<< std::boolalpha
-				<< "Isempty : " << vec.empty() << "\n"
-				<< "Pointer : " << vec.data() << "\n";
-
-	ft::vector<int>::iterator it = vec.begin();
-	ft::vector<int>::iterator ite = vec.end();
+	displayInfo(vec);
+	displayContent(vec);
+	ft::vector<myType>::iterator it = vec.begin();
+	ft::vector<myType>::iterator ite = vec.end();
 	
 	try
 	{
@@ -91,12 +81,17 @@ int	main(void)
 	{
 		std::cerr << e.what() << '\n';
 	}
-
+	
 	for (size_t i = 0; it != ite; it++, i++)
 		vec.at(i) = i + 1;
-
-	ft::vector<int> vec2(vec);
 	
+	ft::vector<myType> vec2(vec);
+	displayContent(vec2);
+	
+	vec2 = vec;
+	
+	displayContent(vec2);
+
 	it = vec2.begin();
 	ite = vec2.end();
 
@@ -119,14 +114,9 @@ int	main(void)
 		std::cout << vec2[i] << " ";
 	std::cout << "]\n";
 
-	it = vec.begin();
+	it = vec.end();
 	ite = vec.end();
-
-	std::cout << "[ ";
-	for (; it != ite; it++)
-		std::cout << *it << " ";
-	//std::for_each(vec.begin(), vec.end(), [](T x) {std::cout << x << " ";});
-	std::cout << "]" << std::endl;
+	displayContent(vec);
 
 	std::cout << "===[iterator tests]===\n";
 	std::cout << "*(it - 1) = " << *(it - 1) << "\n";
@@ -151,14 +141,11 @@ int	main(void)
 	std::cout	<< "it != it   " << (it != it) << "\n";
 	std::cout	<< "it == ite   " << (it == ite) << "\n";
 	
-	it = vec2.begin();
+	displayContent(vec2);
+	
+	it = vec2.end();
 	ite = vec2.end();
 	
-	std::cout << "[ ";
-	for (; it != ite; it++)
-		std::cout << *it << " ";
-	std::cout << "]" << std::endl;
-
 	it -= 3;
 	std::cout << "*it = " << *it << "\n";
 	vec2.erase(it);
@@ -171,7 +158,28 @@ int	main(void)
 	for (; it != ite; it++)
 		std::cout << *it << " ";
 	std::cout << "]" << std::endl;
+	std::cout << "pushback\n";
 	
+	displayInfo(vec);
+	vec.push_back(4242);
+	vec.push_back(4242);
+	displayInfo(vec);
+	
+	vec.pop_back();
+	vec.pop_back();
+
+	vec.pop_back();
+	vec.pop_back();
+	
+	vec.pop_back();
+	vec.pop_back();
+
+	//vec.pop_back();
+	
+	displayContent(vec);
+	
+	std::cout << "vector.get_allocator = " << typeid(vec.get_allocator()).name() << "\n";
+
 	return (0);
 }
 

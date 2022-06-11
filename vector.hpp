@@ -6,13 +6,14 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/10 22:24:10 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/11 16:04:44 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <iostream>
 #include "iterator.hpp"
+#include "algorithm.hpp"
 #include <memory>
 #include "colors.h"
 
@@ -66,14 +67,15 @@ class vector
 		template <class InputIterator>
 		vector (InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type());
 		vector (const vector & x)
-		: mem_control(x.mem_control), mem_start(NULL), mem_size(x.mem_size), mem_cap(x.mem_cap)
+		: mem_control(x.mem_control), mem_start(NULL), mem_size(0), mem_cap(0)
 		{
-			mem_start = mem_control.allocate(mem_cap);
-			for (size_t i = 0; i < this->mem_size; i++)
-				mem_control.construct(mem_start + i, x[i]);
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[vector] copy constructor called. Size: " << mem_size << " Sizeof T: " << sizeof(x[0]) << " Pointer: " << mem_start << "\n" << COLOR_DEFAULT;
 			#endif
+			// mem_start = mem_control.allocate(mem_cap);
+			// for (size_t i = 0; i < this->mem_size; i++)
+			// 	mem_control.construct(mem_start + i, x[i]);
+			*this = x;
 		}
 	//Vector destructor (public member function )
 		~vector(void)
@@ -86,8 +88,26 @@ class vector
 			#endif
 		}
 	//Assign content (public member function )
-		vector & operator= (const vector & x);
-
+		vector & operator= (const vector & x)
+		{
+			#if DEBUG
+				std::cout << COLOR_GREEN << "[vector] assignement constructor called. Size: " << x.mem_size << " Sizeof T: " << sizeof(x[0]) << " Pointer: " << x.mem_start << "\n" << COLOR_DEFAULT;
+			#endif
+			if (this->mem_size > 0)
+			{
+				for (size_t i = 0; i < this->mem_size; i++)
+					mem_control.destroy(this->mem_start + i);
+			}
+			if (this->mem_cap > 0)
+				mem_control.deallocate(mem_start, mem_cap);
+			this->mem_control = x.mem_control;
+			this->mem_size = x.mem_size;
+			this->mem_cap = x.mem_cap;
+			this->mem_start = mem_control.allocate(mem_cap);
+			for (size_t i = 0; i < this->mem_size; i++)
+				mem_control.construct(mem_start + i, x[i]);
+			return (*this );
+		}
 	//Iterators:
 	//Return iterator to beginning (public member function )
 		iterator begin(void)
@@ -288,9 +308,40 @@ class vector
 		void assign (InputIterator first, InputIterator last);
 		void assign (size_type n, const value_type& val);
 	//Add element at the end (public member function )
-		void push_back (const value_type& val);
+		void push_back (const value_type& val)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] push_back called.\n" << COLOR_DEFAULT;
+			#endif
+			if (this->mem_size < this->mem_cap)
+			{
+				mem_control.construct(mem_start + this->mem_size, val);
+				this->mem_size++;
+			}
+			else
+			{
+				vector	tmp(*this);
+				for (size_t i = 0; i < this->mem_size; i++)
+					mem_control.destroy(this->mem_start + i);
+				if (this->mem_cap > 0)
+					mem_control.deallocate(mem_start, mem_cap);
+				mem_cap = 2 * mem_cap;
+				mem_start = mem_control.allocate(mem_cap);
+				for (size_t i = 0; i < tmp.mem_size; i++)
+					mem_control.construct(mem_start + i, tmp[i]);
+				mem_control.construct(mem_start + tmp.mem_size, val);
+				this->mem_size++;
+			}
+		}
 	//Delete last element (public member function )
-		void pop_back(void);
+		void pop_back(void)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] pop_back called.\n" << COLOR_DEFAULT;
+			#endif
+			this->mem_size--;
+			mem_control.destroy(this->mem_start + this->mem_size);
+		}
 	//Insert elements (public member function )
 		iterator insert (iterator position, const value_type& val);
 		void insert (iterator position, size_type n, const value_type& val);
@@ -299,6 +350,9 @@ class vector
 	//Erase elements (public member function )
 		iterator erase (iterator position)
 		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] erase called.\n" << COLOR_DEFAULT;
+			#endif
 			this->mem_control.destroy(position.address());
 			iterator it = position;
 			iterator ite = this->end();
@@ -323,25 +377,47 @@ class vector
 	
 	//Allocator:
 	//Get allocator (public member function )
-		allocator_type get_allocator() const;
+		allocator_type get_allocator() const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] get_allocator called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_control);
+		}
+};
+	
 
 	//Non-member function overloads
 	//Relational operators for vector (function template )
-		//template <class T, class Alloc>
-		friend bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		//template <class T, class Alloc>
-		friend bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		//template <class T, class Alloc>
-		friend bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		//template <class T, class Alloc>
-		friend bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		//template <class T, class Alloc>
-		friend bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
-		//template <class T, class Alloc>
-		friend bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+		template <class T, class Alloc>
+		bool operator== (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+		{
+			#if DEBUG
+				std::cout << COLOR_BLUE << "[vector] bool operator== called.\n" << COLOR_DEFAULT;
+			#endif
+			if (lhs.size() == rhs.size())
+				return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+			return (false);
+		}
+		template <class T, class Alloc>
+		bool operator!= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+		{
+			#if DEBUG
+				std::cout << COLOR_BLUE << "[vector] bool operator!= called.\n" << COLOR_DEFAULT;
+			#endif
+			if (lhs.size() != rhs.size())
+				return (true);
+			return (!ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+		}
+		template <class T, class Alloc>
+		bool operator<  (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs);
+		template <class T, class Alloc>
+		bool operator<= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs);
+		template <class T, class Alloc>
+		bool operator>  (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs);
+		template <class T, class Alloc>
+		bool operator>= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs);
 	//Exchange contents of vectors (function template )
-		//template <class T, class Alloc>
-		void swap (vector<T,Alloc>& x, vector<T,Alloc>& y);
-};
-	
+		template <class T, class Alloc>
+		void swap (ft::vector<T,Alloc> & x, ft::vector<T,Alloc> & y);
 }

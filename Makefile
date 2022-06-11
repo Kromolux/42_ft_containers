@@ -6,7 +6,7 @@
 #    By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/09 21:06:31 by rkaufman          #+#    #+#              #
-#    Updated: 2022/06/10 19:18:42 by rkaufman         ###   ########.fr        #
+#    Updated: 2022/06/11 11:53:57 by rkaufman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,19 +42,16 @@ fclean: clean
 
 re: fclean all
 
-test: re
-		./$(NAME) > ft.out
-test: CFLAGS += $(TFLAG)
-test: re
-		./$(NAME) > std.out
-		diff ft.out std.out
+test: ft std
+	diff -y --suppress-common-lines ft.out std.out
 
 std: CFLAGS += $(TFLAG)
 std: re
-	./$(NAME)
+	./$(NAME) > std.out
 
-ft: re
-	./$(NAME)
+ft:
+	make re
+	./$(NAME) > ft.out
 
 val:
 	valgrind --leak-check=full -s ./$(NAME)
@@ -62,4 +59,4 @@ val:
 leak:
 	leaks --atExit -- ./$(NAME)
 
-.PHONY: clean fclean re
+.PHONY: clean fclean re std ft test
