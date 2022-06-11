@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/11 16:04:44 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/11 19:50:58 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,18 @@ class vector
 {
 
 	public:
-		typedef	T									value_type;
-		typedef	Alloc								allocator_type;				//defaults to: allocator<value_type>
+		typedef	T											value_type;
+		typedef	Alloc										allocator_type;				//defaults to: allocator<value_type>
 		typedef	typename allocator_type::reference			reference;					//for the default allocator: value_type&
-		typedef	typename allocator_type::const_reference		const_reference;			//for the default allocator: const value_type&
-		typedef	typename allocator_type::pointer				pointer;					//for the default allocator: value_type*
+		typedef	typename allocator_type::const_reference	const_reference;			//for the default allocator: const value_type&
+		typedef	typename allocator_type::pointer			pointer;					//for the default allocator: value_type*
 		typedef	typename allocator_type::const_pointer		const_pointer;				//for the default allocator: const value_type*
 		typedef	typename ft::iterator<T>					iterator;					//a random access iterator to value_type convertible to const_iterator
-		typedef	typename ft::iterator<T>			const_iterator;				//a random access iterator to const value_type
-		typedef	std::reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>;
-		typedef	std::reverse_iterator<const_iterator>	const_reverse_iterator;		//reverse_iterator<const_iterator>;
-		typedef	typename allocator_type::difference_type			difference_type;			//a signed integral type, identical to: usually the same as ptrdiff_t
-		typedef	typename allocator_type::size_type				size_type;					//an unsigned integral type that can represent any non-negative value of difference_type usually the same as size_t
+		typedef	typename ft::iterator<T>					const_iterator;				//a random access iterator to const value_type
+		typedef	std::reverse_iterator<iterator>				reverse_iterator;			//reverse_iterator<iterator>;
+		typedef	std::reverse_iterator<const_iterator>		const_reverse_iterator;		//reverse_iterator<const_iterator>;
+		typedef	typename allocator_type::difference_type	difference_type;			//a signed integral type, identical to: usually the same as ptrdiff_t
+		typedef	typename allocator_type::size_type			size_type;					//an unsigned integral type that can represent any non-negative value of difference_type usually the same as size_t
 	
 	protected:
 		allocator_type	mem_control;
@@ -80,12 +80,11 @@ class vector
 	//Vector destructor (public member function )
 		~vector(void)
 		{
-			for (size_t i = 0; i < this->mem_size; i++)
-				mem_control.destroy(this->mem_start + i);
-			mem_control.deallocate(mem_start, mem_cap);
 			#if DEBUG
 				std::cout << COLOR_RED << "[vector] deconstructor called.\n" << COLOR_DEFAULT;
 			#endif
+			MEM_destroy(*this);
+			mem_control.deallocate(mem_start, mem_cap);
 		}
 	//Assign content (public member function )
 		vector & operator= (const vector & x)
@@ -94,10 +93,7 @@ class vector
 				std::cout << COLOR_GREEN << "[vector] assignement constructor called. Size: " << x.mem_size << " Sizeof T: " << sizeof(x[0]) << " Pointer: " << x.mem_start << "\n" << COLOR_DEFAULT;
 			#endif
 			if (this->mem_size > 0)
-			{
-				for (size_t i = 0; i < this->mem_size; i++)
-					mem_control.destroy(this->mem_start + i);
-			}
+				MEM_destroy(*this);
 			if (this->mem_cap > 0)
 				mem_control.deallocate(mem_start, mem_cap);
 			this->mem_control = x.mem_control;
@@ -196,10 +192,21 @@ class vector
 			return (this->mem_control.max_size());
 		}
 	//Change size (public member function )
-		// void resize (size_type n, value_type val = value_type())
-		// {
-		// 	for (size_t = )
-		// }
+		void resize (size_type n, value_type val = value_type())
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] resize called.\n" << COLOR_DEFAULT;
+			#endif
+			if (n < this->mem_size)
+				MEM_destroy(*this, n);
+			else if (n > this->mem_cap)
+			{
+				MEM_reallocate(*this, n);
+				for (size_type i = this->mem_size; i < n; i++)
+				mem_control.construct(this->mem_start + i, val);
+			}
+			this->mem_size = n;
+		}
 	//Return size of allocated storage capacity (public member function )
 		size_type capacity(void) const
 		{
@@ -217,7 +224,15 @@ class vector
 			return (this->mem_size == 0);
 		}
 	//Request a change in capacity (public member function )
-		void reserve (size_type n);
+		void reserve (size_type n)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] reserve called.\n" << COLOR_DEFAULT;
+			#endif
+			if (n < this->mem_cap)
+				return ;
+			MEM_reallocate(*this, n);
+		}
 	//Shrink to fit (public member function )
 		//C++11
 
@@ -320,16 +335,8 @@ class vector
 			}
 			else
 			{
-				vector	tmp(*this);
-				for (size_t i = 0; i < this->mem_size; i++)
-					mem_control.destroy(this->mem_start + i);
-				if (this->mem_cap > 0)
-					mem_control.deallocate(mem_start, mem_cap);
-				mem_cap = 2 * mem_cap;
-				mem_start = mem_control.allocate(mem_cap);
-				for (size_t i = 0; i < tmp.mem_size; i++)
-					mem_control.construct(mem_start + i, tmp[i]);
-				mem_control.construct(mem_start + tmp.mem_size, val);
+				MEM_reallocate(*this, 2 * this->mem_cap);
+				mem_control.construct(mem_start + this->mem_size, val);
 				this->mem_size++;
 			}
 		}
@@ -351,7 +358,7 @@ class vector
 		iterator erase (iterator position)
 		{
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[vector] erase called.\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[vector] erase position called.\n" << COLOR_DEFAULT;
 			#endif
 			this->mem_control.destroy(position.address());
 			iterator it = position;
@@ -365,11 +372,59 @@ class vector
 			this->mem_size--;
 			return (position);
 		}
-		iterator erase (iterator first, iterator last);
+		iterator erase (iterator first, iterator last)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] erase first - last called.\n" << COLOR_DEFAULT;
+			#endif
+			iterator it = first;
+			iterator ite = this->end();
+			for (; it != last; ++it)
+			{
+				this->mem_control.destroy(it.address());
+				this->mem_size--;
+			}
+			iterator it_to = first;
+			it = last;
+			while (it != ite)
+			{
+				this->mem_control.construct(it_to.address(), *it);
+				this->mem_control.destroy(it.address());
+				++it;
+				++it_to;
+			}
+			return (last);
+		}
 	//Swap content (public member function )
-		void swap (vector& x);
+		void swap (vector& x)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] swap called.\n" << COLOR_DEFAULT;
+			#endif
+			allocator_type	tmp_control = this->mem_control;
+			pointer			tmp_start = this->mem_start;
+			size_type		tmp_size = this->mem_size;
+			size_type		tmp_cap = this->mem_cap;
+			
+			this->mem_control = x.mem_control;
+			this->mem_start = x.mem_start;
+			this->mem_size = x.mem_size;
+			this->mem_cap = x.mem_cap;
+			
+			x.mem_control = tmp_control;
+			x.mem_start = tmp_start;
+			x.mem_size = tmp_size;
+			x.mem_cap = tmp_cap;
+		}
 	//Clear content (public member function )
-		void clear(void);
+		void clear(void)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] clear called.\n" << COLOR_DEFAULT;
+			#endif
+			MEM_destroy(*this);
+			this->mem_size = 0;
+		}
 	//Construct and insert element (public member function )
 		//C++11
 	//Construct and insert element at the end (public member function )
@@ -384,10 +439,29 @@ class vector
 			#endif
 			return (this->mem_control);
 		}
+	protected:
+		void	MEM_destroy(vector & x, size_type i = 0)
+		{
+			for (; i < x.mem_size; i++)
+				mem_control.destroy(x.mem_start + i);
+		}
+		void	MEM_reallocate(vector & x, size_type const & n)
+		{
+			vector	tmp(x);
+
+			MEM_destroy(x);
+			if (x.mem_cap > 0)
+				mem_control.deallocate(x.mem_start, x.mem_cap);
+			x.mem_cap = n;
+			x.mem_start = x.mem_control.allocate(x.mem_cap);
+			for (size_type i = 0; i < tmp.mem_size; i++)
+				x.mem_control.construct(x.mem_start + i, tmp[i]);
+		}
 };
 	
 
 	//Non-member function overloads
+	//https://cplusplus.com/reference/vector/vector/operators/
 	//Relational operators for vector (function template )
 		template <class T, class Alloc>
 		bool operator== (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
@@ -410,14 +484,32 @@ class vector
 			return (!ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 		}
 		template <class T, class Alloc>
-		bool operator<  (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs);
+		bool operator<  (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+		{
+			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		}
 		template <class T, class Alloc>
-		bool operator<= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs);
+		bool operator<= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+		{
+			return !(rhs < lhs);
+		}
 		template <class T, class Alloc>
-		bool operator>  (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs);
+		bool operator>  (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+		{
+			return (rhs < lhs);
+		}
 		template <class T, class Alloc>
-		bool operator>= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs);
+		bool operator>= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+		{
+			return !(lhs < rhs);
+		}
 	//Exchange contents of vectors (function template )
 		template <class T, class Alloc>
-		void swap (ft::vector<T,Alloc> & x, ft::vector<T,Alloc> & y);
+		void swap (ft::vector<T,Alloc> & x, ft::vector<T,Alloc> & y)
+		{
+			#if DEBUG
+				std::cout << COLOR_BLUE << "[vector] void swap template called.\n" << COLOR_DEFAULT;
+			#endif
+			x.swap(y);
+		}
 }

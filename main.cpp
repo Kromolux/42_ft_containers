@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/11 15:53:21 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/11 19:59:18 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,71 @@ int	main(void)
 	
 	std::cout << "vector.get_allocator = " << typeid(vec.get_allocator()).name() << "\n";
 
+	vec.reserve(15);
+	displayInfo(vec);
+	displayContent(vec);
+	
+	vec.swap(vec2);
+	displayInfo(vec);
+	displayContent(vec);
+	
+	ft::swap(vec, vec2);
+	displayInfo(vec);
+	displayContent(vec);
+	
+	vec.clear();
+	displayInfo(vec);
+	displayContent(vec);
+
+	vec2.resize(10, 999);
+	displayInfo(vec2);
+	displayContent(vec2);
+
+	vec2.resize(5);
+	displayInfo(vec2);
+	displayContent(vec2);
+
+	it = vec2.begin() + 1;
+	ite = vec2.begin() + 3;
+
+	std::cout	<< "*it  = " << *it << "\n"
+				<< "*ite = " << *ite << "\n";
+
+	vec2.erase(it, ite);
+	std::cout	<< "*it  = " << *it << "\n"
+				<< "*ite = " << *ite << "\n";
+	displayInfo(vec2);
+	displayContent(vec2);
+
+	for (size_t i = 0; i < vec.capacity(); i++)
+		vec.push_back(i);
+	displayInfo(vec);
+	displayContent(vec);
+
+	it = vec.begin();
+	ite = vec.begin() + 3;
+
+	std::cout	<< "*it  = " << *it << "\n"
+				<< "*ite = " << *ite << "\n";
+
+	vec.erase(it, ite);
+	std::cout	<< "*it  = " << *it << "\n"
+				<< "*ite = " << *ite << "\n";
+	displayInfo(vec);
+	displayContent(vec);
+
+
+	it = vec.begin() + 3;
+	ite = vec.end() - 1;
+
+	std::cout	<< "*it  = " << *it << "\n"
+				<< "*ite = " << *ite << "\n";
+
+	vec.erase(it, ite);
+	std::cout	<< "*it  = " << *it << "\n"
+				<< "*ite = " << *ite << "\n";
+	displayInfo(vec);
+	displayContent(vec);
 	return (0);
 }
 
