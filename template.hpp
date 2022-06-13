@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   template.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 11:02:36 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/11 18:22:24 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/12 10:18:12 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	displayInfo(ft::vector<T> & vec )
 				<< "Size    : " << vec.size() << "\n"
 				<< "Max Size: " << vec.max_size() << "\n"
 				<< std::boolalpha
-				<< "Isempty : " << vec.empty() << "\n"
-				<< "Pointer : " << vec.data() << "\n";
+				<< "Isempty : " << vec.empty() << "\n";
+				//<< "Pointer : " << vec.data() << "\n";
 }
 
 template <class T>

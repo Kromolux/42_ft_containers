@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/11 19:59:18 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/13 18:46:00 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ public:
 };
 */
 
-typedef int myType;
+typedef long long myType;
 int	main(void)
 {
 	ft::vector<myType> vec(5);
@@ -243,6 +243,27 @@ int	main(void)
 	vec.erase(it, ite);
 	std::cout	<< "*it  = " << *it << "\n"
 				<< "*ite = " << *ite << "\n";
+	displayInfo(vec);
+	displayContent(vec);
+	std::cout << "testing assign with int\n";
+	try
+	{
+		vec.assign(5, 42);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
+	displayInfo(vec);
+	displayContent(vec);
+
+	displayInfo(vec2);
+	displayContent(vec2);
+	it = vec2.begin();
+	ite = vec2.end();
+	std::cout << "testing assign with iterators\n";
+	vec.assign(it, ite);
 	displayInfo(vec);
 	displayContent(vec);
 	return (0);

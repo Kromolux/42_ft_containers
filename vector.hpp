@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/11 19:50:58 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/13 18:31:50 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ class vector
 
 		template <class InputIterator>
 		vector (InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type());
+		
 		vector (const vector & x)
 		: mem_control(x.mem_control), mem_start(NULL), mem_size(0), mem_cap(0)
 		{
@@ -319,9 +320,62 @@ class vector
 
 	//Modifiers:
 	//Assign vector content (public member function )
+
+		//template <typename Integer, ft::enable_if<ft::is_integral<Integer>::value, bool> = true>
+		void assign (size_type n, const value_type& val)
+		{
+			if (this->mem_size > 0)
+				MEM_destroy(*this);
+			if (n > this->mem_cap)
+			{
+				this->mem_control.deallocate(this->mem_start, this->mem_cap);
+				this->mem_cap = n;
+				this->mem_start = this->mem_control.allocate(this->mem_cap);
+			}
+			for (size_type i = 0; i < n; i++)
+				this->mem_control.construct(this->mem_start + i, val);
+			this->mem_size = n;
+		}
 		template <class InputIterator>
-		void assign (InputIterator first, InputIterator last);
-		void assign (size_type n, const value_type& val);
+		void assign (InputIterator first, InputIterator last)
+		{
+			help_assign(first, last, ft::is_integral<InputIterator>());
+		}
+	private:
+		template <class InputIterator>
+		void	help_assign(InputIterator first, InputIterator last, ft::false_type)
+		{
+			size_type	tmp_cap = static_cast<size_type>(last - first);
+
+			if (this->mem_size > 0)
+				MEM_destroy(*this);
+			if (tmp_cap > this->mem_cap)
+			{
+				this->mem_control.deallocate(this->mem_start, this->mem_cap);
+				this->mem_cap = tmp_cap;
+				this->mem_start = this->mem_control.allocate(this->mem_cap);
+			}
+			for (size_type i = 0; first != last; ++first, ++i)
+				this->mem_control.construct(this->mem_start + i, *first);
+			this->mem_size = tmp_cap;
+		}
+		template <class Integer>
+		void	help_assign(Integer n, Integer val, ft::true_type)
+		{
+			size_type	tmp = static_cast<size_type>(n);
+			if (this->mem_size > 0)
+				MEM_destroy(*this);
+			if (tmp > this->mem_cap)
+			{
+				this->mem_control.deallocate(this->mem_start, this->mem_cap);
+				this->mem_cap = tmp;
+				this->mem_start = this->mem_control.allocate(this->mem_cap);
+			}
+			for (size_type i = 0; i < tmp; i++)
+				this->mem_control.construct(this->mem_start + i, val);
+			this->mem_size = tmp;
+		}
+	public:
 	//Add element at the end (public member function )
 		void push_back (const value_type& val)
 		{
