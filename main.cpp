@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/13 18:46:00 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/16 18:55:34 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 	namespace ft = std;
 #else
 	//#include <map.hpp>
-	//#include <stack.hpp>
+	#include "stack.hpp"
 	#include "vector.hpp"
 #endif
 
@@ -42,7 +42,7 @@ struct Buffer
 
 
 #define COUNT (MAX_RAM / (int)sizeof(Buffer))
-/*
+
 template<typename T>
 class MutantStack : public ft::stack<T>
 {
@@ -61,9 +61,9 @@ public:
 	iterator begin() { return this->c.begin(); }
 	iterator end() { return this->c.end(); }
 };
-*/
 
-typedef long long myType;
+
+typedef int myType;
 int	main(void)
 {
 	ft::vector<myType> vec(5);
@@ -150,14 +150,16 @@ int	main(void)
 	std::cout << "*it = " << *it << "\n";
 	vec2.erase(it);
 	std::cout << "*it = " << *it << "\n";
-
-	it = vec2.begin();
-	ite = vec2.end();
-	
+	//const ft::vector<myType> cvector = const_cast<ft::vector<myType>&>(vec2);
+	ft::vector<myType>::iterator cit = vec2.begin();
+	ft::vector<myType>::iterator cite = vec2.end();
+	//*cit = 555;
 	std::cout << "[ ";
-	for (; it != ite; it++)
-		std::cout << *it << " ";
+	for (; cit != cite; cit++)
+		std::cout << *cit << " ";
 	std::cout << "]" << std::endl;
+
+	
 	std::cout << "pushback\n";
 	
 	displayInfo(vec);
@@ -266,6 +268,79 @@ int	main(void)
 	vec.assign(it, ite);
 	displayInfo(vec);
 	displayContent(vec);
+	displayInfo(vec2);
+	displayContent(vec2);
+	vec2.clear();
+	for (size_t i = 0; i < vec2.capacity(); i++)
+		vec2.push_back(i);
+	vec2.push_back(1234567989);
+	displayInfo(vec2);
+	displayContent(vec2);
+	it = vec2.begin();
+	ite = vec2.end();
+	std::cout << "testing insert\n";
+	it = vec2.insert(it + 3, 42);
+	std::cout << "it points to " << *it << "\n";
+	displayInfo(vec2);
+	displayContent(vec2);
+
+	vec2.erase(it);
+	displayInfo(vec2);
+	displayContent(vec2);
+	it = vec2.insert(it + 3, 42);
+	std::cout << "it points to " << *it << "\n";
+	displayInfo(vec2);
+	displayContent(vec2);
+
+	std::cout << "insert numbers into vec2\n";
+	vec2.insert(it, 5, 999);
+	std::cout << "vec2\n";
+	displayInfo(vec2);
+	displayContent(vec2);
+	std::cout << "vec\n";
+	displayInfo(vec);
+	displayContent(vec);
+	vec2.insert(vec2.begin(), vec.begin(), vec.end());
+	std::cout << "vec2\n";
+	displayInfo(vec2);
+	displayContent(vec2);
+	std::cout << "vector constructor InputIterator test\n";
+	it = vec2.begin();
+	ite = vec2.end();
+	ft::vector<myType> vec3(it, ite);
+	displayInfo(vec3);
+	displayContent(vec3);
+	std::cout << "\nTesting stack\n";
+	
+	ft::stack<myType>	myStack;
+	#if TEST
+		std::cout << "std";
+	#else
+		std::cout << "ft";
+	#endif
+	std::cout	<< "::stack<" << typeid(myType).name() << "> details\n"
+				<< "Size    : " << myStack.size() << "\n"
+				//<< "Capacity: " << myStack.c.capacity() << "\n"
+				//<< "Max Size: " << myStack.c.max_size() << "\n"
+				<< std::boolalpha
+				<< "Isempty : " << myStack.empty() << "\n";
+	std::cout << "push(42)\n";
+	myStack.push(42);
+	std::cout << "push(4242)\n";
+	myStack.push(4242);
+	std::cout << "top element: " << myStack.top() << "\n";
+	myStack.pop();
+	std::cout << "pop()\n";
+	std::cout << "top element: " << myStack.top() << "\n";
+	std::cout << "populating stack\n";
+	for (size_t i = 0; i < 7; ++i)
+		myStack.push(i);
+	std::cout << "iterating through stack and poping elements\n";
+	while (myStack.empty() == false)
+	{
+		std::cout << "top element: " << myStack.top() << "\n";
+		myStack.pop();
+	}
 	return (0);
 }
 

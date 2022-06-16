@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 14:38:17 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/13 18:28:39 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/16 17:29:52 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,30 +90,42 @@ bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, Input
 	return (first2 != last2);
 }
 
-template <class T, T v>
-    struct integral_constant 
-    {
-        static const T value = v;
-        typedef T value_type;
-        typedef integral_constant<T, v> type;
-    };
+	template <class T, T v>
+	struct integral_constant 
+	{
+		static const T value = v;
+		typedef T value_type;
+		typedef integral_constant<T, v> type;
+	};
 
-    template <class T, T v> const 
-    T integral_constant<T, v>::value;
+	template <class T, T v> const 
+	T integral_constant<T, v>::value;
 
-    typedef integral_constant<bool, true>  true_type;
-    typedef integral_constant<bool, false> false_type;
+	typedef integral_constant<bool, true>  true_type;
+	typedef integral_constant<bool, false> false_type;
 
-    template <class T> struct is_integral : public false_type { };
+	template <class T> struct is_integral : public false_type { };
 
-    template <> struct is_integral<bool> : public true_type { };
-    template <> struct is_integral<char> : public true_type { };
-    template <> struct is_integral<unsigned char> : public true_type { };
-    template <> struct is_integral<signed char> : public true_type { };
-    template <> struct is_integral<short> : public true_type { };
-    template <> struct is_integral<unsigned short> : public true_type { };
-    template <> struct is_integral<int> : public true_type { };
-    template <> struct is_integral<unsigned int> : public true_type { };
-    template <> struct is_integral<long long> : public true_type { };
-    template <> struct is_integral<unsigned long long> : public true_type { };
+	template <> struct is_integral<bool> : public true_type { };
+	template <> struct is_integral<char> : public true_type { };
+	template <> struct is_integral<unsigned char> : public true_type { };
+	template <> struct is_integral<short> : public true_type { };
+	template <> struct is_integral<unsigned short> : public true_type { };
+	template <> struct is_integral<int> : public true_type { };
+	template <> struct is_integral<unsigned int> : public true_type { };
+	template <> struct is_integral<long> : public true_type { };
+	template <> struct is_integral<unsigned long> : public true_type { };
+	template <> struct is_integral<long long> : public true_type { };
+	template <> struct is_integral<unsigned long long> : public true_type { };
+
+	///enable_if
+	template <bool condition, class T = void>
+	struct enable_if {};
+
+	template <class T>
+	struct enable_if <true, T>
+	{
+		typedef T type;
+	};
+
 }
