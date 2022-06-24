@@ -6,13 +6,13 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/16 18:55:34 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/24 21:57:16 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <string>
-#include <deque>
+//#include <deque>
 #include "template.hpp"
 
 #ifndef TEST
@@ -27,6 +27,7 @@
 	//#include <map.hpp>
 	#include "stack.hpp"
 	#include "vector.hpp"
+	#include "pair.hpp"
 #endif
 
 #include <stdlib.h>
@@ -43,24 +44,24 @@ struct Buffer
 
 #define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
-template<typename T>
-class MutantStack : public ft::stack<T>
-{
-public:
-	MutantStack() {}
-	MutantStack(const MutantStack<T>& src) { *this = src; }
-	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
-	{
-		this->c = rhs.c;
-		return *this;
-	}
-	~MutantStack() {}
+// template<typename T>
+// class MutantStack : public ft::stack<T>
+// {
+// public:
+// 	MutantStack() {}
+// 	MutantStack(const MutantStack<T>& src) { *this = src; }
+// 	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
+// 	{
+// 		this->c = rhs.c;
+// 		return *this;
+// 	}
+// 	~MutantStack() {}
 
-	typedef typename ft::stack<T>::container_type::iterator iterator;
+// 	typedef typename ft::stack<T>::container_type::iterator iterator;
 
-	iterator begin() { return this->c.begin(); }
-	iterator end() { return this->c.end(); }
-};
+// 	iterator begin() { return this->c.begin(); }
+// 	iterator end() { return this->c.end(); }
+// };
 
 
 typedef int myType;
@@ -72,6 +73,8 @@ int	main(void)
 	displayContent(vec);
 	ft::vector<myType>::iterator it = vec.begin();
 	ft::vector<myType>::iterator ite = vec.end();
+	ft::vector<myType>::reverse_iterator rit = vec.rbegin();
+	ft::vector<myType>::reverse_iterator rite = vec.rend();
 	
 	try
 	{
@@ -84,6 +87,10 @@ int	main(void)
 	
 	for (size_t i = 0; it != ite; it++, i++)
 		vec.at(i) = i + 1;
+
+	displayContent(vec);
+	for (size_t i = 0; rit != rite; rit++, i++)
+		std::cout << "i= " << i << " = " << *rit << " ";
 	
 	ft::vector<myType> vec2(vec);
 	displayContent(vec2);
@@ -151,9 +158,9 @@ int	main(void)
 	vec2.erase(it);
 	std::cout << "*it = " << *it << "\n";
 	//const ft::vector<myType> cvector = const_cast<ft::vector<myType>&>(vec2);
-	ft::vector<myType>::iterator cit = vec2.begin();
-	ft::vector<myType>::iterator cite = vec2.end();
-	//*cit = 555;
+	ft::vector<myType>::const_iterator cit = vec2.begin();
+	ft::vector<myType>::const_iterator cite = vec2.end();
+	// *cit = 555;
 	std::cout << "[ ";
 	for (; cit != cite; cit++)
 		std::cout << *cit << " ";
@@ -313,6 +320,8 @@ int	main(void)
 	std::cout << "\nTesting stack\n";
 	
 	ft::stack<myType>	myStack;
+	ft::stack<myType>	my2Stack;
+
 	#if TEST
 		std::cout << "std";
 	#else
@@ -326,6 +335,11 @@ int	main(void)
 				<< "Isempty : " << myStack.empty() << "\n";
 	std::cout << "push(42)\n";
 	myStack.push(42);
+	my2Stack.push(42);
+	std::cout << (myStack < my2Stack) << " < comparison\n";
+	std::cout << (myStack > my2Stack) << " > comparison\n";
+	std::cout << (myStack <= my2Stack) << " <= comparison\n";
+	std::cout << (myStack >= my2Stack) << " >= comparison\n";
 	std::cout << "push(4242)\n";
 	myStack.push(4242);
 	std::cout << "top element: " << myStack.top() << "\n";
@@ -341,6 +355,41 @@ int	main(void)
 		std::cout << "top element: " << myStack.top() << "\n";
 		myStack.pop();
 	}
+	ft::pair<std::string, int> myPair;
+
+	myPair.first = "Key";
+	myPair.second = 42;
+
+	std::cout	<< "Test with pairs\n"
+				<< "myPair.first = " << myPair.first << "\n"
+				<< "myPair.second = " << myPair.second << "\n";
+
+	ft::pair<std::string, int> secondPair =  myPair;
+
+	myPair.first = "Next Test";
+	myPair.second = 4200;
+	
+	std::cout	<< "Test with pairs\n"
+			<< "myPair.first = " << myPair.first << "\n"
+			<< "myPair.second = " << myPair.second << "\n"
+			<< "secondPair.first = " << secondPair.first << "\n"
+			<< "secondPair.second = " << secondPair.second << "\n";
+	ft::pair<std::string, int> thirdPair("Argument constructor", 888);
+	ft::pair<std::string, int> forthPair(thirdPair);
+	std::cout	<< "Test with pairs\n"
+			<< "thirdPair.first = " << thirdPair.first << "\n"
+			<< "thirdPair.second = " << thirdPair.second << "\n"
+			<< "forthPair.first = " << forthPair.first << "\n"
+			<< "forthPair.second = " << forthPair.second << "\n";
+
+	ft::pair <int, float> pairMake;
+	pairMake = ft::make_pair(42, 42.42);
+	std::cout	<< "Test with pairs\n"
+			<< "pairMake.first = " << pairMake.first << "\n"
+			<< "pairMake.second = " << pairMake.second << "\n";
+	std::cout << (myPair == secondPair) << "\n";
+	std::cout << (myPair > secondPair) << "\n";
+	
 	return (0);
 }
 

@@ -6,27 +6,31 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 12:36:54 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/12 10:17:36 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/24 21:47:52 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <iterator>
 #include <cstddef>
+#include "algorithm.hpp"
+#include "reverse_iterator.hpp"
 #include "colors.h"
+
+class reverse_iterator;
 
 namespace ft
 {
-	
-template <class T>
-class iterator
-{
+
+	template <class T, class nonconst_T>
+	class iterator
+	{
 	public:
 		typedef T								value_type;
 		typedef ptrdiff_t						difference_type;
 		typedef T *								pointer;
 		typedef T &								reference;
-		typedef std::random_access_iterator_tag	iterator_category;
+		typedef random_access_iterator_tag		iterator_category;
 
 		iterator(void) : ptr(NULL)
 		{
@@ -45,6 +49,12 @@ class iterator
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[iterator] copy constructor called.\n" << COLOR_DEFAULT;
 			#endif
+		}
+		template <class It>
+		iterator(const iterator<It, nonconst_T>& i,
+		typename ft::enable_if<ft::is_same<It, nonconst_T>::value>::type* = NULL) : ptr(i.address())
+		{
+
 		}
 		~iterator(void)
 		{
@@ -232,6 +242,6 @@ class iterator
 	private:
 
 		T * ptr;
-};
+	};
 
 }

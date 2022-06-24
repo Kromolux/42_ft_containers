@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 11:02:36 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/14 20:14:11 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/24 21:58:37 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 	namespace ft = std;
 #else
 	//#include <map.hpp>
-	//#include <stack.hpp>
+	//#include "stack.hpp"
 	#include "vector.hpp"
 	#include "iterator.hpp"
 #endif
@@ -28,11 +28,11 @@
 template <class T>
 void	displayInfo(ft::vector<T> & vec )
 {
-	#if TEST
-		std::cout << "std";
-	#else
-		std::cout << "ft";
-	#endif
+	// #if TEST
+	// 	std::cout << "std";
+	// #else
+	// 	std::cout << "ft";
+	// #endif
 	std::cout	<< "::vector<" << typeid(T).name() << "> details\n"
 				<< "Capacity: " << vec.capacity() << "\n"
 				<< "Size    : " << vec.size() << "\n"

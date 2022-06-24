@@ -6,15 +6,15 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/16 18:59:10 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/24 21:55:31 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <iostream>
+#include <memory>
 #include "iterator.hpp"
 #include "algorithm.hpp"
-#include <memory>
 #include "colors.h"
 
 namespace ft {
@@ -24,18 +24,18 @@ class vector
 {
 
 	public:
-		typedef	T											value_type;
-		typedef	Alloc										allocator_type;				//defaults to: allocator<value_type>
-		typedef	typename allocator_type::reference			reference;					//for the default allocator: value_type&
-		typedef	typename allocator_type::const_reference	const_reference;			//for the default allocator: const value_type&
-		typedef	typename allocator_type::pointer			pointer;					//for the default allocator: value_type*
-		typedef	typename allocator_type::const_pointer		const_pointer;				//for the default allocator: const value_type*
-		typedef	typename ft::iterator<T>					iterator;					//a random access iterator to value_type convertible to const_iterator
-		typedef	typename ft::iterator<const T>				const_iterator;				//a random access iterator to const value_type
-		typedef	std::reverse_iterator<iterator>				reverse_iterator;			//reverse_iterator<iterator>;
-		typedef	std::reverse_iterator<const_iterator>		const_reverse_iterator;		//reverse_iterator<const_iterator>;
-		typedef	typename allocator_type::difference_type	difference_type;			//a signed integral type, identical to: usually the same as ptrdiff_t
-		typedef	typename allocator_type::size_type			size_type;					//an unsigned integral type that can represent any non-negative value of difference_type usually the same as size_t
+		typedef	T												value_type;
+		typedef	Alloc											allocator_type;				//defaults to: allocator<value_type>
+		typedef	typename allocator_type::reference				reference;					//for the default allocator: value_type&
+		typedef	typename allocator_type::const_reference		const_reference;			//for the default allocator: const value_type&
+		typedef	typename allocator_type::pointer				pointer;					//for the default allocator: value_type*
+		typedef	typename allocator_type::const_pointer			const_pointer;				//for the default allocator: const value_type*
+		typedef	typename ft::iterator<T, T>						iterator;					//a random access iterator to value_type convertible to const_iterator
+		typedef	typename ft::iterator<const T, T>				const_iterator;				//a random access iterator to const value_type
+		typedef	typename ft::reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>;
+		typedef	typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;		//reverse_iterator<const_iterator>;
+		typedef	typename allocator_type::difference_type		difference_type;			//a signed integral type, identical to: usually the same as ptrdiff_t
+		typedef	typename allocator_type::size_type				size_type;					//an unsigned integral type that can represent any non-negative value of difference_type usually the same as size_t
 	
 	protected:
 		allocator_type	mem_control;
@@ -127,12 +127,14 @@ class vector
 			#endif
 			return (iterator(this->mem_start));
 		}
+		//template < class T, class Alloc = std::allocator<T> >
+		//template <const class T>
 		const_iterator begin(void) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[vector] const_iterator begin called.\n" << COLOR_DEFAULT;
 			#endif
-			return (const_cast<ft::vector<const T> >(iterator(this->mem_start)));
+			return (const_iterator(this->mem_start));
 		}
 	//Return iterator to end (public member function )
 		iterator end(void)
@@ -142,6 +144,7 @@ class vector
 			#endif
 			return (iterator(this->mem_start + this->mem_size));
 		}
+		//template <iterator<T
 		const_iterator end(void) const
 		{
 			#if DEBUG
@@ -155,7 +158,7 @@ class vector
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[vector] reverse_iterator rbegin called.\n" << COLOR_DEFAULT;
 			#endif
-			return (reverse_iterator(this->mem_start));
+			return (reverse_iterator(this->mem_start + this->mem_size));
 		}
 		const_reverse_iterator rbegin(void) const
 		{
@@ -170,7 +173,7 @@ class vector
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[vector] reverse_iterator rend called.\n" << COLOR_DEFAULT;
 			#endif
-			return (reverse_iterator(this->mem_start + this->mem_size));
+			return (reverse_iterator(this->mem_start));
 		}
 		const_reverse_iterator rend(void) const
 		{
