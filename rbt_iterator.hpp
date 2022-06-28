@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rbt.hpp                                            :+:      :+:    :+:   */
+/*   rbt_iterator.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/21 13:03:32 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/28 10:02:28 by rkaufman         ###   ########.fr       */
+/*   Created: 2022/06/28 09:52:47 by rkaufman          #+#    #+#             */
+/*   Updated: 2022/06/28 09:57:35 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#include <memory>
+#include <iterator>
+#include <cstddef>
 #include "algorithm.hpp"
-
-//#include "colors.h"
+#include "rbt_reverse_iterator.hpp"
 
 namespace ft
 {
-	class rbt
+	class rbt_iterator
 	{
 		
-	}; // class rbt
-	
+	}; //rbt_iterator
+
 } // namespace ft

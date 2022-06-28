@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 14:38:17 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/24 21:59:37 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/28 10:01:24 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,4 +146,5 @@ namespace ft
 	{
 		static const bool value = true;
 	};
+
 }

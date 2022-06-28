@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 12:36:54 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/24 21:47:52 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/28 09:53:13 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <cstddef>
 #include "algorithm.hpp"
 #include "reverse_iterator.hpp"
-#include "colors.h"
 
 class reverse_iterator;
 

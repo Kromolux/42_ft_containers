@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/24 21:55:31 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/28 10:06:22 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,17 @@
 #include <memory>
 #include "iterator.hpp"
 #include "algorithm.hpp"
-#include "colors.h"
 
-namespace ft {
-
-template < class T, class Alloc = std::allocator<T> >
-class vector
+namespace ft
 {
 
-	public:
+	template <	class T,
+				class Alloc = std::allocator<T>
+				>
+	class vector
+	{
+
+		public:
 		typedef	T												value_type;
 		typedef	Alloc											allocator_type;				//defaults to: allocator<value_type>
 		typedef	typename allocator_type::reference				reference;					//for the default allocator: value_type&
@@ -37,15 +39,15 @@ class vector
 		typedef	typename allocator_type::difference_type		difference_type;			//a signed integral type, identical to: usually the same as ptrdiff_t
 		typedef	typename allocator_type::size_type				size_type;					//an unsigned integral type that can represent any non-negative value of difference_type usually the same as size_t
 	
-	protected:
+		protected:
 		allocator_type	mem_control;
 		pointer			mem_start;
 		size_type		mem_size;
 		size_type		mem_cap;
 
-	public:
-	//Member functions
-	//Construct vector (public member function )
+		public:
+		//Member functions
+		//Construct vector (public member function )
 		explicit vector (const allocator_type & alloc = allocator_type())
 		: mem_control(alloc), mem_start(NULL), mem_size(0), mem_cap(0)
 		{
@@ -91,7 +93,7 @@ class vector
 			// 	mem_control.construct(mem_start + i, x[i]);
 			*this = x;
 		}
-	//Vector destructor (public member function )
+		//Vector destructor (public member function )
 		~vector(void)
 		{
 			#if DEBUG
@@ -100,7 +102,7 @@ class vector
 			MEM_destroy(*this);
 			mem_control.deallocate(mem_start, mem_cap);
 		}
-	//Assign content (public member function )
+		//Assign content (public member function )
 		vector & operator= (const vector & x)
 		{
 			#if DEBUG
@@ -118,8 +120,8 @@ class vector
 				mem_control.construct(mem_start + i, x[i]);
 			return (*this );
 		}
-	//Iterators:
-	//Return iterator to beginning (public member function )
+		//Iterators:
+		//Return iterator to beginning (public member function )
 		iterator begin(void)
 		{
 			#if DEBUG
@@ -136,7 +138,7 @@ class vector
 			#endif
 			return (const_iterator(this->mem_start));
 		}
-	//Return iterator to end (public member function )
+		//Return iterator to end (public member function )
 		iterator end(void)
 		{
 			#if DEBUG
@@ -152,7 +154,7 @@ class vector
 			#endif
 			return (const_iterator(this->mem_start + this->mem_size));
 		}
-	//Return reverse iterator to reverse beginning (public member function )
+		//Return reverse iterator to reverse beginning (public member function )
 		reverse_iterator rbegin(void)
 		{
 			#if DEBUG
@@ -167,7 +169,7 @@ class vector
 			#endif
 			return (const_reverse_iterator(this->mem_start));
 		}
-	//Return reverse iterator to reverse end (public member function )
+		//Return reverse iterator to reverse end (public member function )
 		reverse_iterator rend(void)
 		{
 			#if DEBUG
@@ -182,17 +184,17 @@ class vector
 			#endif
 			return (const_reverse_iterator(this->mem_start + this->mem_size));
 		}
-	//Return const_iterator to beginning (public member function )
+		//Return const_iterator to beginning (public member function )
 		//C++11
-	//Return const_iterator to end (public member function )
+		//Return const_iterator to end (public member function )
 		//C++11
-	//Return const_reverse_iterator to reverse beginning (public member function )
+		//Return const_reverse_iterator to reverse beginning (public member function )
 		//C++11
-	//Return const_reverse_iterator to reverse end (public member function )
+		//Return const_reverse_iterator to reverse end (public member function )
 		//C++11
 
-	//Capacity:
-	//Return size (public member function )
+		//Capacity:
+		//Return size (public member function )
 		size_type size(void) const
 		{
 			#if DEBUG
@@ -200,7 +202,7 @@ class vector
 			#endif
 			return (mem_size);
 		}
-	//Return maximum size (public member function )
+		//Return maximum size (public member function )
 		size_type max_size(void) const
 		{
 			#if DEBUG
@@ -208,7 +210,7 @@ class vector
 			#endif
 			return (this->mem_control.max_size());
 		}
-	//Change size (public member function )
+		//Change size (public member function )
 		void resize (size_type n, value_type val = value_type())
 		{
 			#if DEBUG
@@ -224,7 +226,7 @@ class vector
 			}
 			this->mem_size = n;
 		}
-	//Return size of allocated storage capacity (public member function )
+		//Return size of allocated storage capacity (public member function )
 		size_type capacity(void) const
 		{
 			#if DEBUG
@@ -232,7 +234,7 @@ class vector
 			#endif
 			return (this->mem_cap);
 		}
-	//Test whether vector is empty (public member function )
+		//Test whether vector is empty (public member function )
 		bool empty(void) const
 		{
 			#if DEBUG
@@ -240,7 +242,7 @@ class vector
 			#endif
 			return (this->mem_size == 0);
 		}
-	//Request a change in capacity (public member function )
+		//Request a change in capacity (public member function )
 		void reserve (size_type n)
 		{
 			#if DEBUG
@@ -250,11 +252,11 @@ class vector
 				return ;
 			MEM_reallocate(*this, n);
 		}
-	//Shrink to fit (public member function )
+		//Shrink to fit (public member function )
 		//C++11
 
-	//Element access:
-	//Access element (public member function )
+		//Element access:
+		//Access element (public member function )
 		reference operator[] (size_type n)
 		{
 			#if DEBUG
@@ -269,7 +271,7 @@ class vector
 			#endif
 			return (this->mem_start[n]);
 		}
-	//Access element (public member function )
+		//Access element (public member function )
 		reference at (size_type n)
 		{
 			#if DEBUG
@@ -288,7 +290,7 @@ class vector
 				throw std::out_of_range("vector::Index out of bounds!");
 			return (this->mem_start[n]);
 		}
-	//Access first element (public member function )
+		//Access first element (public member function )
 		reference front(void)
 		{
 			#if DEBUG
@@ -303,7 +305,7 @@ class vector
 			#endif
 			return (this->mem_start[0]);
 		}
-	//Access last element (public member function )
+		//Access last element (public member function )
 		reference back(void)
 		{
 			#if DEBUG
@@ -318,7 +320,7 @@ class vector
 			#endif
 			return (this->mem_start[this->mem_size - 1]);
 		}
-	//Access data (public member function )
+		//Access data (public member function )
 		pointer data()
 		{
 			#if DEBUG
@@ -334,8 +336,8 @@ class vector
 			return (this->mem_start);
 		}
 
-	//Modifiers:
-	//Assign vector content (public member function )
+		//Modifiers:
+		//Assign vector content (public member function )
 
 		//template <typename Integer, ft::enable_if<ft::is_integral<Integer>::value, bool> = true>
 		void assign (size_type n, const value_type& val)
@@ -357,7 +359,7 @@ class vector
 		{
 			help_assign(first, last, ft::is_integral<InputIterator>());
 		}
-	private:
+		private:
 		template <class InputIterator>
 		void	help_assign(InputIterator first, InputIterator last, ft::false_type)
 		{
@@ -391,8 +393,8 @@ class vector
 				this->mem_control.construct(this->mem_start + i, val);
 			this->mem_size = tmp;
 		}
-	public:
-	//Add element at the end (public member function )
+		public:
+		//Add element at the end (public member function )
 		void push_back (const value_type& val)
 		{
 			#if DEBUG
@@ -412,7 +414,7 @@ class vector
 				this->mem_size++;
 			}
 		}
-	//Delete last element (public member function )
+		//Delete last element (public member function )
 		void pop_back(void)
 		{
 			#if DEBUG
@@ -421,7 +423,7 @@ class vector
 			this->mem_size--;
 			mem_control.destroy(this->mem_start + this->mem_size);
 		}
-	//Insert elements (public member function )
+		//Insert elements (public member function )
 		iterator insert (iterator position, const value_type& val)
 		{
 			vector		copy(*this);
@@ -465,7 +467,7 @@ class vector
 		{
 			help_insert(position, first, last, ft::is_integral<InputIterator>());
 		}
-	private:
+		private:
 		template <class InputIterator>
 		void	help_insert(iterator position, InputIterator first, InputIterator last, ft::false_type)
 		{
@@ -552,8 +554,8 @@ class vector
 				}
 			}
 		}
-	public:
-	//Erase elements (public member function )
+		public:
+		//Erase elements (public member function )
 		iterator erase (iterator position)
 		{
 			#if DEBUG
@@ -596,7 +598,7 @@ class vector
 			}
 			return (last);
 		}
-	//Swap content (public member function )
+		//Swap content (public member function )
 		void swap (vector& x)
 		{
 			#if DEBUG
@@ -617,7 +619,7 @@ class vector
 			x.mem_size = tmp_size;
 			x.mem_cap = tmp_cap;
 		}
-	//Clear content (public member function )
+		//Clear content (public member function )
 		void clear(void)
 		{
 			#if DEBUG
@@ -626,13 +628,13 @@ class vector
 			MEM_destroy(*this);
 			this->mem_size = 0;
 		}
-	//Construct and insert element (public member function )
+		//Construct and insert element (public member function )
 		//C++11
-	//Construct and insert element at the end (public member function )
+		//Construct and insert element at the end (public member function )
 		//C++11
 	
-	//Allocator:
-	//Get allocator (public member function )
+		//Allocator:
+		//Get allocator (public member function )
 		allocator_type get_allocator() const
 		{
 			#if DEBUG
@@ -640,7 +642,7 @@ class vector
 			#endif
 			return (this->mem_control);
 		}
-	protected:
+		protected:
 		void	MEM_destroy(vector & x, size_type i = 0)
 		{
 			for (; i < x.mem_size; i++)
@@ -658,59 +660,59 @@ class vector
 			for (size_type i = 0; i < tmp.mem_size; i++)
 				x.mem_control.construct(x.mem_start + i, tmp[i]);
 		}
-};
+	};
 	
 
 	//Non-member function overloads
 	//https://cplusplus.com/reference/vector/vector/operators/
 	//Relational operators for vector (function template )
-		template <class T, class Alloc>
-		bool operator== (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
-		{
-			#if DEBUG
-				std::cout << COLOR_BLUE << "[vector] bool operator== called.\n" << COLOR_DEFAULT;
-			#endif
-			if (lhs.size() == rhs.size())
-				return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
-			return (false);
-		}
-		template <class T, class Alloc>
-		bool operator!= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
-		{
-			#if DEBUG
-				std::cout << COLOR_BLUE << "[vector] bool operator!= called.\n" << COLOR_DEFAULT;
-			#endif
-			if (lhs.size() != rhs.size())
-				return (true);
-			return (!ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
-		}
-		template <class T, class Alloc>
-		bool operator<  (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
-		{
-			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
-		}
-		template <class T, class Alloc>
-		bool operator<= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
-		{
-			return !(rhs < lhs);
-		}
-		template <class T, class Alloc>
-		bool operator>  (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
-		{
-			return (rhs < lhs);
-		}
-		template <class T, class Alloc>
-		bool operator>= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
-		{
-			return !(lhs < rhs);
-		}
+	template <class T, class Alloc>
+	bool operator== (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+	{
+		#if DEBUG
+			std::cout << COLOR_BLUE << "[vector] bool operator== called.\n" << COLOR_DEFAULT;
+		#endif
+		if (lhs.size() == rhs.size())
+			return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+		return (false);
+	}
+	template <class T, class Alloc>
+	bool operator!= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+	{
+		#if DEBUG
+			std::cout << COLOR_BLUE << "[vector] bool operator!= called.\n" << COLOR_DEFAULT;
+		#endif
+		if (lhs.size() != rhs.size())
+			return (true);
+		return (!ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+	template <class T, class Alloc>
+	bool operator<  (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+	{
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+	template <class T, class Alloc>
+	bool operator<= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+	{
+		return !(rhs < lhs);
+	}
+	template <class T, class Alloc>
+	bool operator>  (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+	{
+		return (rhs < lhs);
+	}
+	template <class T, class Alloc>
+	bool operator>= (const ft::vector<T,Alloc> & lhs, const ft::vector<T,Alloc> & rhs)
+	{
+		return !(lhs < rhs);
+	}
 	//Exchange contents of vectors (function template )
-		template <class T, class Alloc>
-		void swap (ft::vector<T,Alloc> & x, ft::vector<T,Alloc> & y)
-		{
-			#if DEBUG
-				std::cout << COLOR_BLUE << "[vector] void swap template called.\n" << COLOR_DEFAULT;
-			#endif
-			x.swap(y);
-		}
+	template <class T, class Alloc>
+	void swap (ft::vector<T,Alloc> & x, ft::vector<T,Alloc> & y)
+	{
+		#if DEBUG
+			std::cout << COLOR_BLUE << "[vector] void swap template called.\n" << COLOR_DEFAULT;
+		#endif
+		x.swap(y);
+	}
 }
