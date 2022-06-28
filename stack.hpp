@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 17:49:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/28 10:07:48 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/28 10:48:00 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,15 @@ namespace ft
 	template <class T, class Container = ft::vector<T> >
 	class stack
 	{
-		protected:
-		container_type	c;
-
 		public:
 		typedef	T			value_type;		//The first template parameter (T)	Type of the elements
 		typedef	Container	container_type;	//The second template parameter (Container)	Type of the underlying container
 		typedef	size_t		size_type;		//an unsigned integral type	usually the same as size_t
 		
+		protected:
+		container_type	c;
+		
+		public:
 		//Member functions
 		//(constructor)
 		explicit stack (const container_type& ctnr = container_type()) : c(ctnr)

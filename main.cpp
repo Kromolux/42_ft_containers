@@ -6,12 +6,13 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/24 21:57:16 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/28 11:22:15 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <string>
+#include <ctime>
 //#include <deque>
 #include "template.hpp"
 
@@ -63,9 +64,137 @@ struct Buffer
 // 	iterator end() { return this->c.end(); }
 // };
 
+typedef struct s_Test {
+	clock_t		start;
+	clock_t		end;
+}				t_Test;
+
+typedef struct s_testTimes {
+	struct s_Test	all;
+	struct s_Test	vector;
+	struct s_Test	stack;
+	struct s_Test	pair;
+}				t_testTime;
+
+static void test_vector(void);
+static void test_stack(void);
+static void test_pair(void);
 
 typedef int myType;
 int	main(void)
+{
+	t_testTime	myTimer;
+	std::string	testCase;
+	#if TEST
+		testCase = "std";
+	#else
+		testCase = "ft";
+	#endif
+
+	myTimer.all.start = clock();
+
+	std::cout << testCase << "::Test started at: " << myTimer.all.start << "\n";
+	
+	myTimer.vector.start = clock();
+	test_vector();
+	myTimer.vector.end = clock();
+	
+	myTimer.stack.start = clock();
+	test_stack();
+	myTimer.stack.end = clock();
+	
+	myTimer.pair.start = clock();
+	test_pair();
+	myTimer.pair.end = clock();
+	
+	myTimer.all.end = clock();
+	
+	std::cout	<< testCase << "::Time all elapsed: " << static_cast<float>(myTimer.all.end - myTimer.all.start) / CLOCKS_PER_SEC
+				<< " seconds\n";
+	std::cout	<< testCase << "::Time vector elapsed: " << static_cast<float>(myTimer.vector.end - myTimer.vector.start) / CLOCKS_PER_SEC
+				<< " seconds\n";
+	std::cout	<< testCase << "::Time stack elapsed: " << static_cast<float>(myTimer.stack.end - myTimer.stack.start) / CLOCKS_PER_SEC
+				<< " seconds\n";
+	std::cout	<< testCase << "::Time pair elapsed: " << static_cast<float>(myTimer.pair.end - myTimer.pair.start) / CLOCKS_PER_SEC
+				<< " seconds\n";
+	return (0);
+}
+
+/*
+int main(int argc, char** argv)
+{
+	if (argc != 2)
+	{
+		std::cerr << "Usage: ./test seed" << std::endl;
+		std::cerr << "Provide a seed please" << std::endl;
+		std::cerr << "Count value:" << COUNT << std::endl;
+		return 1;
+	}
+	const int seed = atoi(argv[1]);
+	srand(seed);
+
+	ft::vector<std::string> vector_str;
+	ft::vector<int> vector_int;
+	ft::stack<int> stack_int;
+	ft::vector<Buffer> vector_buffer;
+	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
+	ft::map<int, int> map_int;
+
+	for (int i = 0; i < COUNT; i++)
+	{
+		vector_buffer.push_back(Buffer());
+	}
+
+	for (int i = 0; i < COUNT; i++)
+	{
+		const int idx = rand() % COUNT;
+		vector_buffer[idx].idx = 5;
+	}
+	ft::vector<Buffer>().swap(vector_buffer);
+
+	try
+	{
+		for (int i = 0; i < COUNT; i++)
+		{
+			const int idx = rand() % COUNT;
+			vector_buffer.at(idx);
+			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
+		}
+	}
+	catch(const std::exception& e)
+	{
+		//NORMAL ! :P
+	}
+	
+	for (int i = 0; i < COUNT; ++i)
+	{
+		map_int.insert(ft::make_pair(rand(), rand()));
+	}
+
+	int sum = 0;
+	for (int i = 0; i < 10000; i++)
+	{
+		int access = rand();
+		sum += map_int[access];
+	}
+	std::cout << "should be constant with the same seed: " << sum << std::endl;
+
+	{
+		ft::map<int, int> copy = map_int;
+	}
+	MutantStack<char> iterable_stack;
+	for (char letter = 'a'; letter <= 'z'; letter++)
+		iterable_stack.push(letter);
+	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
+	{
+		std::cout << *it;
+	}
+	std::cout << std::endl;
+	return (0);
+}
+*/
+
+static void test_vector(void)
 {
 	ft::vector<myType> vec(5);
 
@@ -317,6 +446,10 @@ int	main(void)
 	ft::vector<myType> vec3(it, ite);
 	displayInfo(vec3);
 	displayContent(vec3);
+}
+
+static void test_stack(void)
+{
 	std::cout << "\nTesting stack\n";
 	
 	ft::stack<myType>	myStack;
@@ -355,6 +488,10 @@ int	main(void)
 		std::cout << "top element: " << myStack.top() << "\n";
 		myStack.pop();
 	}
+}
+
+static void test_pair(void)
+{
 	ft::pair<std::string, int> myPair;
 
 	myPair.first = "Key";
@@ -389,80 +526,4 @@ int	main(void)
 			<< "pairMake.second = " << pairMake.second << "\n";
 	std::cout << (myPair == secondPair) << "\n";
 	std::cout << (myPair > secondPair) << "\n";
-	
-	return (0);
 }
-
-/*
-int main(int argc, char** argv)
-{
-	if (argc != 2)
-	{
-		std::cerr << "Usage: ./test seed" << std::endl;
-		std::cerr << "Provide a seed please" << std::endl;
-		std::cerr << "Count value:" << COUNT << std::endl;
-		return 1;
-	}
-	const int seed = atoi(argv[1]);
-	srand(seed);
-
-	ft::vector<std::string> vector_str;
-	ft::vector<int> vector_int;
-	ft::stack<int> stack_int;
-	ft::vector<Buffer> vector_buffer;
-	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
-	ft::map<int, int> map_int;
-
-	for (int i = 0; i < COUNT; i++)
-	{
-		vector_buffer.push_back(Buffer());
-	}
-
-	for (int i = 0; i < COUNT; i++)
-	{
-		const int idx = rand() % COUNT;
-		vector_buffer[idx].idx = 5;
-	}
-	ft::vector<Buffer>().swap(vector_buffer);
-
-	try
-	{
-		for (int i = 0; i < COUNT; i++)
-		{
-			const int idx = rand() % COUNT;
-			vector_buffer.at(idx);
-			std::cerr << "Error: THIS VECTOR SHOULD BE EMPTY!!" <<std::endl;
-		}
-	}
-	catch(const std::exception& e)
-	{
-		//NORMAL ! :P
-	}
-	
-	for (int i = 0; i < COUNT; ++i)
-	{
-		map_int.insert(ft::make_pair(rand(), rand()));
-	}
-
-	int sum = 0;
-	for (int i = 0; i < 10000; i++)
-	{
-		int access = rand();
-		sum += map_int[access];
-	}
-	std::cout << "should be constant with the same seed: " << sum << std::endl;
-
-	{
-		ft::map<int, int> copy = map_int;
-	}
-	MutantStack<char> iterable_stack;
-	for (char letter = 'a'; letter <= 'z'; letter++)
-		iterable_stack.push(letter);
-	for (MutantStack<char>::iterator it = iterable_stack.begin(); it != iterable_stack.end(); it++)
-	{
-		std::cout << *it;
-	}
-	std::cout << std::endl;
-	return (0);
-}
-*/
