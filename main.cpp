@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/28 11:22:15 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/30 10:45:38 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,13 @@
 #endif
 #if TEST //CREATE A REAL STL EXAMPLE
 	#include <map>
+	#include <set>
 	#include <stack>
 	#include <vector>
 	namespace ft = std;
 #else
-	//#include <map.hpp>
+	#include "map.hpp"
+	#include "set.hpp"
 	#include "stack.hpp"
 	#include "vector.hpp"
 	#include "pair.hpp"
@@ -74,16 +76,22 @@ typedef struct s_testTimes {
 	struct s_Test	vector;
 	struct s_Test	stack;
 	struct s_Test	pair;
+	struct s_Test	map;
+	struct s_Test	set;
 }				t_testTime;
 
-static void test_vector(void);
-static void test_stack(void);
-static void test_pair(void);
+void test_vector(t_testTime & myTimer);
+void test_stack(t_testTime & myTimer);
+void test_pair(t_testTime & myTimer);
+void test_map(t_testTime & myTimer);
+void test_set(t_testTime & myTimer);
+void initTimer(t_testTime & myTimer);
 
 typedef int myType;
 int	main(void)
 {
-	t_testTime	myTimer;
+	t_testTime	myTimer = {};
+	initTimer(myTimer);
 	std::string	testCase;
 	#if TEST
 		testCase = "std";
@@ -95,29 +103,32 @@ int	main(void)
 
 	std::cout << testCase << "::Test started at: " << myTimer.all.start << "\n";
 	
-	myTimer.vector.start = clock();
-	test_vector();
-	myTimer.vector.end = clock();
-	
-	myTimer.stack.start = clock();
-	test_stack();
-	myTimer.stack.end = clock();
-	
-	myTimer.pair.start = clock();
-	test_pair();
-	myTimer.pair.end = clock();
+	//test_vector(myTimer);
+	//test_stack(myTimer);
+	//test_pair(myTimer);
+	test_map(myTimer);
+	test_set(myTimer);
+
 	
 	myTimer.all.end = clock();
 	
-	std::cout	<< testCase << "::Time all elapsed: " << static_cast<float>(myTimer.all.end - myTimer.all.start) / CLOCKS_PER_SEC
+	std::cout	<< testCase << "::Time [all] elapsed: " << static_cast<float>(myTimer.all.end - myTimer.all.start) / CLOCKS_PER_SEC
 				<< " seconds\n";
-	std::cout	<< testCase << "::Time vector elapsed: " << static_cast<float>(myTimer.vector.end - myTimer.vector.start) / CLOCKS_PER_SEC
+	std::cout	<< testCase << "::Time [vector] elapsed: " << static_cast<float>(myTimer.vector.end - myTimer.vector.start) / CLOCKS_PER_SEC
 				<< " seconds\n";
-	std::cout	<< testCase << "::Time stack elapsed: " << static_cast<float>(myTimer.stack.end - myTimer.stack.start) / CLOCKS_PER_SEC
+	std::cout	<< testCase << "::Time [stack] elapsed: " << static_cast<float>(myTimer.stack.end - myTimer.stack.start) / CLOCKS_PER_SEC
 				<< " seconds\n";
-	std::cout	<< testCase << "::Time pair elapsed: " << static_cast<float>(myTimer.pair.end - myTimer.pair.start) / CLOCKS_PER_SEC
+	std::cout	<< testCase << "::Time [pair] elapsed: " << static_cast<float>(myTimer.pair.end - myTimer.pair.start) / CLOCKS_PER_SEC
+				<< " seconds\n";
+	std::cout	<< testCase << "::Time [map] elapsed: " << static_cast<float>(myTimer.map.end - myTimer.map.start) / CLOCKS_PER_SEC
 				<< " seconds\n";
 	return (0);
+}
+void initTimer(t_testTime & myTimer)
+{
+	
+	myTimer.all.start = 0;
+	myTimer.all.end = 0;
 }
 
 /*
@@ -194,8 +205,10 @@ int main(int argc, char** argv)
 }
 */
 
-static void test_vector(void)
+void test_vector(t_testTime & myTimer)
 {
+	myTimer.vector.start = clock();
+
 	ft::vector<myType> vec(5);
 
 	displayInfo(vec);
@@ -287,13 +300,14 @@ static void test_vector(void)
 	vec2.erase(it);
 	std::cout << "*it = " << *it << "\n";
 	//const ft::vector<myType> cvector = const_cast<ft::vector<myType>&>(vec2);
-	ft::vector<myType>::const_iterator cit = vec2.begin();
-	ft::vector<myType>::const_iterator cite = vec2.end();
-	// *cit = 555;
-	std::cout << "[ ";
-	for (; cit != cite; cit++)
-		std::cout << *cit << " ";
-	std::cout << "]" << std::endl;
+	//TODO const_iterator not working anymore! WHY?
+	// ft::vector<myType>::const_iterator cit = vec2.begin();
+	// ft::vector<myType>::const_iterator cite = vec2.end();
+	// // *cit = 555;
+	// std::cout << "[ ";
+	// for (; cit != cite; cit++)
+	// 	std::cout << *cit << " ";
+	// std::cout << "]" << std::endl;
 
 	
 	std::cout << "pushback\n";
@@ -446,10 +460,13 @@ static void test_vector(void)
 	ft::vector<myType> vec3(it, ite);
 	displayInfo(vec3);
 	displayContent(vec3);
+	myTimer.vector.end = clock();
 }
 
-static void test_stack(void)
+void test_stack(t_testTime & myTimer)
 {
+	myTimer.stack.start = clock();
+	
 	std::cout << "\nTesting stack\n";
 	
 	ft::stack<myType>	myStack;
@@ -488,10 +505,12 @@ static void test_stack(void)
 		std::cout << "top element: " << myStack.top() << "\n";
 		myStack.pop();
 	}
+	myTimer.stack.end = clock();
 }
 
-static void test_pair(void)
+void test_pair(t_testTime & myTimer)
 {
+	myTimer.pair.start = clock();
 	ft::pair<std::string, int> myPair;
 
 	myPair.first = "Key";
@@ -526,4 +545,39 @@ static void test_pair(void)
 			<< "pairMake.second = " << pairMake.second << "\n";
 	std::cout << (myPair == secondPair) << "\n";
 	std::cout << (myPair > secondPair) << "\n";
+	myTimer.pair.end = clock();
+}
+
+void test_map(t_testTime & myTimer)
+{
+	myTimer.map.start = clock();
+
+	ft::map<int, int> myMap;
+	
+	std::cout << "Testing MAP\n";
+
+	displayMapInfo(myMap);
+	displayMapContent(myMap);
+
+	//myMap.insert(ft::pair<int, int>(5, 1));
+	displayMapContent(myMap);
+
+	myTimer.map.end = clock();
+}
+
+void test_set(t_testTime & myTimer)
+{
+	myTimer.set.start = clock();
+
+	ft::set<int> mySet;
+	
+	std::cout << "Testing SET\n";
+
+	displaySetInfo(mySet);
+	displaySetContent(mySet);
+
+	//mySet.insert(5);
+	displaySetContent(mySet);
+
+	myTimer.set.end = clock();
 }

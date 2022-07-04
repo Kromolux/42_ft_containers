@@ -6,17 +6,19 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 12:36:54 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/28 09:53:13 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/30 10:46:08 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <iterator>
 #include <cstddef>
-#include "algorithm.hpp"
 #include "reverse_iterator.hpp"
+#include "algorithm.hpp"
+
 
 class reverse_iterator;
+class algorithm;
 
 namespace ft
 {
@@ -24,13 +26,17 @@ namespace ft
 	template <class T, class nonconst_T>
 	class iterator
 	{
-	public:
+		public:
 		typedef T								value_type;
 		typedef ptrdiff_t						difference_type;
 		typedef T *								pointer;
 		typedef T &								reference;
 		typedef random_access_iterator_tag		iterator_category;
 
+		private:
+		T * ptr;
+
+		public:
 		iterator(void) : ptr(NULL)
 		{
 			#if DEBUG
@@ -49,12 +55,14 @@ namespace ft
 				std::cout << COLOR_GREEN << "[iterator] copy constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
-		template <class It>
-		iterator(const iterator<It, nonconst_T>& i,
-		typename ft::enable_if<ft::is_same<It, nonconst_T>::value>::type* = NULL) : ptr(i.address())
-		{
-
-		}
+		// template <class It>
+		// iterator(const iterator<It, nonconst_T>& i,
+		// typename ft::enable_if<ft::is_same<It, nonconst_T>::value>::type* = NULL) : ptr(i.address())
+		// {
+		// 	#if DEBUG
+		// 		std::cout << COLOR_GREEN << "[iterator] const constructor called.\n" << COLOR_DEFAULT;
+		// 	#endif
+		// }
 		~iterator(void)
 		{
 			#if DEBUG
@@ -73,7 +81,7 @@ namespace ft
 		{
 			return (this->ptr);
 		}
-		iterator &	operator++()
+		iterator &	operator++(void)
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] operator++() called.\n" << COLOR_DEFAULT;
@@ -90,7 +98,7 @@ namespace ft
 			this->ptr++;
 			return (tmp);
 		}
-		iterator &	operator--()
+		iterator &	operator--(void)
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] operator--() called.\n" << COLOR_DEFAULT;
@@ -236,11 +244,7 @@ namespace ft
 			this->ptr += n;
 			return (*this);
 		}
-	protected:
 
-	private:
-
-		T * ptr;
 	};
 
 }

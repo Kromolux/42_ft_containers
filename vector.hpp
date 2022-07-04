@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/28 10:06:22 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/06/30 09:44:38 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[vector] size called.\n" << COLOR_DEFAULT;
 			#endif
-			return (mem_size);
+			return (this->mem_size);
 		}
 		//Return maximum size (public member function )
 		size_type max_size(void) const
@@ -511,6 +511,9 @@ namespace ft
 					this->mem_control.construct(this->mem_start + i, copy[ii]);
 				}
 			}
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] insert iterator range called.\n" << COLOR_DEFAULT;
+			#endif
 		}
 		void 	help_insert(iterator position, size_type n, const value_type& val, ft::true_type)
 		{
@@ -553,6 +556,9 @@ namespace ft
 					this->mem_control.construct(this->mem_start + i, copy[pos]);
 				}
 			}
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] insert iterator n val called.\n" << COLOR_DEFAULT;
+			#endif
 		}
 		public:
 		//Erase elements (public member function )
