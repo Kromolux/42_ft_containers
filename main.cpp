@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/30 10:45:38 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/06 16:18:40 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@
 	#include "set.hpp"
 	#include "stack.hpp"
 	#include "vector.hpp"
-	#include "pair.hpp"
 #endif
 
 #include <stdlib.h>
@@ -107,7 +106,7 @@ int	main(void)
 	//test_stack(myTimer);
 	//test_pair(myTimer);
 	test_map(myTimer);
-	test_set(myTimer);
+	//test_set(myTimer);
 
 	
 	myTimer.all.end = clock();
@@ -557,10 +556,29 @@ void test_map(t_testTime & myTimer)
 	std::cout << "Testing MAP\n";
 
 	displayMapInfo(myMap);
+	myMap.insert(ft::pair<int, int>(50, 1));
+	myMap.insert(ft::pair<int, int>(30, 2));
+	myMap.insert(ft::pair<int, int>(70, 3));
+	myMap.insert(ft::pair<int, int>(20, 4));
+	myMap.insert(ft::pair<int, int>(80, 5));
+	myMap.insert(ft::pair<int, int>(40, 6));
+	myMap.insert(ft::pair<int, int>(60, 7));
+	myMap.insert(ft::pair<int, int>(31, 8));
+	myMap.insert(ft::pair<int, int>(55, 9));
+	myMap.insert(ft::pair<int, int>(75, 10));
+	displayMapInfo(myMap);
+	// ft::map<int, int>::iterator it = myMap.begin();
+	// ft::map<int, int>::iterator ite = myMap.end();
+	// --ite;
+	// while (it != ite)
+	// {
+	// 	std::cout << "begin points to: " << it->first << ":" << it->second << " end points to: " << ite->first << ":" << ite->second << "\n";
+	// 	++it;
+	// }
 	displayMapContent(myMap);
 
 	//myMap.insert(ft::pair<int, int>(5, 1));
-	displayMapContent(myMap);
+	//displayMapContent(myMap);
 
 	myTimer.map.end = clock();
 }
@@ -574,10 +592,10 @@ void test_set(t_testTime & myTimer)
 	std::cout << "Testing SET\n";
 
 	displaySetInfo(mySet);
-	displaySetContent(mySet);
+	//displaySetContent(mySet);
 
 	//mySet.insert(5);
-	displaySetContent(mySet);
+	//displaySetContent(mySet);
 
 	myTimer.set.end = clock();
 }

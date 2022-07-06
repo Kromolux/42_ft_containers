@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   set.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:38:15 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/01 11:08:03 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/06 14:29:25 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#include "rbt.hpp"
+#include "RBT.hpp"
+#include "rbt_iterator.hpp"
 
 namespace ft
 {
@@ -39,7 +40,7 @@ namespace ft
 		typedef typename allocator_type::size_type					size_type;				//an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
 
 		private:
-		rbt<T, Compare, Alloc> c;
+		RBT<T, T, Compare, Alloc> c;
 		
 		public:
 		//Member functions

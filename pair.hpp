@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pair.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 13:07:48 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/23 15:37:13 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/06 12:48:53 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,35 @@
 
 namespace ft {
 
-	template <class T1, class T2> struct pair
+	template <class T1, class T2>
+	class pair
 	{
-			typedef T1	first_type;
-			typedef T2	second_type;
+		public:
+		typedef T1	first_type;
+		typedef T2	second_type;
 
-			T1	first;
-			T2	second;
+		first_type	first;
+		second_type	second;
 
-			pair(void) : first(T1()), second(T2())
-			{}
+		pair(void) : first(), second()
+		{}
 
-			template<class U, class V>
-			pair (const pair<U,V>& pr) : first(pr.first), second(pr.second)
-			{}
+		template<class U, class V>
+		pair (const pair<U, V> & pr) : first(pr.first), second(pr.second)
+		{}
 
-			pair (const first_type& a, const second_type& b) : first(a), second(b)
-			{}
+		pair (const first_type& a, const second_type& b) : first(a), second(b)
+		{}
 
-			// implicitly declared:
-			pair & operator= (const pair & pr)
-			{
-				this->first = pr.first;
-				this->second = pr.second;
-				return (*this);
-			}
-		
-			//C++11 void swap (pair& pr) noexcept ( noexcept(swap(first,pr.first)) && noexcept(swap(second,pr.second)) );
+		// implicitly declared:
+		pair & operator= (const pair & pr)
+		{
+			this->first = pr.first;
+			this->second = pr.second;
+			return (*this);
+		}
+	
+		//C++11 void swap (pair& pr) noexcept ( noexcept(swap(first,pr.first)) && noexcept(swap(second,pr.second)) );
 
 	};
 

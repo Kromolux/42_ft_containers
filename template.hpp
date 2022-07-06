@@ -3,26 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   template.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 11:02:36 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/30 11:02:08 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/06 15:19:43 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #if TEST //CREATE A REAL STL EXAMPLE
+	#include <map>
+	#include <set>
 	#include <vector>
 	#include <iterator>
 	namespace ft = std;
 #else
 	#include "set.hpp"
-	#include <set>
+	//#include <set>
 	#include "map.hpp"
-	#include <map>
+	//#include <map>
 	#include "stack.hpp"
 	#include "vector.hpp"
-	#include "iterator.hpp"
+	//#include "iterator.hpp"
 #endif
 
 #include <iostream>
@@ -75,12 +77,12 @@ void	displayMapInfo(ft::map<T1, T2> & myMap)
 template <class T1, class T2>
 void	displayMapContent(ft::map<T1, T2> & myMap)
 {
-	typename std::map<T1, T2>::iterator it = myMap.begin();
-	typename std::map<T1, T2>::iterator ite = myMap.end();
+	typename ft::map<T1, T2>::iterator it = myMap.begin();
+	typename ft::map<T1, T2>::iterator ite = myMap.end();
 
-	std::cout << "[ ";
+	std::cout << "map content = [ ";
 	for (; it != ite; it++)
-		std::cout << *it.first << ":" << *it.second << " ";
+		std::cout << it->first << ":" << it->second << " ";
 	std::cout << "]" << std::endl;
 }
 
@@ -102,8 +104,8 @@ void	displaySetInfo(ft::set<T> & mySet)
 template <class T>
 void	displaySetContent(ft::set<T> & mySet)
 {
-	typename std::set<T>::iterator it = mySet.begin();
-	typename std::set<T>::iterator ite = mySet.end();
+	typename ft::set<T>::iterator it = mySet.begin();
+	typename ft::set<T>::iterator ite = mySet.end();
 
 	std::cout << "[ ";
 	for (; it != ite; it++)

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/30 12:07:03 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/06 16:36:34 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#include "rbt.hpp"
-#include "pair.hpp"
+#include "RBT.hpp"
+#include "rbt_iterator.hpp"
 
 namespace ft
 {
@@ -20,7 +20,7 @@ namespace ft
 	template <	class Key,											// map::key_type
 				class T,											// map::mapped_type
 				class Compare = std::less<Key>,						// map::key_compare
-				class Alloc = std::allocator<pair<const Key,T> >	// map::allocator_type
+				class Alloc = std::allocator<ft::pair<const Key,T> >	// map::allocator_type
 				>
 	class map
 	{
@@ -35,15 +35,15 @@ namespace ft
 		typedef typename allocator_type::const_reference			const_reference;			//for the default allocator: const value_type&
 		typedef typename allocator_type::pointer					pointer;					//for the default allocator: value_type*
 		typedef typename allocator_type::const_pointer				const_pointer;				//for the default allocator: const value_type*
-		typedef typename ft::rbt_iterator<T, T>						iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
-		typedef typename ft::rbt_iterator<const T, T>				const_iterator;				//a bidirectional iterator to const value_type
+		typedef typename ft::rbt_iterator<Key, T>					iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
+		typedef typename ft::rbt_iterator<const Key, T>				const_iterator;				//a bidirectional iterator to const value_type
 		typedef typename ft::rbt_reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>
 		typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;		//reverse_iterator<const_iterator>
 		typedef typename allocator_type::difference_type			difference_type;			//a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
 		typedef typename allocator_type::size_type					size_type;					//an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
 	
 		private:
-		rbt<Key, Compare, Alloc> c;
+		RBT<Key, T, Compare, Alloc> c;
 
 		public:
 		//***Member functions
@@ -99,14 +99,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] iterator begin called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.begin());
+			return (iterator(this->c.begin(), this->c.begin(), this->c.end()));
 		}
 		const_iterator begin() const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const_iterator begin called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.begin());
+			return (const_iterator(this->c.begin(), this->c.begin(), this->c.end()));
 		}
 		//Return iterator to end (public member function )
 		iterator end(void)
@@ -114,14 +114,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] iterator end called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.end());
+			return (iterator(NULL, this->c.begin(), this->c.end()));
 		}
 		const_iterator end(void) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const_iterator end called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.end());
+			return (const_iterator(NULL, this->c.begin(), this->c.end()));
 		}
 		//Return reverse iterator to reverse beginning (public member function )
 		reverse_iterator rbegin(void)
@@ -129,14 +129,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] reverse_iterator rbegin called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.rbegin());
+			return (reverse_iterator(this->c.rbegin(), this->c.begin(), this->c.end()));
 		}
 		const_reverse_iterator rbegin(void) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const_reverse_iterator rbegin called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.rbegin());
+			return (const_reverse_iterator(this->c.rbegin(), this->c.begin(), this->c.end()));
 		}
 		//Return reverse iterator to reverse end (public member function )
 		reverse_iterator rend(void)
@@ -144,14 +144,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] reverse_iterator rend called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.rend());
+			return (reverse_iterator(NULL, this->c.begin(), this->c.end()));
 		}
 		const_reverse_iterator rend(void) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const_reverse_iterator rend called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.rend());
+			return (const_reverse_iterator(NULL, this->c.begin(), this->c.end()));
 		}
 		//Return const_iterator to beginning (public member function )
 		// C++ 11
@@ -210,9 +210,13 @@ namespace ft
 		pair<iterator, bool> insert (const value_type& val)
 		{
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[map] insert value called.\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[map] insert value called [Key:Val] [" << val.first << ":" << val.second << "]\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.insert(val));
+			iterator it(this->c.addNode(val), this->c.begin(), this->c.end());
+			if (it != iterator())
+				return (ft::make_pair(it, true));
+			else
+				return (ft::make_pair(it, false));
 		}
 
 		iterator insert (iterator position, const value_type& val);
