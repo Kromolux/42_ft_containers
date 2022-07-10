@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/06 16:18:40 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/10 21:31:39 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -566,15 +566,54 @@ void test_map(t_testTime & myTimer)
 	myMap.insert(ft::pair<int, int>(31, 8));
 	myMap.insert(ft::pair<int, int>(55, 9));
 	myMap.insert(ft::pair<int, int>(75, 10));
+	myMap.insert(ft::pair<int, int>(53, 11));
+	myMap.insert(ft::pair<int, int>(76, 12));
+	myMap.insert(ft::pair<int, int>(35, 13));
+	myMap.insert(ft::pair<int, int>(57, 14));
+	// myMap.insert(ft::pair<int, int>(50, 1));
+	// myMap.insert(ft::pair<int, int>(70, 2));
+	// myMap.insert(ft::pair<int, int>(80, 3));
+	// myMap.insert(ft::pair<int, int>(90, 4));
+	// myMap.insert(ft::pair<int, int>(100, 5));
+	// myMap.insert(ft::pair<int, int>(50, 1));
+	// myMap.insert(ft::pair<int, int>(40, 2));
+	// myMap.insert(ft::pair<int, int>(30, 3));
+	// myMap.insert(ft::pair<int, int>(20, 4));
+	// myMap.insert(ft::pair<int, int>(10, 5));
 	displayMapInfo(myMap);
-	// ft::map<int, int>::iterator it = myMap.begin();
-	// ft::map<int, int>::iterator ite = myMap.end();
-	// --ite;
+	displayMapContent(myMap);
+	std::cout << "iterator test start\n";
+	ft::map<int, int>::iterator it = myMap.begin();
+	std::cout << "iterator created it begin\n";
+	ft::map<int, int>::iterator ite = myMap.end();
+	std::cout << "iterator tests\n";
+	//--ite;
+	while (it != ite)
+	{
+		std::cout << it->first << ":" << it->second << " ";
+		++it;
+	}
+	//++it;
+	// std::cout << "\n using the same iterators by incrementing it again going forwards\n";
 	// while (it != ite)
 	// {
-	// 	std::cout << "begin points to: " << it->first << ":" << it->second << " end points to: " << ite->first << ":" << ite->second << "\n";
+	// 	std::cout << it->first << ":" << it->second << " ";
 	// 	++it;
 	// }
+	// --it;
+	//it = myMap.end();
+	--it;
+	std::cout << "\n";
+	ite = myMap.begin();
+	--ite;
+	//std::cout << "\n using the same iterators by decremeting it againg going backwards\n";
+	while (it != ite)
+	{
+		std::cout << it->first << ":" << it->second << " ";
+		--it;
+	}
+	std::cout << "\ndone with iterators\n";
+	
 	displayMapContent(myMap);
 
 	//myMap.insert(ft::pair<int, int>(5, 1));

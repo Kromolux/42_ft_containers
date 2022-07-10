@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 11:02:36 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/06 15:19:43 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/10 21:04:49 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	displayContent(ft::vector<T> & vec)
 	typename ft::vector<T>::iterator ite = vec.end();
 
 	std::cout << "[ ";
-	for (; it != ite; it++)
+	for (; it != ite; ++it)
 		std::cout << *it << " ";
 	std::cout << "]" << std::endl;
 }
@@ -81,7 +81,7 @@ void	displayMapContent(ft::map<T1, T2> & myMap)
 	typename ft::map<T1, T2>::iterator ite = myMap.end();
 
 	std::cout << "map content = [ ";
-	for (; it != ite; it++)
+	for (; it != ite; ++it)
 		std::cout << it->first << ":" << it->second << " ";
 	std::cout << "]" << std::endl;
 }
@@ -108,7 +108,7 @@ void	displaySetContent(ft::set<T> & mySet)
 	typename ft::set<T>::iterator ite = mySet.end();
 
 	std::cout << "[ ";
-	for (; it != ite; it++)
+	for (; it != ite; ++it)
 		std::cout << *it << " ";
 	std::cout << "]" << std::endl;
 }

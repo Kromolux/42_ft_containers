@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 09:52:47 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/06 16:26:29 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/10 20:59:05 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,9 +178,27 @@ namespace ft
 				this->ptr = tmp;
 			}
 		}
-		void decrement(rbt_iterator & iter)
+		
+		void decrement(void)
 		{
-			(void) iter;
+			if (!this->ptr)
+				this->ptr = this->biggest;
+			else if (this->ptr->left)
+			{
+				this->ptr = this->ptr->left;
+				while (this->ptr->right)
+					this->ptr = this->ptr->right;
+			}
+			else
+			{
+				node_type tmp = this->ptr->parent;
+				while (tmp && this->ptr == tmp->left)
+				{
+					this->ptr = tmp;
+					tmp = tmp->parent;
+				}
+				this->ptr = tmp;
+			}
 		}
 	}; //rbt_iterator
 
