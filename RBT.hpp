@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 13:03:32 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/10 21:02:03 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/11 10:29:26 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,17 +254,19 @@ namespace ft
 
 		//***Element access:
 		//operator[] Access element (public member function )
-		mapped_type& operator[] (const key_type& k)
-		{
-			#if DEBUG
-				std::cout << COLOR_YELLOW << "[RBT] reference operator[] called.\n" << COLOR_DEFAULT;
-			#endif
-			//TODO
-			node * tmp = findNode(k);
-			if (tmp)
-				return (tmp->data->second);
-			return (NULL);
-		}
+		// mapped_type& operator[] (const key_type& k)
+		// {
+		// 	#if DEBUG
+		// 		std::cout << COLOR_YELLOW << "[RBT] reference operator[] called.\n" << COLOR_DEFAULT;
+		// 	#endif
+		// 	//TODO
+		// 	node * tmp = findNode(k);
+		// 	if (tmp)
+		// 		return (tmp->data.second);
+		// 	V value = {};
+		// 	tmp = addNode(ft::pair<K, V>(k, value));
+		// 	return (tmp->data.second);
+		// }
 		//at Access element (public member function )
 		// C++ 11
 		
@@ -425,15 +427,17 @@ namespace ft
 		// 	(void) k;
 		// 	return (const_iterator(NULL));
 		// }
-		// //Count elements with a specific key (public member function )
-		// size_type count (const key_type& k) const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] count called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	(void) k;
-		// 	return (0);
-		// }
+		//Count elements with a specific key (public member function )
+		size_type count (const key_type& k) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[RBT] count called.\n" << COLOR_DEFAULT;
+			#endif
+			node *nd = this->findNode(k);
+			if (nd)
+				return (1);
+			return (0);
+		}
 		// //Return iterator to lower bound (public member function )
 		// iterator lower_bound (const key_type& k)
 		// {
@@ -779,21 +783,7 @@ namespace ft
 			//this->mem_control.deallocate(nd->data, 1);
 			this->mem_node_control.deallocate(nd, 1);
 		}
-		node * findNode(const K & k)
-		{
-			node *tmp = this->root;
-
-			while (tmp)
-			{
-				if (tmp->data.first == k)
-					return (tmp);
-				if (k < tmp->data.first)
-					tmp = tmp->left;
-				else
-					tmp = tmp->right;
-			}
-			return (tmp);
-		}
+		
 		node * getSibling(node & nd) const
 		{
 			if (nd->parent == NULL)
@@ -827,6 +817,58 @@ namespace ft
 			if (nd->right)
 				clearTree(nd->right);
 			deleteNode(nd);
+		}
+		public:
+		node * findNode(const K & k)
+		{
+			node *tmp = this->root;
+
+			while (tmp)
+			{
+				if (tmp->data.first == k)
+					return (tmp);
+				if (k < tmp->data.first)
+					tmp = tmp->left;
+				else
+					tmp = tmp->right;
+			}
+			return (tmp);
+		}
+		int	height(void)
+		{
+			if (this->root == NULL)
+				return (0);
+			return (height(this->root) - 1);
+		}
+
+		int	height(node * nd)
+		{
+			if (nd == NULL)
+				return (0);
+			int	leftHeight = height(nd->left) + 1;
+			int	rightHeight = height(nd->right) + 1;
+			if (leftHeight > rightHeight)
+				return (leftHeight);
+			return (rightHeight);
+		}
+		
+		int	blackNodes(void)
+		{
+			return (blackNodes(this->root));
+		}
+		
+		int	blackNodes(node * nd)
+		{
+			if (nd == NULL)
+				return (1);
+			int	rightBlackNodes = blackNodes(nd->right);
+			int	leftBlackNodes = blackNodes(nd->left);
+			if (rightBlackNodes != leftBlackNodes)
+				// throw error fix the tree
+				std::cout << "imbalance in RBT!\n";
+			if (nd->isBlack)
+				++leftBlackNodes;
+			return (leftBlackNodes);
 		}
 	}; // class RBT
 	

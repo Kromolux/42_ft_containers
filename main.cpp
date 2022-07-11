@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/10 21:31:39 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/11 10:33:48 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ typedef int myType;
 int	main(void)
 {
 	t_testTime	myTimer = {};
-	initTimer(myTimer);
+	//initTimer(myTimer);
 	std::string	testCase;
 	#if TEST
 		testCase = "std";
@@ -121,13 +121,9 @@ int	main(void)
 				<< " seconds\n";
 	std::cout	<< testCase << "::Time [map] elapsed: " << static_cast<float>(myTimer.map.end - myTimer.map.start) / CLOCKS_PER_SEC
 				<< " seconds\n";
+	std::cout	<< testCase << "::Time [set] elapsed: " << static_cast<float>(myTimer.set.end - myTimer.set.start) / CLOCKS_PER_SEC
+				<< " seconds\n";
 	return (0);
-}
-void initTimer(t_testTime & myTimer)
-{
-	
-	myTimer.all.start = 0;
-	myTimer.all.end = 0;
 }
 
 /*
@@ -556,20 +552,26 @@ void test_map(t_testTime & myTimer)
 	std::cout << "Testing MAP\n";
 
 	displayMapInfo(myMap);
+	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myMap.insert(ft::pair<int, int>(50, 1));
+	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myMap.insert(ft::pair<int, int>(30, 2));
 	myMap.insert(ft::pair<int, int>(70, 3));
+	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myMap.insert(ft::pair<int, int>(20, 4));
 	myMap.insert(ft::pair<int, int>(80, 5));
 	myMap.insert(ft::pair<int, int>(40, 6));
 	myMap.insert(ft::pair<int, int>(60, 7));
+	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myMap.insert(ft::pair<int, int>(31, 8));
 	myMap.insert(ft::pair<int, int>(55, 9));
 	myMap.insert(ft::pair<int, int>(75, 10));
 	myMap.insert(ft::pair<int, int>(53, 11));
+	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myMap.insert(ft::pair<int, int>(76, 12));
 	myMap.insert(ft::pair<int, int>(35, 13));
 	myMap.insert(ft::pair<int, int>(57, 14));
+	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	// myMap.insert(ft::pair<int, int>(50, 1));
 	// myMap.insert(ft::pair<int, int>(70, 2));
 	// myMap.insert(ft::pair<int, int>(80, 3));
@@ -582,6 +584,10 @@ void test_map(t_testTime & myTimer)
 	// myMap.insert(ft::pair<int, int>(10, 5));
 	displayMapInfo(myMap);
 	displayMapContent(myMap);
+	myMap[50] = 42;
+	ft::pair<ft::map<int, int>::iterator, ft::map<int, int>::iterator> myRange = myMap.equal_range(75);
+	std::cout << "lower_bound of 50 = " << myMap.lower_bound(50)->first << " upper_bound of 50 = " << myMap.upper_bound(50)->first << "\n";
+	std::cout << "equal_range of 75 = " << myRange.first->first << " = " << myRange.second->first << "\n";
 	std::cout << "iterator test start\n";
 	ft::map<int, int>::iterator it = myMap.begin();
 	std::cout << "iterator created it begin\n";
@@ -618,7 +624,7 @@ void test_map(t_testTime & myTimer)
 
 	//myMap.insert(ft::pair<int, int>(5, 1));
 	//displayMapContent(myMap);
-
+	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myTimer.map.end = clock();
 }
 

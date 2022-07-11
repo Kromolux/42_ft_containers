@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/06 16:36:34 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/11 10:28:26 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] reference operator[] called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c[k]);
+			return ( (*( (this->insert(ft::make_pair(k, mapped_type()))).first)).second );
 		}
 		//at Access element (public member function )
 		// C++ 11
@@ -219,10 +219,27 @@ namespace ft
 				return (ft::make_pair(it, false));
 		}
 
-		iterator insert (iterator position, const value_type& val);
+		iterator insert (iterator position, const value_type& val)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[map] insert position called [Key:Val] [" << val.first << ":" << val.second << "]\n" << COLOR_DEFAULT;
+			#endif
+			(void) position;
+			return (iterator(this->c.addNode(val), this->c.begin(), this->c.end()));
+		}
 
 		template <class InputIterator>
-		void insert (InputIterator first, InputIterator last);
+		void insert (InputIterator first, InputIterator last)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[map] insert iterator called.\n" << COLOR_DEFAULT;
+			#endif
+			for (; first != last; ++first)
+			{
+				this->c.addNode(*first);
+			}
+		}
+		
 		//Erase elements (public member function )
 		void erase (iterator position)
 		{
@@ -231,6 +248,7 @@ namespace ft
 			#endif
 			this->c.erase(position);
 		}
+
 		size_type erase (const key_type& k)
 		{
 			#if DEBUG
@@ -244,7 +262,8 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase first - last called.\n" << COLOR_DEFAULT;
 			#endif
-			this->c.erase(first, last);
+			for (; first != last; ++first)
+				this->c.erase(first);
 		}
 		//Swap content (public member function )
 		void swap (map& x)
@@ -288,19 +307,19 @@ namespace ft
 
 		//***Operations:
 		//Get iterator to element (public member function )
-		iterator find (const key_type& k)
+		iterator find (const key_type & k)
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] find called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.find(k));
+			return (iterator(this->c.find(k), this->c.begin(), this->c.end()));
 		}
 		const_iterator find (const key_type& k) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const find called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.find(k));
+			return (const_iterator(this->c.find(k), this->c.begin(), this->c.end()));
 		}
 		//Count elements with a specific key (public member function )
 		size_type count (const key_type& k) const
@@ -316,14 +335,20 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] lower_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.lower_bound(k));
+			iterator it(this->c.findNode(k), this->c.begin(), this->c.end());
+			if (it != iterator())
+			--it;
+			return (it);
 		}
 		const_iterator lower_bound (const key_type& k) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const lower_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.lower_bound(k));
+			const_iterator it(this->c.findNode(k), this->c.begin(), this->c.end());
+			if (it != const_iterator())
+			--it;
+			return (it);
 		}
 		//Return iterator to upper bound (public member function )
 		iterator upper_bound (const key_type& k)
@@ -331,14 +356,20 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] upper_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.upper_bound(k));
+			iterator it(this->c.findNode(k), this->c.begin(), this->c.end());
+			if (it != iterator())
+			++it;
+			return (it);
 		}
 		const_iterator upper_bound (const key_type& k) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const upper_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.upper_bound(k));
+			const_iterator it(this->c.findNode(k), this->c.begin(), this->c.end());
+			if (it != const_iterator())
+			++it;
+			return (it);
 		}
 		//Get range of equal elements (public member function )
 		pair<const_iterator, const_iterator>	equal_range (const key_type& k) const
@@ -346,14 +377,15 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] equal_range called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.equal_range(k));
+			return (ft::make_pair(lower_bound(k), upper_bound(k)));
 		}
+
 		pair<iterator, iterator>				equal_range (const key_type& k)
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] equal_range called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.equal_range(k));
+			return (ft::make_pair(lower_bound(k), upper_bound(k)));
 		}
 
 		//***Allocator:
@@ -363,7 +395,17 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] get_allocator called.\n" << COLOR_DEFAULT;
 			#endif
-			return (c.get_allocator());
+			return (this->c.get_allocator());
+		}
+		
+		int	height(void)
+		{
+			return (this->c.height());
+		}
+
+		int	blackNodes(void)
+		{
+			return (this->c.blackNodes());
 		}
 		
 	}; // class map
