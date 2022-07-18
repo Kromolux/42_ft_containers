@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   RBT.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 13:03:32 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/11 10:29:26 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/18 17:10:08 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "Utils.hpp"
+#include "vector.hpp"
 //#include "rbt_iterator.hpp"
 //#include <memory>
 //#include <map>
@@ -95,32 +96,32 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[RBT] default constructor called.\n" << COLOR_DEFAULT;
 			#endif
-			mem_compare = comp;
-			mem_control = alloc;
-			mem_size = 0;
-			root = NULL;
+			this->mem_compare = comp;
+			this->mem_control = alloc;
+			this->mem_size = 0;
+			this->root = NULL;
 		}
 
-		template <class InputIterator>
-		RBT (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-		{
-			#if DEBUG
-				std::cout << COLOR_GREEN << "[RBT] InputIterator constructor called.\n" << COLOR_DEFAULT;
-			#endif
-			//TODO
-			(void) first;
-			(void) last;
-			mem_compare = comp;
-			mem_control = alloc;
+		// template <class InputIterator>
+		// RBT (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
+		// {
+		// 	#if DEBUG
+		// 		std::cout << COLOR_GREEN << "[RBT] InputIterator constructor called.\n" << COLOR_DEFAULT;
+		// 	#endif
+		// 	//TODO
+		// 	(void) first;
+		// 	(void) last;
+		// 	this->mem_compare = comp;
+		// 	this->mem_control = alloc;
 			
-		}
+		// }
 
-		RBT (const RBT & copy)
+		RBT (const RBT & Copy)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[RBT] default constructor called.\n" << COLOR_DEFAULT;
 			#endif
-			*this = copy;
+			*this = Copy;
 		}
 		
 		~RBT(void)
@@ -131,14 +132,43 @@ namespace ft
 			clearTree(this->root);
 		}
 		
-		RBT & operator= (const RBT & copy)
+		RBT & operator= (const RBT & Copy)
 		{
 			//TODO
-			(void) copy;
+			if (this->mem_size > 0)
+				clearTree(this->root);
+			this->mem_compare = Copy.mem_compare;
+			this->mem_control = Copy.mem_control;
+			this->mem_node_control = Copy.mem_node_control;
+			this->mem_size = 0;
+			//TODO copy all nodes!
+			copyTree(Copy);
 			return (*this);
 		}
 
+		void copyTree(const RBT & Copy)
+		{
+			this->root = copyNode(*Copy.root);
+			if (Copy.root->left)
+				copyTree(*this->root, *Copy.root->left);
+			if (Copy.root->right)
+				copyTree(*this->root, *Copy.root->right);
+		}
+		
+		void	copyTree(node & parent, const node & CopyNode)
+		{
+			node * Copy = copyNode(CopyNode);
+			if (Copy->isLeftChild)
+				parent.left = Copy;
+			else
+				parent.right = Copy;
+			Copy->parent = &parent;
 
+			if (CopyNode.left)
+				copyTree(*Copy, *CopyNode.left);
+			if (CopyNode.right)
+				copyTree(*Copy, *CopyNode.right);
+		}
 		// //***Iterators:
 		// //Return iterator to beginning (public member function )
 		node * begin(void) const
@@ -157,74 +187,6 @@ namespace ft
 		{
 			return (getLeftNode(this->root));
 		}
-		// iterator begin(void)
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] iterator begin called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (iterator(this->root));
-		// }
-		// const_iterator begin() const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] const_iterator begin called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (const_iterator(this->root));
-		// }
-		// //Return iterator to end (public member function )
-		// iterator end(void)
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] iterator end called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (iterator(NULL));
-		// }
-		// const_iterator end(void) const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] const_iterator end called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (const_iterator(NULL));
-		// }
-		// //Return reverse iterator to reverse beginning (public member function )
-		// reverse_iterator rbegin(void)
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] reverse_iterator rbegin called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (reverse_iterator(this->root));
-		// }
-		// const_reverse_iterator rbegin(void) const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] const_reverse_iterator rbegin called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (const_reverse_iterator(this->root));
-		// }
-		// //Return reverse iterator to reverse end (public member function )
-		// reverse_iterator rend(void)
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] reverse_iterator rend called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (reverse_iterator(NULL));
-		// }
-		// const_reverse_iterator rend(void) const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] const_reverse_iterator rend called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (const_reverse_iterator(NULL));
-		// }
-		//Return const_iterator to beginning (public member function )
-		// C++ 11
-		//Return const_iterator to end (public member function )
- 		// C++ 11
-		//Return const_reverse_iterator to reverse beginning (public member function )
-		// C++ 11
-		//Return const_reverse_iterator to reverse end (public member function )
-		// C++ 11
-
 		
 		//***Capacity:
 		//Test whether container is empty (public member function )
@@ -251,24 +213,6 @@ namespace ft
 			#endif
 			return (this->mem_control.max_size());
 		}
-
-		//***Element access:
-		//operator[] Access element (public member function )
-		// mapped_type& operator[] (const key_type& k)
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] reference operator[] called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	//TODO
-		// 	node * tmp = findNode(k);
-		// 	if (tmp)
-		// 		return (tmp->data.second);
-		// 	V value = {};
-		// 	tmp = addNode(ft::pair<K, V>(k, value));
-		// 	return (tmp->data.second);
-		// }
-		//at Access element (public member function )
-		// C++ 11
 		
 		//***Modifiers:
 		//Insert elements (public member function )
@@ -333,34 +277,164 @@ namespace ft
 			}
 			checkNode->isBlack = false;
 			checkNode->parent = parentNode;
-			checkColor(*checkNode);
+			checkColor(checkNode);
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[RBT] done with addNode\n" << COLOR_DEFAULT;
 			#endif
 			return (checkNode);
 		}
-
-		// iterator insert (iterator position, const value_type& val);
-
-		// template <class InputIterator>
-		// void insert (InputIterator first, InputIterator last);
-		//Erase elements (public member function )
-		// void erase (iterator position)
+		// void printTree(void)
 		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] erase position called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	(void) position;
+		// 	if (this->root)
+		// 	{
+		// 		sdt::cout << "[" << root->data.first << ":" << root->data.second << "]\n";
+		// 		printTreeNode(this->root);
+		// 	}
+		// }
+		// void printTreeNode(node * nd)
+		// {
+		// 	//if (nd)
+		// 	//	sdt::cout << "[" << nd->data.first << ":" << nd->data.second << "]\n";
+		// 	if (nd->left)
+		// 		sdt::cout << "[" << nd->left->data.first << ":" << nd->data.second << "]";
 		// }
 		size_type erase (const key_type& k)
 		{
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[RBT] erase key called.\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[RBT] function erase key: " << k << " called.\n" << COLOR_DEFAULT;
 			#endif
-			(void) k;
+			node *nodeToDelete = this->findNode(k);
+			if (nodeToDelete)
+			{
+				#if DEBUG
+					std::cout << COLOR_YELLOW << "[RBT] found node to delete in tree key:value " << nodeToDelete->data.first << ":" << nodeToDelete->data.second << " .\n" << COLOR_DEFAULT;
+				#endif
+
+				node *nodeReplaceDeleted = getNextNode(nodeToDelete);
+				if (!nodeReplaceDeleted)
+				{
+					#if DEBUG
+						std::cout << COLOR_YELLOW << "[RBT] no node to replace deleted one in Tree.\n" << COLOR_DEFAULT;
+					#endif
+					if (nodeToDelete == this->root)
+						this->root = NULL;
+					if (nodeToDelete->isLeftChild)
+						nodeToDelete->parent->left = NULL;
+					else
+						nodeToDelete->parent->right = NULL;
+					deleteNode(nodeToDelete);
+					//checkColor
+					blackNodes();
+					return (1);
+				}
+				
+				if (nodeToDelete == this->root)
+					this->root = nodeReplaceDeleted;
+				node *nodeMoveUp = getNextNode(nodeReplaceDeleted);
+				//node *nodeHelp = NULL;
+				if (nodeMoveUp)
+				{
+					#if DEBUG
+						std::cout << COLOR_YELLOW << "[RBT] found nodeMoveUp key:value " << nodeMoveUp->data.first << ":" << nodeMoveUp->data.second << " .\n" << COLOR_DEFAULT;
+					#endif
+					nodeMoveUp->parent = nodeReplaceDeleted->parent;
+					if (nodeReplaceDeleted->isLeftChild)
+					{
+						nodeMoveUp->isLeftChild = true;
+						nodeMoveUp->parent->left = nodeMoveUp;
+					}
+					else
+					{
+						nodeMoveUp->isLeftChild = false;
+						nodeMoveUp->parent->right = nodeMoveUp;
+					}
+				}
+				else
+				{
+					//nodeHelp = copyNode(*nodeReplaceDeleted);
+					if (nodeReplaceDeleted->isLeftChild)
+						nodeReplaceDeleted->parent->left = NULL;
+					else
+						nodeReplaceDeleted->parent->right = NULL;
+				}
+				#if DEBUG
+					std::cout << COLOR_YELLOW << "[RBT] found nodeReplaceDeleted key:value " << nodeReplaceDeleted->data.first << ":" << nodeReplaceDeleted->data.second << " .\n" << COLOR_DEFAULT;
+				#endif
+				nodeReplaceDeleted->parent = nodeToDelete->parent;
+				if (nodeReplaceDeleted->parent)
+				{
+					if (nodeToDelete->isLeftChild)
+					{
+						nodeReplaceDeleted->isLeftChild = true;
+						nodeReplaceDeleted->parent->left = nodeReplaceDeleted;
+					}
+					else
+					{
+						nodeReplaceDeleted->isLeftChild = false;
+						nodeReplaceDeleted->parent->right = nodeReplaceDeleted;
+					}
+				}
+				nodeReplaceDeleted->isBlack = true;
+				if (nodeToDelete->left != nodeReplaceDeleted)
+					nodeReplaceDeleted->left = nodeToDelete->left;
+				if (nodeReplaceDeleted->left)
+				{
+					nodeReplaceDeleted->left->parent = nodeReplaceDeleted;
+					//nodeReplaceDeleted->left->isBlack = false;
+				}
+				nodeReplaceDeleted->right = nodeToDelete->right;
+				if (nodeReplaceDeleted->right)
+				{
+					nodeReplaceDeleted->right->parent = nodeReplaceDeleted;
+					//nodeReplaceDeleted->right->isBlack = false;
+				}
+				#if DEBUG
+					std::cout << COLOR_YELLOW << "[RBT] going to checkColor.\n" << COLOR_DEFAULT;
+				#endif
+				
+				if (nodeMoveUp)
+					checkColor(nodeMoveUp);
+				else
+				{
+					//std::cout << "in else branch\n";
+					//what to do here????
+					// if (nodeReplaceDeleted->left)
+					// 	checkColor(*nodeReplaceDeleted->left);
+					// if (nodeReplaceDeleted->right)
+					// 	checkColor(*nodeReplaceDeleted->right);
+					//checkColor(*nodeHelp);
+					//deleteNode(nodeHelp);
+				}
+				deleteNode(nodeToDelete);
+				//std::cout << "number of black nodes: " << 
+				blackNodes();// << "\n";
+				return (1);
+			}
 			return (0);
 		}
-
+		
+		node * copyNode(const node & Copy)
+		{
+			node * newNode = this->mem_node_control.allocate(1);
+			this->mem_control.construct(&(newNode->data), Copy.data);
+			++this->mem_size;
+			newNode->parent = Copy.parent;
+			newNode->left = Copy.left;
+			newNode->right = Copy.right;
+			newNode->isBlack = Copy.isBlack;
+			newNode->isLeftChild = Copy.isLeftChild;
+			return (newNode);
+		}
+		node * getNextNode(node * nd)
+		{
+			if (nd->left && nd->left->right)
+				return (getRightNode(nd->left->right));
+			if (nd->left)
+				return (nd->left);
+			if (nd->right)
+				return (nd->right);
+			return (NULL);
+		}
 		// void erase (iterator first, iterator last)
 		// {
 		// 	#if DEBUG
@@ -375,7 +449,17 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[RBT] swap called.\n" << COLOR_DEFAULT;
 			#endif
-			(void) x;
+			RBT &tmp = x;
+			x.mem_compare = this->mem_compare;
+			x.mem_control = this->mem_control;
+			x.mem_node_control = this->mem_node_control;
+			x.mem_size = this->mem_size;
+			x.root = this->root;
+			this->mem_compare = tmp.mem_compare;
+			this->mem_control = tmp.mem_control;
+			this->mem_node_control = tmp.mem_node_control;
+			this->mem_size = tmp.mem_size;
+			this->root = tmp.root;
 		}
 		//Clear content (public member function )
 		void clear(void)
@@ -394,39 +478,23 @@ namespace ft
 		//***Observers:
 
 		//Return key comparison object (public member function )
-		// key_compare key_comp(void) const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] key_comp called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (NULL);
-		// }
-		// //Return value comparison object (public member function )
-		// value_compare value_comp(void) const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] value_comp called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (NULL);
-		// }
+		key_compare key_comp(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[RBT] key_comp called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->mem_compare);
+		}
+		//Return value comparison object (public member function )
+		value_compare value_comp(void) const
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[RBT] value_comp called.\n" << COLOR_DEFAULT;
+			#endif
+			return (value_compare());
+		}
 
 		// //***Operations:
-		// //Get iterator to element (public member function )
-		// iterator find (const key_type& k)
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] find called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (iterator(findNode(k)));
-		// }
-		// const_iterator find (const key_type& k) const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] const find called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	(void) k;
-		// 	return (const_iterator(NULL));
-		// }
 		//Count elements with a specific key (public member function )
 		size_type count (const key_type& k) const
 		{
@@ -438,57 +506,6 @@ namespace ft
 				return (1);
 			return (0);
 		}
-		// //Return iterator to lower bound (public member function )
-		// iterator lower_bound (const key_type& k)
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] lower_bound called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	(void) k;
-		// 	return (iterator(NULL));
-		// }
-		// const_iterator lower_bound (const key_type& k) const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] const lower_bound called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	(void) k;
-		// 	return (const_iterator(NULL));
-		// }
-		// //Return iterator to upper bound (public member function )
-		// iterator upper_bound (const key_type& k)
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] upper_bound called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	(void) k;
-		// 	return (iterator(NULL));
-		// }
-		// const_iterator upper_bound (const key_type& k) const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] const upper_bound called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	(void) k;
-		// 	return (const_iterator(NULL));
-		// }
-		// //Get range of equal elements (public member function )
-		// pair<const_iterator, const_iterator>	equal_range (const key_type& k) const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] equal_range called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	(void) k;
-		// 	return (ft::make_pair(const_iterator(NULL), const_iterator(NULL)));
-		// }
-		// pair<iterator, iterator>				equal_range (const key_type& k)
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_YELLOW << "[RBT] equal_range called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	(void) k;
-		// 	return (ft::make_pair(iterator(NULL), iterator(NULL)));
-		// }
 
 		//***Allocator:
 		//Get allocator (public member function )
@@ -519,17 +536,22 @@ namespace ft
 		*/
 
 		private:
-		void	checkColor(node & nd)
+		void	checkColor(node * nd)
 		{
-			if (&nd == this->root)
+			if (!nd)
+				return ;
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[RBT] checkColor key:value " << nd->data.first << ":" << nd->data.second << " called.\n" << COLOR_DEFAULT;
+			#endif
+			if (nd == this->root)
 			{
-				if (nd.isBlack == false)
-					nd.isBlack = true;
+				if (nd->isBlack == false)
+					nd->isBlack = true;
 				return ;
 			}
-			if (!nd.isBlack && !nd.parent->isBlack)
-				correctTree(nd);
-			checkColor(*nd.parent);
+			if (!nd->isBlack && !nd->parent->isBlack)
+				correctTree(*nd);
+			checkColor(nd->parent);
 		}
 		
 		void	correctTree(node & nd)
@@ -781,6 +803,7 @@ namespace ft
 			#endif
 			//this->mem_control.destroy(&(nd->data));
 			//this->mem_control.deallocate(nd->data, 1);
+			--this->mem_size;
 			this->mem_node_control.deallocate(nd, 1);
 		}
 		
@@ -812,6 +835,8 @@ namespace ft
 		}
 		void	clearTree(node * nd)
 		{
+			if (!nd)
+				return ;
 			if (nd->left)
 				clearTree(nd->left);
 			if (nd->right)
@@ -834,6 +859,7 @@ namespace ft
 			}
 			return (tmp);
 		}
+
 		int	height(void)
 		{
 			if (this->root == NULL)
@@ -861,15 +887,81 @@ namespace ft
 		{
 			if (nd == NULL)
 				return (1);
+			#if DEBUG
+				std::cout << COLOR_BLUE << "blackNodes called node: " << nd->data.first << " isBlack: " << nd->isBlack << "\n" << COLOR_DEFAULT;
+			#endif
 			int	rightBlackNodes = blackNodes(nd->right);
 			int	leftBlackNodes = blackNodes(nd->left);
 			if (rightBlackNodes != leftBlackNodes)
+			{
 				// throw error fix the tree
-				std::cout << "imbalance in RBT!\n";
+				#if DEBUG
+					std::cout << COLOR_BLUE << "imbalance in RBT! node: " << nd->data.first << "\n" << COLOR_DEFAULT;
+				#endif
+				if (rightBlackNodes > leftBlackNodes)
+				{
+					//correctTree(*nd->right->left);
+					if (height() > 1)
+						leftRotate(*nd);
+					else
+					{
+						nd->right->isBlack = false;
+						#if DEBUG
+							std::cout << COLOR_BLUE << "changed color to red node: " << nd->data.first << "\n" << COLOR_DEFAULT;
+						#endif
+					}
+					if (nd-> parent && nd->parent->right)
+					{
+						nd->parent->right->isBlack = true;
+						#if DEBUG
+							std::cout << COLOR_BLUE << "changed color to black node: " << nd->data.first << "\n" << COLOR_DEFAULT;
+						#endif
+					}
+				}
+				else
+				{
+					rightRotate(*nd);
+					//correctTree(*nd->left->right);
+				}
+			}
 			if (nd->isBlack)
 				++leftBlackNodes;
 			return (leftBlackNodes);
 		}
+
+		// void	printTree(void)
+		// {
+		// 	this->TreePicture.clear();
+		// 	this->MaxElementsAtMaxLvl = twoPowerOf(this->height());
+		// 	Order = 0;
+		// 	for (int i = 0, TreeHeight = this->height(); i <= TreeHeight; ++i)
+		// 		TreePicture[i] += whiteSpace(TreeHeight * 2 + 1);
+		// 	printTree(this->root, 0, 0);
+		// 	for (int i = 0, TreeHeight = this->height(); i <= TreeHeight; ++i)
+		// 		std::cout << TreePicture[i] << "\n";
+		// }
+		
+		// void	printTree(node *nd, size_t level, size_t order)
+		// {
+		// 	TreePicture[level] += "[" + nd->first + "]"
+		// 	++level;
+		// 	order = order * 2;
+		// 	if (nd->left)
+		// 		printTree(nd->left, level, order);
+		// 	if (nd->right)
+		// 		printTree(nd->right, level, order + 1);
+		// }
+		
+		// private:
+		// ft::vector<std::string> TreePicture;
+		// size_t	MaxElementsAtMaxLvl;
+		// size_t	Order;
+
+		// size_t & twoPowerOf(size_t & value)
+		// {
+		// 	return (1 << value);
+		// }
+		
 	}; // class RBT
 	
 } // namespace ft

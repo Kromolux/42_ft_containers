@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/11 10:33:48 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/18 16:57:50 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -552,53 +552,93 @@ void test_map(t_testTime & myTimer)
 	std::cout << "Testing MAP\n";
 
 	displayMapInfo(myMap);
-	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myMap.insert(ft::pair<int, int>(50, 1));
-	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myMap.insert(ft::pair<int, int>(30, 2));
 	myMap.insert(ft::pair<int, int>(70, 3));
-	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myMap.insert(ft::pair<int, int>(20, 4));
 	myMap.insert(ft::pair<int, int>(80, 5));
 	myMap.insert(ft::pair<int, int>(40, 6));
 	myMap.insert(ft::pair<int, int>(60, 7));
-	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myMap.insert(ft::pair<int, int>(31, 8));
 	myMap.insert(ft::pair<int, int>(55, 9));
 	myMap.insert(ft::pair<int, int>(75, 10));
 	myMap.insert(ft::pair<int, int>(53, 11));
-	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myMap.insert(ft::pair<int, int>(76, 12));
 	myMap.insert(ft::pair<int, int>(35, 13));
 	myMap.insert(ft::pair<int, int>(57, 14));
-	std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	// myMap.insert(ft::pair<int, int>(50, 1));
-	// myMap.insert(ft::pair<int, int>(70, 2));
-	// myMap.insert(ft::pair<int, int>(80, 3));
-	// myMap.insert(ft::pair<int, int>(90, 4));
-	// myMap.insert(ft::pair<int, int>(100, 5));
-	// myMap.insert(ft::pair<int, int>(50, 1));
-	// myMap.insert(ft::pair<int, int>(40, 2));
-	// myMap.insert(ft::pair<int, int>(30, 3));
-	// myMap.insert(ft::pair<int, int>(20, 4));
-	// myMap.insert(ft::pair<int, int>(10, 5));
+	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	myMap.insert(ft::pair<int, int>(50, 1));
+	myMap.insert(ft::pair<int, int>(70, 2));
+	myMap.insert(ft::pair<int, int>(80, 3));
+	myMap.insert(ft::pair<int, int>(90, 4));
+	myMap.insert(ft::pair<int, int>(100, 5));
+	myMap.insert(ft::pair<int, int>(50, 1));
+	myMap.insert(ft::pair<int, int>(40, 2));
+	myMap.insert(ft::pair<int, int>(30, 3));
+	myMap.insert(ft::pair<int, int>(20, 4));
+	myMap.insert(ft::pair<int, int>(10, 5));
+	
 	displayMapInfo(myMap);
 	displayMapContent(myMap);
-	myMap[50] = 42;
+
+	ft::map<int, int>::iterator it = myMap.begin();
+	ft::map<int, int>::iterator ite = myMap.end();
+	
+	std::cout << "\ncopying map:\n";
+	std::cout << "first using copy constructor\n";
+	ft::map<int, int> myMap2(myMap);
+	displayMapInfo(myMap2);
+	displayMapContent(myMap2);
+	
+	std::cout << "\ncopying map:\n";
+	std::cout << "second using assingment constructor\n";
+	ft::map<int, int> myMap3 = myMap;
+	displayMapInfo(myMap3);
+	displayMapContent(myMap3);
+
+	std::cout << "\ncopying map:\n";
+	std::cout << "third using iterator constructor\n";
+	
+	ft::map<int, int> myMap4(it, ite);
+	displayMapInfo(myMap4);
+	displayMapContent(myMap4);
+	std::cout << "\n\n";
+	
+	//myMap[50] = 42;
+
+	/*
 	ft::pair<ft::map<int, int>::iterator, ft::map<int, int>::iterator> myRange = myMap.equal_range(75);
+	std::cout << "lower_bound of 40 = " << myMap.lower_bound(40)->first << " upper_bound of 40 = " << myMap.upper_bound(40)->first << "\n";
 	std::cout << "lower_bound of 50 = " << myMap.lower_bound(50)->first << " upper_bound of 50 = " << myMap.upper_bound(50)->first << "\n";
 	std::cout << "equal_range of 75 = " << myRange.first->first << " = " << myRange.second->first << "\n";
 	std::cout << "iterator test start\n";
-	ft::map<int, int>::iterator it = myMap.begin();
+	
 	std::cout << "iterator created it begin\n";
-	ft::map<int, int>::iterator ite = myMap.end();
+	
+	std::cout << "iterator created ite end\n";
+	myMap.erase(55);
+	std::cout << "deleted number 50\n\n";
+	std::cout << "lower_bound of 40 = " << myMap.lower_bound(40)->first << " upper_bound of 40 = " << myMap.upper_bound(40)->first << "\n";
+	displayMapContent(myMap);
+	ft::map<int, int>::iterator erase_it = myMap.find(75);
+	myMap.erase(erase_it);
+	std::cout << "erase key 75 with iterator\n";
+	displayMapContent(myMap);
 	std::cout << "iterator tests\n";
+	it = myMap.begin();
+	ite = myMap.end();
+	*/
 	//--ite;
-	while (it != ite)
-	{
-		std::cout << it->first << ":" << it->second << " ";
-		++it;
-	}
+	// while (it != ite)
+	// {
+	// 	std::cout << it->first << ":" << it->second << " ";
+	// 	++it;
+	// }
 	//++it;
 	// std::cout << "\n using the same iterators by incrementing it again going forwards\n";
 	// while (it != ite)
@@ -608,20 +648,35 @@ void test_map(t_testTime & myTimer)
 	// }
 	// --it;
 	//it = myMap.end();
-	--it;
-	std::cout << "\n";
-	ite = myMap.begin();
-	--ite;
-	//std::cout << "\n using the same iterators by decremeting it againg going backwards\n";
-	while (it != ite)
-	{
-		std::cout << it->first << ":" << it->second << " ";
-		--it;
-	}
-	std::cout << "\ndone with iterators\n";
+	// --it;
+	// std::cout << "\n";
+	// ite = myMap.begin();
+	// --ite;
+	// //std::cout << "\n using the same iterators by decremeting it againg going backwards\n";
+	// while (it != ite)
+	// {
+	// 	std::cout << it->first << ":" << it->second << " ";
+	// 	--it;
+	// }
+	// std::cout << "\ndone with iterators\n";
 	
-	displayMapContent(myMap);
+	//displayMapContent(myMap);
 
+	it = myMap.begin();
+	ite = myMap.end();
+	++it;
+	//++it;
+	//++it;
+	//++it;
+	--ite;
+	std::cout << "deleting map content with iterators start: " << it->first << " end: " << ite->first << "\n";
+	myMap.erase(it, ite);
+	myMap.insert(ft::pair<int, int>(90, 99));
+	// myMap.erase(it);
+	// myMap.erase(60);
+	// myMap.erase(70);
+	// myMap.erase(80);
+	displayMapContent(myMap);
 	//myMap.insert(ft::pair<int, int>(5, 1));
 	//displayMapContent(myMap);
 	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
