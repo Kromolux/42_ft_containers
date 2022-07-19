@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/18 16:57:50 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/18 18:00:22 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -609,9 +609,9 @@ void test_map(t_testTime & myTimer)
 	displayMapContent(myMap4);
 	std::cout << "\n\n";
 	
-	//myMap[50] = 42;
+	myMap[50] = 42;
 
-	/*
+	
 	ft::pair<ft::map<int, int>::iterator, ft::map<int, int>::iterator> myRange = myMap.equal_range(75);
 	std::cout << "lower_bound of 40 = " << myMap.lower_bound(40)->first << " upper_bound of 40 = " << myMap.upper_bound(40)->first << "\n";
 	std::cout << "lower_bound of 50 = " << myMap.lower_bound(50)->first << " upper_bound of 50 = " << myMap.upper_bound(50)->first << "\n";
@@ -632,7 +632,7 @@ void test_map(t_testTime & myTimer)
 	std::cout << "iterator tests\n";
 	it = myMap.begin();
 	ite = myMap.end();
-	*/
+	
 	//--ite;
 	// while (it != ite)
 	// {
@@ -665,9 +665,10 @@ void test_map(t_testTime & myTimer)
 	it = myMap.begin();
 	ite = myMap.end();
 	++it;
+	++it;
 	//++it;
 	//++it;
-	//++it;
+	--ite;
 	--ite;
 	std::cout << "deleting map content with iterators start: " << it->first << " end: " << ite->first << "\n";
 	myMap.erase(it, ite);
@@ -692,10 +693,10 @@ void test_set(t_testTime & myTimer)
 	std::cout << "Testing SET\n";
 
 	displaySetInfo(mySet);
-	//displaySetContent(mySet);
+	displaySetContent(mySet);
 
-	//mySet.insert(5);
-	//displaySetContent(mySet);
+	mySet.insert(5);
+	displaySetContent(mySet);
 
 	myTimer.set.end = clock();
 }

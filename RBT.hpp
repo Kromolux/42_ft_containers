@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 13:03:32 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/18 17:10:08 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/18 18:01:52 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,6 +282,11 @@ namespace ft
 				std::cout << COLOR_YELLOW << "[RBT] done with addNode\n" << COLOR_DEFAULT;
 			#endif
 			return (checkNode);
+		}
+
+		node * addNode (const key_type& k) //overload for SET
+		{
+			return (addNode(ft::pair<K, K>(k, k)));
 		}
 		// void printTree(void)
 		// {

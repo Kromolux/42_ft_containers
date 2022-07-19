@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:38:15 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/06 14:29:25 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/18 18:46:27 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@ namespace ft
 				>
 	class set
 	{
+		private:
+		typedef RBT<T, T, Compare, Alloc> tree_type;
+		
 		public:
 		typedef T													key_type;				//The first template parameter (T)	
 		typedef T													value_type;				//The first template parameter (T)	
@@ -32,15 +35,21 @@ namespace ft
 		typedef typename allocator_type::const_reference			const_reference;		//for the default allocator: const value_type&
 		typedef typename allocator_type::pointer					pointer;				//for the default allocator: value_type*
 		typedef typename allocator_type::const_pointer				const_pointer;			//for the default allocator: const value_type*
-		typedef typename ft::rbt_iterator<T, T>						iterator;				//a bidirectional iterator to value_type	convertible to const_iterator
-		typedef typename ft::rbt_iterator<const T, T>				const_iterator;			//a bidirectional iterator to const value_type	
-		typedef typename ft::rbt_reverse_iterator<iterator>			reverse_iterator;		//reverse_iterator<iterator>
-		typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;	//reverse_iterator<const_iterator>	
+		typedef typename ft::rbt_iterator<typename tree_type::node, tree_type>			iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
+		typedef typename ft::rbt_iterator<typename tree_type::node, tree_type>			const_iterator;				//a bidirectional iterator to const value_type
+		typedef typename ft::rbt_reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>
+		typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;	
+		
+		// typedef typename ft::rbt_iterator<T, T>						iterator;				//a bidirectional iterator to value_type	convertible to const_iterator
+		// typedef typename ft::rbt_iterator<const T, T>				const_iterator;			//a bidirectional iterator to const value_type	
+		// typedef typename ft::rbt_reverse_iterator<iterator>			reverse_iterator;		//reverse_iterator<iterator>
+		// typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;	//reverse_iterator<const_iterator>	
 		typedef typename allocator_type::difference_type			difference_type;		//a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
 		typedef typename allocator_type::size_type					size_type;				//an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
 
 		private:
-		RBT<T, T, Compare, Alloc> c;
+		//RBT<T, T, Compare, Alloc> c;
+		tree_type c;
 		
 		public:
 		//Member functions
@@ -55,11 +64,15 @@ namespace ft
 		
 		template <class InputIterator>
 		set (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-		: c(first, last, comp, alloc)
+		: c(comp, alloc)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[set] InputIterator constructor called.\n" << COLOR_DEFAULT;
 			#endif
+			for (; first != last; ++first)
+			{
+				this->c.addNode(*first);
+			}
 		}
 		
 		set (const set& x)
@@ -86,7 +99,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[set] assignement constructor called.\n" << COLOR_DEFAULT;
 			#endif
-			this->c = x;
+			this->c = x.c;
 			return (*this);
 		}
 		
@@ -97,14 +110,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] iterator begin called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.begin());
+			return (iterator(this->c.begin(), this->c.begin(), this->c.end()));
 		}
 		const_iterator begin(void) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] const_iterator begin called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.begin());
+			return (const_iterator(this->c.begin(), this->c.begin(), this->c.end()));
 		}
 		//Return iterator to end (public member function )
 		iterator end(void)
@@ -112,14 +125,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] iterator end called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.end());
+			return (iterator(NULL, this->c.begin(), this->c.end()));
 		}
 		const_iterator end(void) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] const_iterator end called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.end());
+			return (const_iterator(NULL, this->c.begin(), this->c.end()));
 		}
 		//Return reverse iterator to reverse beginning (public member function )
 		reverse_iterator rbegin(void)
@@ -127,14 +140,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] reverse_iterator rbegin called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.rbegin());
+			return (reverse_iterator(this->c.rbegin(), this->c.begin(), this->c.end()));
 		}
 		const_reverse_iterator rbegin(void) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] const_reverse_iterator rbegin called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.rbegin());
+			return (const_reverse_iterator(this->c.rbegin(), this->c.begin(), this->c.end()));
 		}
 		//Return reverse iterator to reverse end (public member function )
 		reverse_iterator rend(void)
@@ -142,14 +155,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] reverse_iterator rend called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.rend());
+			return (reverse_iterator(NULL, this->c.begin(), this->c.end()));
 		}
 		const_reverse_iterator rend(void) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] const_reverse_iterator rend called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.rend());
+			return (const_reverse_iterator(NULL, this->c.begin(), this->c.end()));
 		}
 		//Return const_iterator to beginning (public member function )
 		// C++ 11
@@ -193,13 +206,33 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] insert value called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.insert(val));
+			iterator it(this->c.addNode(val), this->c.begin(), this->c.end());
+			if (it != iterator())
+				return (ft::make_pair(it, true));
+			else
+				return (ft::make_pair(it, false));
 		}
 		
-		iterator insert (iterator position, const value_type& val);
+		iterator insert (iterator position, const value_type& val)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[set] insert position called [Key] [" << val << ":" << "]\n" << COLOR_DEFAULT;
+			#endif
+			(void) position;
+			return (iterator(this->c.addNode(val), this->c.begin(), this->c.end()));
+		}
 		
 		template <class InputIterator>
-		void insert (InputIterator first, InputIterator last);
+		void insert (InputIterator first, InputIterator last)
+		{
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[set] insert iterator called.\n" << COLOR_DEFAULT;
+			#endif
+			for (; first != last; ++first)
+			{
+				this->c.addNode(*first);
+			}
+		}
 		
 		//Erase elements (public member function )
 		void erase (iterator position)
@@ -207,7 +240,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] erase position called.\n" << COLOR_DEFAULT;
 			#endif
-			this->c.erase(position);
+			this->c.erase(*position);
 		}
 
 		size_type erase (const value_type& val)

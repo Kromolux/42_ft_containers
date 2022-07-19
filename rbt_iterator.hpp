@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rbt_iterator.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 09:52:47 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/11 09:27:05 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/18 18:47:05 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,25 +23,30 @@ namespace ft
 {
 	//template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
 	//class RBT;
-	template <class Key, class T>
+	template <class Key, class Tree>
 	class rbt_iterator //: public ft::iterator<ft::bidirectional_iterator_tag, T>
 	{
 		public:
 		typedef Key 																					key_type;
-		typedef T																						mapped_type;
-		typedef ft::pair<const key_type, mapped_type>													value_type;
+		//typedef T																						mapped_type;
+		typedef typename Tree::value_type 																value_type;
+		//typedef ft::pair<const key_type, mapped_type>													value_type;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::difference_type		difference_type;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::pointer				pointer;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::reference				reference;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::iterator_category		iterator_category;
 		
-		typedef typename ft::RBT<key_type, mapped_type>::node * node_type;
-
+		//typedef typename ft::RBT<key_type, mapped_type>::node * node_type;
+		typedef Key *node_type;
 		private:
 		node_type ptr;
 		node_type smallest;
 		node_type biggest;
 
+		// Key ptr;
+		// Key smallest;
+		// Key biggest;
+		
 		public:
 		rbt_iterator(void) : ptr(NULL), smallest(NULL), biggest(NULL)
 		{
@@ -138,7 +143,8 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[rbt_iterator] operator* called.\n" << COLOR_DEFAULT;
 			#endif
-			return (static_cast<node_type>(this->ptr)->data);
+			//return (static_cast<node_type>(this->ptr)->data);
+			return (this->ptr->data);
 		}
 		
 		bool	operator==(rbt_iterator const & rhs) const

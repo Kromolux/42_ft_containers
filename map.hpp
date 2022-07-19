@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/18 13:53:57 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/18 18:31:35 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ namespace ft
 				>
 	class map
 	{
+		private:
+		typedef RBT<Key, T, Compare, Alloc> tree_type;
+		
 		public:
 		typedef Key													key_type;					//The first template parameter (Key)
 		typedef T													mapped_type;				//The second template parameter (T)
@@ -35,15 +38,21 @@ namespace ft
 		typedef typename allocator_type::const_reference			const_reference;			//for the default allocator: const value_type&
 		typedef typename allocator_type::pointer					pointer;					//for the default allocator: value_type*
 		typedef typename allocator_type::const_pointer				const_pointer;				//for the default allocator: const value_type*
-		typedef typename ft::rbt_iterator<Key, T>					iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
-		typedef typename ft::rbt_iterator<const Key, T>				const_iterator;				//a bidirectional iterator to const value_type
+		typedef typename ft::rbt_iterator<typename tree_type::node, tree_type>					iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
+		typedef typename ft::rbt_iterator<typename tree_type::node, tree_type>			const_iterator;				//a bidirectional iterator to const value_type
 		typedef typename ft::rbt_reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>
-		typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;		//reverse_iterator<const_iterator>
+		typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;	
+		// typedef typename ft::rbt_iterator<Key, T>					iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
+		// typedef typename ft::rbt_iterator<const Key, T>				const_iterator;				//a bidirectional iterator to const value_type
+		// typedef typename ft::rbt_reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>
+		// typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;		//reverse_iterator<const_iterator>
 		typedef typename allocator_type::difference_type			difference_type;			//a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
 		typedef typename allocator_type::size_type					size_type;					//an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
 	
 		private:
-		RBT<Key, T, Compare, Alloc> c;
+		//typedef RBT<Key, T, Compare, Alloc> tree_type;
+		//RBT<Key, T, Compare, Alloc> c;
+		tree_type c;
 
 		public:
 		//***Member functions
@@ -266,7 +275,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase first - last called.\n" << COLOR_DEFAULT;
 			#endif
-			iterator tmp = first++;
+			iterator tmp = first;
 			for (; first != last; tmp = first++)
 			{
 				#if DEBUG
@@ -277,7 +286,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase first - last key " << tmp->first << ".\n" << COLOR_DEFAULT;
 			#endif
-			this->c.erase(tmp->first);
+			//this->c.erase(tmp->first);
 		}
 		//Swap content (public member function )
 		void swap (map& x)
