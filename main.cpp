@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/19 16:46:34 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/19 21:26:14 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,8 @@ int	main(void)
 	//test_vector(myTimer);
 	//test_stack(myTimer);
 	//test_pair(myTimer);
-	//test_map(myTimer);
-	test_set(myTimer);
+	test_map(myTimer);
+	//test_set(myTimer);
 
 	
 	myTimer.all.end = clock();
@@ -585,8 +585,11 @@ void test_map(t_testTime & myTimer)
 	
 	displayMapInfo(myMap);
 	displayMapContent(myMap);
-
+	
+	std::cout << "iterator created it begin\n";
 	ft::map<int, int>::iterator it = myMap.begin();
+	it->second = 666;
+	std::cout << "iterator created ite end\n";
 	ft::map<int, int>::iterator ite = myMap.end();
 	
 	std::cout << "\ncopying map:\n";
@@ -618,11 +621,70 @@ void test_map(t_testTime & myTimer)
 	std::cout << "equal_range of 75 = " << myRange.first->first << " = " << myRange.second->first << "\n";
 	std::cout << "iterator test start\n";
 	
-	std::cout << "iterator created it begin\n";
+	std::cout << "const_iterator created cit begin\n";
+	ft::map<int, int>::const_iterator cit = myMap.begin();
+	std::cout << "const_iterator created cite end\n";
+	ft::map<int, int>::const_iterator cite = myMap.end();
+	//cit->second = 666;
+	while (cit != cite)
+	{
+		std::cout << cit->first << ":" << cit->second << " ";
+		++cit;
+	}
 	
-	std::cout << "iterator created ite end\n";
+	std::cout << "\nbackwards\n";
+	--cit;
+	while (cit != cite)
+	{
+		std::cout << cit->first << ":" << cit->second << " ";
+		--cit;
+	}
+	std::cout << "\n";
+	
+	std::cout << "reverse_iterator created rit begin\n";
+	ft::map<int, int>::reverse_iterator rit = myMap.rbegin();
+	std::cout << "reverse_iterator created rite end\n";
+	ft::map<int, int>::reverse_iterator rite = myMap.rend();
+	//cit->second = 666;
+	while (rit != rite)
+	{
+		std::cout << rit->first << ":" << rit->second << " ";
+		++rit;
+	}
+	
+	std::cout << "\nbackwards\n";
+	--rit;
+	while (rit != rite)
+	{
+		std::cout << rit->first << ":" << rit->second << " ";
+		--rit;
+	}
+	std::cout << "\n";
+
+
+	std::cout << "const_reverse_iterator created crit begin\n";
+	ft::map<int, int>::const_reverse_iterator crit = myMap.rbegin();
+	std::cout << "const_reverse_iterator created crite end\n";
+	ft::map<int, int>::const_reverse_iterator crite = myMap.rend();
+	//cit->second = 666;
+	while (crit != crite)
+	{
+		std::cout << crit->first << ":" << crit->second << " ";
+		++crit;
+	}
+	//crit->second = 666;
+	std::cout << "\nbackwards\n";
+	--crit;
+	while (crit != crite)
+	{
+		std::cout << crit->first << ":" << crit->second << " ";
+		--crit;
+	}
+	std::cout << "\n";
+
+	
 	myMap.erase(55);
-	std::cout << "deleted number 50\n\n";
+	std::cout << "deleted number 55\n\n";
 	std::cout << "lower_bound of 40 = " << myMap.lower_bound(40)->first << " upper_bound of 40 = " << myMap.upper_bound(40)->first << "\n";
 	displayMapContent(myMap);
 	ft::map<int, int>::iterator erase_it = myMap.find(75);

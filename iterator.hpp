@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 12:36:54 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/06 14:34:14 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/19 20:20:49 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -362,6 +362,15 @@ namespace ft
 			--tmp;
 			return (*tmp);
 		}
+
+		pointer operator->() const
+		{
+			#if DEBUG
+				std::cout << COLOR_MAGENTA << "[reverse_iterator] operator-> called.\n" << COLOR_DEFAULT;
+			#endif
+			return &(operator*());
+		}
+
 		// Returns a reverse iterator pointing to the element located n positions away from
 		// the element the iterator currently points to.
 		// Internally, the function applies the binary operator- on the base iterator and returns
@@ -457,13 +466,7 @@ namespace ft
 			this->_base += n;
 			return (*this);
 		}
-		pointer operator->() const
-		{
-			#if DEBUG
-				std::cout << COLOR_MAGENTA << "[reverse_iterator] operator-> called.\n" << COLOR_DEFAULT;
-			#endif
-			return &(operator*());
-		}
+
 		// reference operator[] (difference_type n) const
 		// {
 		// 	#if DEBUG

@@ -6,12 +6,13 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:38:15 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/19 14:39:54 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/19 21:29:02 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "RBT.hpp"
+//#include "iterator.hpp"
 #include "rbt_iterator.hpp"
 
 namespace ft
@@ -26,19 +27,19 @@ namespace ft
 		typedef RBT<T, Compare, Alloc> tree_type;
 		
 		public:
-		typedef T													key_type;				//The first template parameter (T)	
-		typedef T													value_type;				//The first template parameter (T)	
-		typedef typename std::less<key_type>						key_compare;			//The second template parameter (Compare)	defaults to: less<key_type>
-		typedef typename std::less<value_type> 						value_compare;			//The second template parameter (Compare)	defaults to: less<value_type>
-		typedef Alloc												allocator_type;			//The third template parameter (Alloc)	defaults to: allocator<value_type>
-		typedef typename allocator_type::reference					reference;				//for the default allocator: value_type&
-		typedef typename allocator_type::const_reference			const_reference;		//for the default allocator: const value_type&
-		typedef typename allocator_type::pointer					pointer;				//for the default allocator: value_type*
-		typedef typename allocator_type::const_pointer				const_pointer;			//for the default allocator: const value_type*
-		typedef typename ft::rbt_iterator<value_type, tree_type>			iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
-		typedef typename ft::rbt_iterator<value_type, tree_type>			const_iterator;				//a bidirectional iterator to const value_type
-		typedef typename ft::rbt_reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>
-		typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;	
+		typedef T															key_type;				//The first template parameter (T)	
+		typedef T															value_type;				//The first template parameter (T)	
+		typedef typename std::less<key_type>								key_compare;			//The second template parameter (Compare)	defaults to: less<key_type>
+		typedef typename std::less<value_type> 								value_compare;			//The second template parameter (Compare)	defaults to: less<value_type>
+		typedef Alloc														allocator_type;			//The third template parameter (Alloc)	defaults to: allocator<value_type>
+		typedef typename allocator_type::reference							reference;				//for the default allocator: value_type&
+		typedef typename allocator_type::const_reference					const_reference;		//for the default allocator: const value_type&
+		typedef typename allocator_type::pointer							pointer;				//for the default allocator: value_type*
+		typedef typename allocator_type::const_pointer						const_pointer;			//for the default allocator: const value_type*
+		typedef typename ft::rbt_iterator<value_type>						iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
+		typedef typename ft::rbt_iterator<const value_type>					const_iterator;				//a bidirectional iterator to const value_type
+		typedef typename ft::rbt_reverse_iterator<iterator>					reverse_iterator;			//reverse_iterator<iterator>
+		typedef typename ft::rbt_reverse_iterator<const_iterator>			const_reverse_iterator;	
 		
 		// typedef typename ft::rbt_iterator<T, T>						iterator;				//a bidirectional iterator to value_type	convertible to const_iterator
 		// typedef typename ft::rbt_iterator<const T, T>				const_iterator;			//a bidirectional iterator to const value_type	
