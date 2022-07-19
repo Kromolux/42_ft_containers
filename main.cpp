@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/18 18:00:22 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/19 16:46:34 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,8 @@ int	main(void)
 	//test_vector(myTimer);
 	//test_stack(myTimer);
 	//test_pair(myTimer);
-	test_map(myTimer);
-	//test_set(myTimer);
+	//test_map(myTimer);
+	test_set(myTimer);
 
 	
 	myTimer.all.end = clock();
@@ -572,16 +572,16 @@ void test_map(t_testTime & myTimer)
 	myMap.insert(ft::pair<int, int>(35, 13));
 	myMap.insert(ft::pair<int, int>(57, 14));
 	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	myMap.insert(ft::pair<int, int>(50, 1));
-	myMap.insert(ft::pair<int, int>(70, 2));
-	myMap.insert(ft::pair<int, int>(80, 3));
-	myMap.insert(ft::pair<int, int>(90, 4));
-	myMap.insert(ft::pair<int, int>(100, 5));
-	myMap.insert(ft::pair<int, int>(50, 1));
-	myMap.insert(ft::pair<int, int>(40, 2));
-	myMap.insert(ft::pair<int, int>(30, 3));
-	myMap.insert(ft::pair<int, int>(20, 4));
-	myMap.insert(ft::pair<int, int>(10, 5));
+	// myMap.insert(ft::pair<int, int>(50, 1));
+	// myMap.insert(ft::pair<int, int>(70, 2));
+	// myMap.insert(ft::pair<int, int>(80, 3));
+	// myMap.insert(ft::pair<int, int>(90, 4));
+	// myMap.insert(ft::pair<int, int>(100, 5));
+	// myMap.insert(ft::pair<int, int>(50, 1));
+	// myMap.insert(ft::pair<int, int>(40, 2));
+	// myMap.insert(ft::pair<int, int>(30, 3));
+	// myMap.insert(ft::pair<int, int>(20, 4));
+	// myMap.insert(ft::pair<int, int>(10, 5));
 	
 	displayMapInfo(myMap);
 	displayMapContent(myMap);
@@ -696,6 +696,7 @@ void test_set(t_testTime & myTimer)
 	displaySetContent(mySet);
 
 	mySet.insert(5);
+	displaySetInfo(mySet);
 	displaySetContent(mySet);
 
 	myTimer.set.end = clock();

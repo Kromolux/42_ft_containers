@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RBT.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 13:03:32 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/18 18:01:52 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/19 16:43:29 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,27 @@
 
 namespace ft
 {
-	template <class K, class V, class Compare = std::less<K>, class Alloc = std::allocator<ft::pair<const K, V> > >
+	template <class T>
+	struct Node {
+		T		data;
+		Node 	* parent;
+		Node 	* left;
+		Node 	* right;
+		bool	isBlack;
+		bool	isLeftChild;
+	};
+
+	//template <class K, class V, class Compare = std::less<K>, class Alloc = std::allocator<ft::pair<const K, V> > >
+	template <class T, class Compare = std::less<T>, class Alloc = std::allocator<T> >
 	class RBT
 	{
 		public:
-		
-		typedef K													key_type;					//The first template parameter (Key)
-		typedef V													mapped_type;				//The second template parameter (T)
-		typedef ft::pair<const K, V> 								value_type;					//pair<const key_type,mapped_type>
-		typedef typename std::less<key_type> 						key_compare;				//The third template parameter (Compare)	defaults to: less<key_type>
-		typedef typename std::less<value_type> 						value_compare;				//The second template parameter (Compare)	defaults to: less<value_type>
+		typedef T											value_type;
+		//typedef K													key_type;					//The first template parameter (Key)
+		//typedef V													mapped_type;				//The second template parameter (T)
+		//typedef ft::pair<const K, V> 								value_type;					//pair<const key_type,mapped_type>
+		typedef Compare		 						key_compare;				//The third template parameter (Compare)	defaults to: less<key_type>
+		//typedef typename std::less<extract_value(T)> 								value_compare;				//The second template parameter (Compare)	defaults to: less<value_type>
 		typedef Alloc												allocator_type;				//The fourth template parameter (Alloc)	defaults to: allocator<value_type>
 		typedef typename allocator_type::reference					reference;					//for the default allocator: value_type&
 		typedef typename allocator_type::const_reference			const_reference;			//for the default allocator: const value_type&
@@ -71,22 +82,15 @@ namespace ft
 		//typedef typename ft::rbt_iterator<const_iterator>	const_reverse_iterator;		//reverse_iterator<const_iterator>
 		typedef typename allocator_type::difference_type			difference_type;			//a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
 		typedef typename allocator_type::size_type					size_type;					//an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
-	
-		struct node {
-			value_type	data;
-			node 	* parent;
-			node 	* left;
-			node 	* right;
-			bool	isBlack;
-			bool	isLeftChild;
-		};
 
+		typedef Node<T> * node_ptr;
+	
 		protected:
-		node 					* root;
-		std::allocator<node>	mem_node_control;
+		node_ptr				root;
+		std::allocator<Node<T> >	mem_node_control;
 		key_compare				mem_compare;
 		allocator_type			mem_control;
-		//pointer					mem_start;
+		//pointer				mem_start;
 		size_type				mem_size;
 
 		
@@ -139,7 +143,7 @@ namespace ft
 				clearTree(this->root);
 			this->mem_compare = Copy.mem_compare;
 			this->mem_control = Copy.mem_control;
-			this->mem_node_control = Copy.mem_node_control;
+			//this->mem_node_control = Copy.mem_node_control;
 			this->mem_size = 0;
 			//TODO copy all nodes!
 			copyTree(Copy);
@@ -148,42 +152,42 @@ namespace ft
 
 		void copyTree(const RBT & Copy)
 		{
-			this->root = copyNode(*Copy.root);
+			this->root = copyNode(Copy.root);
 			if (Copy.root->left)
-				copyTree(*this->root, *Copy.root->left);
+				copyTree(this->root, Copy.root->left);
 			if (Copy.root->right)
-				copyTree(*this->root, *Copy.root->right);
+				copyTree(this->root, Copy.root->right);
 		}
 		
-		void	copyTree(node & parent, const node & CopyNode)
+		void	copyTree(node_ptr parent, const node_ptr NodeToCopy)
 		{
-			node * Copy = copyNode(CopyNode);
-			if (Copy->isLeftChild)
-				parent.left = Copy;
+			node_ptr tmp = copyNode(NodeToCopy);
+			if (tmp->isLeftChild)
+				parent->left = tmp;
 			else
-				parent.right = Copy;
-			Copy->parent = &parent;
+				parent->right = tmp;
+			tmp->parent = parent;
 
-			if (CopyNode.left)
-				copyTree(*Copy, *CopyNode.left);
-			if (CopyNode.right)
-				copyTree(*Copy, *CopyNode.right);
+			if (NodeToCopy->left)
+				copyTree(tmp, NodeToCopy->left);
+			if (NodeToCopy->right)
+				copyTree(tmp, NodeToCopy->right);
 		}
 		// //***Iterators:
 		// //Return iterator to beginning (public member function )
-		node * begin(void) const
+		node_ptr begin(void) const
 		{
 			return (getLeftNode(this->root));
 		}
-		node * end(void) const
+		node_ptr end(void) const
 		{
 			return (getRightNode(this->root));
 		}
-		node * rbegin(void) const
+		node_ptr rbegin(void) const
 		{
 			return (getRightNode(this->root));
 		}
-		node * rend(void) const
+		node_ptr rend(void) const
 		{
 			return (getLeftNode(this->root));
 		}
@@ -221,7 +225,7 @@ namespace ft
 		to either the newly inserted element or to the element with an equivalent key in the rbt.
 		The pair::second element in the pair is set to true if a new element was inserted or false if an equivalent key already existed.
 		*/
-		node * addNode (const value_type& val)
+		node_ptr addNode (const value_type & input)
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[RBT] insert key/value called.\n" << COLOR_DEFAULT;
@@ -229,26 +233,27 @@ namespace ft
 			if (this->root == NULL)
 			{
 				#if DEBUG
-					std::cout << COLOR_YELLOW << "[RBT] empty tree - creating new root node key: " << val.first << ".\n" << COLOR_DEFAULT;
+					std::cout << COLOR_YELLOW << "[RBT] empty tree - creating new root node key: " << extract_key(input) << ".\n" << COLOR_DEFAULT;
 				#endif
-				this->root = createNode(val);
+				this->root = createNode(input);
 				this->root->isBlack = true;
 				return (this->root);
 			}
-			node * checkNode = findNode(val.first);
+
+			node_ptr	checkNode = findNode(input);
 			if (checkNode)
 			{
 				#if DEBUG
-					std::cout << COLOR_YELLOW << "[RBT] node with key:" << val.first << " already existing.\n" << COLOR_DEFAULT;
+					std::cout << COLOR_YELLOW << "[RBT] node with key:" << extract_key(input) << " already existing.\n" << COLOR_DEFAULT;
 				#endif
 				return (checkNode);
 			}
 			checkNode = this->root;
-			node *parentNode;
+			node_ptr	parentNode;
 			bool isLeft = false;
 			while (checkNode != NULL)
 			{
-				if (val.first < checkNode->data.first)
+				if (extract_key(input) < extract_key(checkNode->data))
 				{
 					parentNode = checkNode;
 					checkNode = checkNode->left;
@@ -262,9 +267,9 @@ namespace ft
 				}
 			}
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[RBT] new node with key:" << val.first << " created. Parent-Key: " << parentNode->data.first << " isLeftChild: " << isLeft << "\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[RBT] new node with key:" << extract_key(input) << " created. Parent-Key: " << extract_key(parentNode->data) << " isLeftChild: " << isLeft << "\n" << COLOR_DEFAULT;
 			#endif
-			checkNode = createNode(val);
+			checkNode = createNode(input);
 			if (isLeft)
 			{
 				parentNode->left = checkNode;
@@ -284,10 +289,10 @@ namespace ft
 			return (checkNode);
 		}
 
-		node * addNode (const key_type& k) //overload for SET
-		{
-			return (addNode(ft::pair<K, K>(k, k)));
-		}
+		// node_ptr addNode (const key_type& k) //overload for SET
+		// {
+		// 	return (addNode(ft::pair<K, K>(k, k)));
+		// }
 		// void printTree(void)
 		// {
 		// 	if (this->root)
@@ -303,19 +308,19 @@ namespace ft
 		// 	if (nd->left)
 		// 		sdt::cout << "[" << nd->left->data.first << ":" << nd->data.second << "]";
 		// }
-		size_type erase (const key_type& k)
+		size_type erase (const value_type& input)
 		{
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[RBT] function erase key: " << k << " called.\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[RBT] function erase key: " << extract_key(input) << " called.\n" << COLOR_DEFAULT;
 			#endif
-			node *nodeToDelete = this->findNode(k);
+			node_ptr	nodeToDelete = this->findNode(input);
 			if (nodeToDelete)
 			{
 				#if DEBUG
-					std::cout << COLOR_YELLOW << "[RBT] found node to delete in tree key:value " << nodeToDelete->data.first << ":" << nodeToDelete->data.second << " .\n" << COLOR_DEFAULT;
+					std::cout << COLOR_YELLOW << "[RBT] found node to delete in tree key:value " << extract_key(nodeToDelete->data) << ":" << extract_value(nodeToDelete->data) << " .\n" << COLOR_DEFAULT;
 				#endif
 
-				node *nodeReplaceDeleted = getNextNode(nodeToDelete);
+				node_ptr nodeReplaceDeleted = getNextNode(nodeToDelete);
 				if (!nodeReplaceDeleted)
 				{
 					#if DEBUG
@@ -335,12 +340,12 @@ namespace ft
 				
 				if (nodeToDelete == this->root)
 					this->root = nodeReplaceDeleted;
-				node *nodeMoveUp = getNextNode(nodeReplaceDeleted);
+				node_ptr	nodeMoveUp = getNextNode(nodeReplaceDeleted);
 				//node *nodeHelp = NULL;
 				if (nodeMoveUp)
 				{
 					#if DEBUG
-						std::cout << COLOR_YELLOW << "[RBT] found nodeMoveUp key:value " << nodeMoveUp->data.first << ":" << nodeMoveUp->data.second << " .\n" << COLOR_DEFAULT;
+						std::cout << COLOR_YELLOW << "[RBT] found nodeMoveUp key:value " << extract_key(nodeMoveUp->data) << ":" << extract_value(nodeMoveUp->data) << " .\n" << COLOR_DEFAULT;
 					#endif
 					nodeMoveUp->parent = nodeReplaceDeleted->parent;
 					if (nodeReplaceDeleted->isLeftChild)
@@ -363,7 +368,7 @@ namespace ft
 						nodeReplaceDeleted->parent->right = NULL;
 				}
 				#if DEBUG
-					std::cout << COLOR_YELLOW << "[RBT] found nodeReplaceDeleted key:value " << nodeReplaceDeleted->data.first << ":" << nodeReplaceDeleted->data.second << " .\n" << COLOR_DEFAULT;
+					std::cout << COLOR_YELLOW << "[RBT] found nodeReplaceDeleted key:value " << extract_key(nodeReplaceDeleted->data) << ":" << extract_value(nodeReplaceDeleted->data) << " .\n" << COLOR_DEFAULT;
 				#endif
 				nodeReplaceDeleted->parent = nodeToDelete->parent;
 				if (nodeReplaceDeleted->parent)
@@ -418,26 +423,27 @@ namespace ft
 			return (0);
 		}
 		
-		node * copyNode(const node & Copy)
+		node_ptr	copyNode(const node_ptr NodeToCopy)
 		{
-			node * newNode = this->mem_node_control.allocate(1);
-			this->mem_control.construct(&(newNode->data), Copy.data);
+			node_ptr	newNode = this->mem_node_control.allocate(1);
+			this->mem_control.construct(&(newNode->data), NodeToCopy->data);
 			++this->mem_size;
-			newNode->parent = Copy.parent;
-			newNode->left = Copy.left;
-			newNode->right = Copy.right;
-			newNode->isBlack = Copy.isBlack;
-			newNode->isLeftChild = Copy.isLeftChild;
+			newNode->parent = NodeToCopy->parent;
+			newNode->left = NodeToCopy->left;
+			newNode->right = NodeToCopy->right;
+			newNode->isBlack = NodeToCopy->isBlack;
+			newNode->isLeftChild = NodeToCopy->isLeftChild;
 			return (newNode);
 		}
-		node * getNextNode(node * nd)
+
+		node_ptr	getNextNode(node_ptr node)
 		{
-			if (nd->left && nd->left->right)
-				return (getRightNode(nd->left->right));
-			if (nd->left)
-				return (nd->left);
-			if (nd->right)
-				return (nd->right);
+			if (node->left && node->left->right)
+				return (getRightNode(node->left->right));
+			if (node->left)
+				return (node->left);
+			if (node->right)
+				return (node->right);
 			return (NULL);
 		}
 		// void erase (iterator first, iterator last)
@@ -449,7 +455,7 @@ namespace ft
 		// 	(void) last;
 		// }
 		//Swap content (public member function )
-		void swap (RBT& x)
+		void swap (RBT & x)
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[RBT] swap called.\n" << COLOR_DEFAULT;
@@ -488,25 +494,25 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[RBT] key_comp called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->mem_compare);
+			return (key_compare());
 		}
 		//Return value comparison object (public member function )
-		value_compare value_comp(void) const
-		{
-			#if DEBUG
-				std::cout << COLOR_YELLOW << "[RBT] value_comp called.\n" << COLOR_DEFAULT;
-			#endif
-			return (value_compare());
-		}
+		// value_compare value_comp(void) const
+		// {
+		// 	#if DEBUG
+		// 		std::cout << COLOR_YELLOW << "[RBT] value_comp called.\n" << COLOR_DEFAULT;
+		// 	#endif
+		// 	return (value_compare());
+		// }
 
 		// //***Operations:
 		//Count elements with a specific key (public member function )
-		size_type count (const key_type& k) const
+		size_type count (const value_type& input) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[RBT] count called.\n" << COLOR_DEFAULT;
 			#endif
-			node *nd = this->findNode(k);
+			node_ptr nd = this->findNode(input);
 			if (nd)
 				return (1);
 			return (0);
@@ -541,101 +547,101 @@ namespace ft
 		*/
 
 		private:
-		void	checkColor(node * nd)
+		void	checkColor(node_ptr node)
 		{
-			if (!nd)
+			if (!node)
 				return ;
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[RBT] checkColor key:value " << nd->data.first << ":" << nd->data.second << " called.\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[RBT] checkColor key:value " << extract_key(node->data) << ":" << extract_value(node->data) << " called.\n" << COLOR_DEFAULT;
 			#endif
-			if (nd == this->root)
+			if (node == this->root)
 			{
-				if (nd->isBlack == false)
-					nd->isBlack = true;
+				if (node->isBlack == false)
+					node->isBlack = true;
 				return ;
 			}
-			if (!nd->isBlack && !nd->parent->isBlack)
-				correctTree(*nd);
-			checkColor(nd->parent);
+			if (!node->isBlack && !node->parent->isBlack)
+				correctTree(node);
+			checkColor(node->parent);
 		}
 		
-		void	correctTree(node & nd)
+		void	correctTree(node_ptr node)
 		{
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[RBT] correctTree function called at node: " << nd.data.first << "\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[RBT] correctTree function called at node: " << extract_key(node->data) << "\n" << COLOR_DEFAULT;
 			#endif
-			if (nd.parent->isLeftChild) //Aunt is nd.parent.parent.right
+			if (node->parent->isLeftChild) //Aunt is node->parent->parent->right
 			{
-				if (nd.parent->parent->right == NULL || nd.parent->parent->right->isBlack)
-					return (rotate(nd));
-				if (nd.parent->parent->right != NULL)
+				if (node->parent->parent->right == NULL || node->parent->parent->right->isBlack)
+					return (rotate(node));
+				if (node->parent->parent->right != NULL)
 				{
-					nd.parent->parent->right->isBlack = true;
+					node->parent->parent->right->isBlack = true;
 					#if DEBUG
-						std::cout << COLOR_YELLOW << "[RBT] changed color at " << nd.parent->parent->right->data.first << " to black\n" << COLOR_DEFAULT;
+						std::cout << COLOR_YELLOW << "[RBT] changed color at " << extract_key(node->parent->parent->right->data) << " to black\n" << COLOR_DEFAULT;
 					#endif
 				}
-				nd.parent->parent->isBlack = false;
-				nd.parent->isBlack = true;
+				node->parent->parent->isBlack = false;
+				node->parent->isBlack = true;
 				#if DEBUG
-					std::cout << COLOR_YELLOW << "[RBT] changed color at " << nd.parent->parent->data.first << " to red\n" << COLOR_DEFAULT;
-					std::cout << COLOR_YELLOW << "[RBT] changed color at " << nd.parent->data.first << " to black\n" << COLOR_DEFAULT;
-					std::cout << COLOR_YELLOW << "[RBT] " << nd.data.first << " parent isLeftChild: true\n" << COLOR_DEFAULT;
+					std::cout << COLOR_YELLOW << "[RBT] changed color at " << extract_key(node->parent->parent->data) << " to red\n" << COLOR_DEFAULT;
+					std::cout << COLOR_YELLOW << "[RBT] changed color at " << extract_key(node->parent->data) << " to black\n" << COLOR_DEFAULT;
+					std::cout << COLOR_YELLOW << "[RBT] " << extract_key(node->data) << " parent isLeftChild: true\n" << COLOR_DEFAULT;
 				#endif
 				return ;
 			}
-			//Aunt is nd.parent.parent.left
-			if (nd.parent->parent->left == NULL || nd.parent->parent->left->isBlack)
-				return (rotate(nd));
-			if (nd.parent->parent->left != NULL)
+			//Aunt is node->parent->parent->left
+			if (node->parent->parent->left == NULL || node->parent->parent->left->isBlack)
+				return (rotate(node));
+			if (node->parent->parent->left != NULL)
 			{
-				nd.parent->parent->left->isBlack = true;
+				node->parent->parent->left->isBlack = true;
 				#if DEBUG
-					std::cout << COLOR_YELLOW << "[RBT] changed color at " << nd.parent->parent->left->data.first << " to black\n" << COLOR_DEFAULT;
+					std::cout << COLOR_YELLOW << "[RBT] changed color at " << extract_key(node->parent->parent->left->data) << " to black\n" << COLOR_DEFAULT;
 				#endif
 			}
-			nd.parent->parent->isBlack = false;
-			nd.parent->isBlack = true;
+			node->parent->parent->isBlack = false;
+			node->parent->isBlack = true;
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[RBT] changed color at " << nd.parent->parent->data.first << " to red\n" << COLOR_DEFAULT;
-				std::cout << COLOR_YELLOW << "[RBT] changed color at " << nd.parent->data.first << " to black\n" << COLOR_DEFAULT;
-				std::cout << COLOR_YELLOW << "[RBT] " << nd.data.first << " parent isLeftChild: false\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[RBT] changed color at " << extract_key(node->parent->parent->data) << " to red\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[RBT] changed color at " << extract_key(node->parent->data) << " to black\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[RBT] " << extract_key(node->data) << " parent isLeftChild: false\n" << COLOR_DEFAULT;
 			#endif
 			return ;
 		}
 		
-		void	rotate(node & nd)
+		void	rotate(node_ptr node)
 		{
-			if (nd.isLeftChild)
+			if (node->isLeftChild)
 			{
-				if (nd.parent->isLeftChild)
+				if (node->parent->isLeftChild)
 				{
-					rightRotate(*nd.parent->parent);
-					nd.isBlack = false;
-					nd.parent->isBlack = true;
-					if (nd.parent->right != NULL)
-						nd.parent->right->isBlack = false;
+					rightRotate(node->parent->parent);
+					node->isBlack = false;
+					node->parent->isBlack = true;
+					if (node->parent->right != NULL)
+						node->parent->right->isBlack = false;
 					return ;
 				}
-				rightLeftRotate(*nd.parent->parent);
-				nd.isBlack = true;
-				nd.right->isBlack = false;
-				nd.left->isBlack = false;
+				rightLeftRotate(node->parent->parent);
+				node->isBlack = true;
+				node->right->isBlack = false;
+				node->left->isBlack = false;
 				return ;
 			}
-			if (!nd.parent->isLeftChild)
+			if (!node->parent->isLeftChild)
 			{
-				leftRotate(*nd.parent->parent);
-				nd.isBlack = false;
-				nd.parent->isBlack = true;
-				if (nd.parent->left != NULL)
-					nd.parent->left->isBlack = false;
+				leftRotate(node->parent->parent);
+				node->isBlack = false;
+				node->parent->isBlack = true;
+				if (node->parent->left != NULL)
+					node->parent->left->isBlack = false;
 				return ;
 			}
-			leftRightRotate(*nd.parent->parent);
-			nd.isBlack = true;
-			nd.right->isBlack = false;
-			nd.left->isBlack = false;
+			leftRightRotate(node->parent->parent);
+			node->isBlack = true;
+			node->right->isBlack = false;
+			node->left->isBlack = false;
 			return ;
 		}
 		/*
@@ -655,43 +661,43 @@ namespace ft
 			   / \
 			 (D) (B)
 		*/
-		void	rightRotate(node & nd) //grandparent node
+		void	rightRotate(node_ptr node) //grandparent node
 		{
 			#if DEBUG
-				std::cout << COLOR_BLUE<< "[RBT] rightRotate called - " << nd.data.first << "\n" << COLOR_DEFAULT;
+				std::cout << COLOR_BLUE<< "[RBT] rightRotate called - " << extract_key(node->data) << "\n" << COLOR_DEFAULT;
 			#endif
-			node & tmp = *nd.left;
-			nd.left = tmp.right;
-			if (nd.left != NULL)
+			node_ptr tmp = node->left;
+			node->left = tmp->right;
+			if (node->left != NULL)
 			{
-				nd.left->parent = &nd;
-				nd.left->isLeftChild = true;
+				node->left->parent = node;
+				node->left->isLeftChild = true;
 			}
-			if (nd.parent == NULL) //Root node
+			if (node->parent == NULL) //Root node
 			{
-				this->root = &tmp;
-				tmp.parent = NULL;
+				this->root = tmp;
+				tmp->parent = NULL;
 				#if DEBUG
-					std::cout << COLOR_BLUE<< "[RBT] changed root node - " << this->root->data.first << "\n" << COLOR_DEFAULT;
+					std::cout << COLOR_BLUE<< "[RBT] changed root node - " << extract_key(this->root->data) << "\n" << COLOR_DEFAULT;
 				#endif
 			}
 			else
 			{
-				tmp.parent = nd.parent;
-				if (nd.isLeftChild)
+				tmp->parent = node->parent;
+				if (node->isLeftChild)
 				{
-					tmp.isLeftChild = true;
-					tmp.parent->left = &tmp;
+					tmp->isLeftChild = true;
+					tmp->parent->left = tmp;
 				}
 				else
 				{
-					tmp.isLeftChild = false;
-					tmp.parent->right = &tmp;
+					tmp->isLeftChild = false;
+					tmp->parent->right = tmp;
 				}
 			}
-			tmp.right = &nd;
-			nd.isLeftChild = false;
-			nd.parent = &tmp;
+			tmp->right = node;
+			node->isLeftChild = false;
+			node->parent = tmp;
 		}
 
 		/*
@@ -712,43 +718,43 @@ namespace ft
 			   / \
 			 (B) (D)
 		*/
-		void	leftRotate(node & nd) //grandparent node
+		void	leftRotate(node_ptr node) //grandparent node
 		{
 			#if DEBUG
-				std::cout << COLOR_BLUE<< "[RBT] leftRotate called - " << nd.data.first << "\n" << COLOR_DEFAULT;
+				std::cout << COLOR_BLUE<< "[RBT] leftRotate called - " << extract_key(node->data) << "\n" << COLOR_DEFAULT;
 			#endif
-			node & tmp = *nd.right;
-			nd.right = tmp.left;
-			if (nd.right != NULL)
+			node_ptr tmp = node->right;
+			node->right = tmp->left;
+			if (node->right != NULL)
 			{
-				nd.right->parent = &nd;
-				nd.right->isLeftChild = false;
+				node->right->parent = node;
+				node->right->isLeftChild = false;
 			}
-			if (nd.parent == NULL) //Root node
+			if (node->parent == NULL) //Root node
 			{
-				this->root = &tmp;
-				tmp.parent = NULL;
+				this->root = tmp;
+				tmp->parent = NULL;
 				#if DEBUG
-					std::cout << COLOR_BLUE<< "[RBT] changed root node - " << this->root->data.first << "\n" << COLOR_DEFAULT;
+					std::cout << COLOR_BLUE<< "[RBT] changed root node - " << extract_key(this->root->data) << "\n" << COLOR_DEFAULT;
 				#endif
 			}
 			else
 			{
-				tmp.parent = nd.parent;
-				if (nd.isLeftChild)
+				tmp->parent = node->parent;
+				if (node->isLeftChild)
 				{
-					tmp.isLeftChild = true;
-					tmp.parent->left = &tmp;
+					tmp->isLeftChild = true;
+					tmp->parent->left = tmp;
 				}
 				else
 				{
-					tmp.isLeftChild = false;
-					tmp.parent->right = &tmp;
+					tmp->isLeftChild = false;
+					tmp->parent->right = tmp;
 				}
 			}
-			tmp.left = &nd;
-			nd.isLeftChild = true;
-			nd.parent = &tmp;
+			tmp->left = node;
+			node->isLeftChild = true;
+			node->parent = tmp;
 		}
 		/*
 		https://www.youtube.com/watch?v=4I_vnGpS-Io
@@ -777,22 +783,22 @@ namespace ft
 			   / \
 			 (C) (B)
 		*/
-		void	leftRightRotate(node & nd)
+		void	leftRightRotate(node_ptr node)
 		{
-			leftRotate(*nd.left);
-			rightRotate(nd);
+			leftRotate(node->left);
+			rightRotate(node);
 		}
-		void	rightLeftRotate(node & nd)
+		void	rightLeftRotate(node_ptr node)
 		{
-			rightRotate(*nd.right);
-			leftRotate(nd);
+			rightRotate(node->right);
+			leftRotate(node);
 		}
 
-		node * createNode(const value_type & val)
+		node_ptr createNode(const value_type & input)
 		{
-			node * newNode = this->mem_node_control.allocate(1);
+			node_ptr newNode = this->mem_node_control.allocate(1);
 			//newNode->data = this->mem_control.allocate(1);
-			this->mem_control.construct(&(newNode->data), val);
+			this->mem_control.construct(&(newNode->data), input);
 			++this->mem_size;
 			newNode->isBlack = false;
 			newNode->isLeftChild = false;
@@ -801,67 +807,83 @@ namespace ft
 			newNode->right = NULL;
 			return (newNode);
 		}
-		void	deleteNode(node * nd)
+		void	deleteNode(node_ptr node)
 		{
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[RBT] deleteNode called - " << nd->data.first << "\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[RBT] deleteNode called - " << extract_key(node->data) << "\n" << COLOR_DEFAULT;
 			#endif
 			//this->mem_control.destroy(&(nd->data));
 			//this->mem_control.deallocate(nd->data, 1);
 			--this->mem_size;
-			this->mem_node_control.deallocate(nd, 1);
+			this->mem_node_control.deallocate(node, 1);
 		}
 		
-		node * getSibling(node & nd) const
+		node_ptr getSibling(node_ptr node) const
 		{
-			if (nd->parent == NULL)
+			if (node->parent == NULL)
 				return (NULL);
-			if (nd->isLeftchild)
-				return (nd->parent->right);
-			return (nd->parent->left);
+			if (node->isLeftchild)
+				return (node->parent->right);
+			return (node->parent->left);
 		}
-		node * getLeftNode(node * nd) const
+		node_ptr getLeftNode(node_ptr node) const
 		{
-			if (!nd)
+			if (!node)
 				return (NULL);
-			node	*tmp = nd;
+			node_ptr	tmp = node;
 			while (tmp && tmp->left)
 				tmp = tmp->left;
 			return (tmp);
 		}
-		node * getRightNode(node * nd) const
+		
+		node_ptr getRightNode(node_ptr node) const
 		{
-			if (!nd)
+			if (!node)
 				return (NULL);
-			node	*tmp = nd;
+			node_ptr	tmp = node;
 			while (tmp && tmp->right)
 				tmp = tmp->right;
 			return (tmp);
 		}
-		void	clearTree(node * nd)
+		
+		void	clearTree(node_ptr node)
 		{
-			if (!nd)
+			if (!node)
 				return ;
-			if (nd->left)
-				clearTree(nd->left);
-			if (nd->right)
-				clearTree(nd->right);
-			deleteNode(nd);
+			if (node->left)
+				clearTree(node->left);
+			if (node->right)
+				clearTree(node->right);
+			deleteNode(node);
 		}
+		
 		public:
-		node * findNode(const K & k)
+		node_ptr findNode(const value_type & input)
 		{
-			node *tmp = this->root;
-
+			node_ptr tmp = this->root;
+			#if DEBUG
+				std::cout << COLOR_BLUE << "findNode called node: " << extract_key(input) << "\n" << COLOR_DEFAULT;
+			#endif
 			while (tmp)
 			{
-				if (tmp->data.first == k)
+				#if DEBUG
+					std::cout << COLOR_BLUE << "findNode looking at node: " << extract_key(tmp->data) << "\n" << COLOR_DEFAULT;
+				#endif
+				if (extract_key(tmp->data) == extract_key(input))
+				{
+					#if DEBUG
+						std::cout << COLOR_BLUE << "findNode found node: " << extract_key(tmp->data) << "\n" << COLOR_DEFAULT;
+					#endif
 					return (tmp);
-				if (k < tmp->data.first)
+				}
+				if (extract_key(input) < extract_key(tmp->data))
 					tmp = tmp->left;
 				else
 					tmp = tmp->right;
 			}
+			#if DEBUG
+				std::cout << COLOR_BLUE << "findNode could not find node: " << extract_key(tmp) << "\n" << COLOR_DEFAULT;
+			#endif
 			return (tmp);
 		}
 
@@ -872,12 +894,12 @@ namespace ft
 			return (height(this->root) - 1);
 		}
 
-		int	height(node * nd)
+		int	height(node_ptr node)
 		{
-			if (nd == NULL)
+			if (node == NULL)
 				return (0);
-			int	leftHeight = height(nd->left) + 1;
-			int	rightHeight = height(nd->right) + 1;
+			int	leftHeight = height(node->left) + 1;
+			int	rightHeight = height(node->right) + 1;
 			if (leftHeight > rightHeight)
 				return (leftHeight);
 			return (rightHeight);
@@ -888,48 +910,48 @@ namespace ft
 			return (blackNodes(this->root));
 		}
 		
-		int	blackNodes(node * nd)
+		int	blackNodes(node_ptr node)
 		{
-			if (nd == NULL)
+			if (node == NULL)
 				return (1);
 			#if DEBUG
-				std::cout << COLOR_BLUE << "blackNodes called node: " << nd->data.first << " isBlack: " << nd->isBlack << "\n" << COLOR_DEFAULT;
+				std::cout << COLOR_BLUE << "blackNodes called node: " << extract_key(node->data) << " isBlack: " << node->isBlack << "\n" << COLOR_DEFAULT;
 			#endif
-			int	rightBlackNodes = blackNodes(nd->right);
-			int	leftBlackNodes = blackNodes(nd->left);
+			int	rightBlackNodes = blackNodes(node->right);
+			int	leftBlackNodes = blackNodes(node->left);
 			if (rightBlackNodes != leftBlackNodes)
 			{
 				// throw error fix the tree
 				#if DEBUG
-					std::cout << COLOR_BLUE << "imbalance in RBT! node: " << nd->data.first << "\n" << COLOR_DEFAULT;
+					std::cout << COLOR_BLUE << "imbalance in RBT! node: " << extract_key(node->data) << "\n" << COLOR_DEFAULT;
 				#endif
 				if (rightBlackNodes > leftBlackNodes)
 				{
 					//correctTree(*nd->right->left);
 					if (height() > 1)
-						leftRotate(*nd);
+						leftRotate(node);
 					else
 					{
-						nd->right->isBlack = false;
+						node->right->isBlack = false;
 						#if DEBUG
-							std::cout << COLOR_BLUE << "changed color to red node: " << nd->data.first << "\n" << COLOR_DEFAULT;
+							std::cout << COLOR_BLUE << "changed color to red node: " << extract_key(node->data) << "\n" << COLOR_DEFAULT;
 						#endif
 					}
-					if (nd-> parent && nd->parent->right)
+					if (node-> parent && node->parent->right)
 					{
-						nd->parent->right->isBlack = true;
+						node->parent->right->isBlack = true;
 						#if DEBUG
-							std::cout << COLOR_BLUE << "changed color to black node: " << nd->data.first << "\n" << COLOR_DEFAULT;
+							std::cout << COLOR_BLUE << "changed color to black node: " << extract_key(node->data) << "\n" << COLOR_DEFAULT;
 						#endif
 					}
 				}
 				else
 				{
-					rightRotate(*nd);
+					rightRotate(node);
 					//correctTree(*nd->left->right);
 				}
 			}
-			if (nd->isBlack)
+			if (node->isBlack)
 				++leftBlackNodes;
 			return (leftBlackNodes);
 		}

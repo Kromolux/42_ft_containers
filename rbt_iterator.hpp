@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rbt_iterator.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 09:52:47 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/18 18:47:05 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/19 16:30:18 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,17 @@ namespace ft
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::reference				reference;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::iterator_category		iterator_category;
 		
-		//typedef typename ft::RBT<key_type, mapped_type>::node * node_type;
-		typedef Key *node_type;
+		//typedef typename ft::RBT<key_type, mapped_type>::node * node_ptr;
+		//typedef value_type *node_ptr;
 		private:
-		node_type ptr;
-		node_type smallest;
-		node_type biggest;
-
-		// Key ptr;
-		// Key smallest;
-		// Key biggest;
+		// node_ptr ptr;
+		// node_ptr smallest;
+		// node_ptr biggest;
+		typedef Node<Key> * node_ptr;
+		
+		node_ptr ptr;
+		node_ptr smallest;
+		node_ptr biggest;
 		
 		public:
 		rbt_iterator(void) : ptr(NULL), smallest(NULL), biggest(NULL)
@@ -54,7 +55,7 @@ namespace ft
 				std::cout << COLOR_GREEN << "[rbt_iterator] default constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
-		rbt_iterator(node_type input, node_type small, node_type big) : ptr(input), smallest(small), biggest(big)
+		rbt_iterator(node_ptr input, node_ptr small, node_ptr big) : ptr(input), smallest(small), biggest(big)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[rbt_iterator] constructor called.\n" << COLOR_DEFAULT;
@@ -130,7 +131,7 @@ namespace ft
 			return (tmp);
 		}
 
-		value_type *	operator->()
+		key_type *	operator->()
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[rbt_iterator] operator-> called.\n" << COLOR_DEFAULT;
@@ -138,12 +139,12 @@ namespace ft
 			return (&(this->ptr->data));
 		}
 
-		value_type &	operator*()
+		key_type &	operator*()
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[rbt_iterator] operator* called.\n" << COLOR_DEFAULT;
 			#endif
-			//return (static_cast<node_type>(this->ptr)->data);
+			//return (static_cast<node_ptr>(this->ptr)->data);
 			return (this->ptr->data);
 		}
 		
@@ -175,7 +176,7 @@ namespace ft
 			}
 			else
 			{
-				node_type tmp = this->ptr->parent;
+				node_ptr tmp = this->ptr->parent;
 				while (tmp && this->ptr == tmp->right)
 				{
 					this->ptr = tmp;
@@ -197,7 +198,7 @@ namespace ft
 			}
 			else
 			{
-				node_type tmp = this->ptr->parent;
+				node_ptr tmp = this->ptr->parent;
 				while (tmp && this->ptr == tmp->left)
 				{
 					this->ptr = tmp;

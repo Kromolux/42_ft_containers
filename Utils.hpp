@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 12:59:00 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/06 13:00:07 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/19 13:32:58 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,4 +223,29 @@ namespace ft {
 	{
 		return ( pair<T1,T2>(x,y) );
 	}
+
+	template <class T>
+	T extract_key(T key)
+	{
+		return (key);
+	}
+
+	template <class first, class second>
+	first extract_key(ft::pair<first, second> pair)
+	{
+		return (pair.first);
+	}
+
+	template <class T>
+	T extract_value(T value)
+	{
+		return (value);
+	}
+
+	template <class first, class second>
+	second extract_value(ft::pair<first, second> pair)
+	{
+		return (pair.second);
+	}
+	
 }

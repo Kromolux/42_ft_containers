@@ -6,7 +6,7 @@
 #    By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/09 21:06:31 by rkaufman          #+#    #+#              #
-#    Updated: 2022/07/10 21:32:15 by rkaufman         ###   ########.fr        #
+#    Updated: 2022/07/19 16:53:32 by rkaufman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ clean:
 	rm -fr $(OBJS)
 
 fclean: clean
-	rm -fr $(NAME)
+	rm -fr $(NAME) $(NAME).dSYM
 
 re: fclean all
 

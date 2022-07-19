@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:38:15 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/18 18:46:27 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/19 14:39:54 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ namespace ft
 	class set
 	{
 		private:
-		typedef RBT<T, T, Compare, Alloc> tree_type;
+		typedef RBT<T, Compare, Alloc> tree_type;
 		
 		public:
 		typedef T													key_type;				//The first template parameter (T)	
@@ -35,8 +35,8 @@ namespace ft
 		typedef typename allocator_type::const_reference			const_reference;		//for the default allocator: const value_type&
 		typedef typename allocator_type::pointer					pointer;				//for the default allocator: value_type*
 		typedef typename allocator_type::const_pointer				const_pointer;			//for the default allocator: const value_type*
-		typedef typename ft::rbt_iterator<typename tree_type::node, tree_type>			iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
-		typedef typename ft::rbt_iterator<typename tree_type::node, tree_type>			const_iterator;				//a bidirectional iterator to const value_type
+		typedef typename ft::rbt_iterator<value_type, tree_type>			iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
+		typedef typename ft::rbt_iterator<value_type, tree_type>			const_iterator;				//a bidirectional iterator to const value_type
 		typedef typename ft::rbt_reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>
 		typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;	
 		

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/18 18:31:35 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/19 16:19:47 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ namespace ft
 				>
 	class map
 	{
-		private:
-		typedef RBT<Key, T, Compare, Alloc> tree_type;
+
 		
 		public:
 		typedef Key													key_type;					//The first template parameter (Key)
@@ -38,8 +37,9 @@ namespace ft
 		typedef typename allocator_type::const_reference			const_reference;			//for the default allocator: const value_type&
 		typedef typename allocator_type::pointer					pointer;					//for the default allocator: value_type*
 		typedef typename allocator_type::const_pointer				const_pointer;				//for the default allocator: const value_type*
-		typedef typename ft::rbt_iterator<typename tree_type::node, tree_type>					iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
-		typedef typename ft::rbt_iterator<typename tree_type::node, tree_type>			const_iterator;				//a bidirectional iterator to const value_type
+		typedef RBT<value_type, Compare> 					tree_type;
+		typedef typename ft::rbt_iterator<value_type, tree_type>	iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
+		typedef typename ft::rbt_iterator<value_type, tree_type>	const_iterator;				//a bidirectional iterator to const value_type
 		typedef typename ft::rbt_reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>
 		typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;	
 		// typedef typename ft::rbt_iterator<Key, T>					iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
@@ -50,15 +50,17 @@ namespace ft
 		typedef typename allocator_type::size_type					size_type;					//an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
 	
 		private:
+		
 		//typedef RBT<Key, T, Compare, Alloc> tree_type;
 		//RBT<Key, T, Compare, Alloc> c;
 		tree_type c;
-
+		allocator_type mem_alloc;
+		
 		public:
 		//***Member functions
 		//(constructor)	Construct map (public member function )
 		explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-		: c(comp, alloc)
+		: c(comp), mem_alloc(alloc)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[map] default constructor called.\n" << COLOR_DEFAULT;
@@ -259,7 +261,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase position called.\n" << COLOR_DEFAULT;
 			#endif
-			this->c.erase(position->first);
+			this->c.erase(*position);
 		}
 
 		size_type erase (const key_type& k)
@@ -267,7 +269,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase key called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.erase(k));
+			return (this->c.erase(make_pair(k, mapped_type())));
 		}
 
 		void erase (iterator first, iterator last)
@@ -281,7 +283,7 @@ namespace ft
 				#if DEBUG
 					std::cout << COLOR_YELLOW << "[map] erase first - last key " << tmp->first << ".\n" << COLOR_DEFAULT;
 				#endif
-				this->c.erase(tmp->first);
+				this->c.erase(*tmp);
 			}
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase first - last key " << tmp->first << ".\n" << COLOR_DEFAULT;
@@ -335,14 +337,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] find called.\n" << COLOR_DEFAULT;
 			#endif
-			return (iterator(this->c.findNode(k), this->c.begin(), this->c.end()));
+			return (iterator(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end()));
 		}
 		const_iterator find (const key_type& k) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const find called.\n" << COLOR_DEFAULT;
 			#endif
-			return (const_iterator(this->c.findNode(k), this->c.begin(), this->c.end()));
+			return (const_iterator(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end()));
 		}
 		//Count elements with a specific key (public member function )
 		size_type count (const key_type& k) const
@@ -350,7 +352,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] count called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.count(k));
+			return (this->c.count(make_pair(k, mapped_type())));
 		}
 		//Return iterator to lower bound (public member function )
 		iterator lower_bound (const key_type& k)
@@ -358,7 +360,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] lower_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			iterator it(this->c.findNode(k), this->c.begin(), this->c.end());
+			iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
 			//if (it != iterator())
 			//--it;
 			return (it);
@@ -368,7 +370,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const lower_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			const_iterator it(this->c.findNode(k), this->c.begin(), this->c.end());
+			const_iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
 			//if (it != const_iterator())
 			//--it;
 			return (it);
@@ -379,7 +381,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] upper_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			iterator it(this->c.findNode(k), this->c.begin(), this->c.end());
+			iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
 			if (it != iterator())
 			++it;
 			return (it);
@@ -389,7 +391,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const upper_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			const_iterator it(this->c.findNode(k), this->c.begin(), this->c.end());
+			const_iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
 			if (it != const_iterator())
 			++it;
 			return (it);
@@ -418,7 +420,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] get_allocator called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.get_allocator());
+			return (this->mem_alloc);
 		}
 		
 		int	height(void)
