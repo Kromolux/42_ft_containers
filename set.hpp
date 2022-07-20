@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:38:15 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/19 21:29:02 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/20 10:42:02 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ namespace ft
 	class set
 	{
 		private:
-		typedef RBT<T, Compare, Alloc> tree_type;
+		typedef RBT<T, Compare> tree_type;
 		
 		public:
 		typedef T															key_type;				//The first template parameter (T)	

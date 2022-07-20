@@ -6,7 +6,7 @@
 #    By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/09 21:06:31 by rkaufman          #+#    #+#              #
-#    Updated: 2022/07/19 21:34:21 by rkaufman         ###   ########.fr        #
+#    Updated: 2022/07/20 11:02:39 by rkaufman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRCS		:=	main.cpp
 
 OBJS		:=	$(SRCS:%.cpp=%.o)
 
-CFLAGS		=	-Wall -Wextra -Werror -std=c++98
+CFLAGS		=	-g -Wall -Wextra -Werror -std=c++98
 DFLAG		:=	-g -D DEBUG=1
 TFLAG		:=	-g -D TEST=1
 
@@ -53,7 +53,7 @@ ft:
 	make re
 	./$(NAME) > ft.out
 
-val: CFLAGS += $(TFLAG)
+#val: CFLAGS += $(TFLAG)
 val: re
 	valgrind --leak-check=full -s ./$(NAME)
 

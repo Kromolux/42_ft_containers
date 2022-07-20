@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 13:03:32 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/19 19:08:33 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/20 10:31:14 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,12 @@ namespace ft
 		typedef Node<T> * node_ptr;
 	
 		protected:
-		node_ptr				root;
+		node_ptr					root;
 		std::allocator<Node<T> >	mem_node_control;
-		key_compare				mem_compare;
-		allocator_type			mem_control;
-		//pointer				mem_start;
-		size_type				mem_size;
+		key_compare					mem_compare;
+		allocator_type				mem_control;
+		//pointer					mem_start;
+		size_type					mem_size;
 
 		
 		public:
@@ -215,7 +215,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[RBT] max_size called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->mem_control.max_size());
+			return (this->mem_node_control.max_size());
 		}
 		
 		//***Modifiers:

@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/19 21:28:46 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/20 10:25:58 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,7 +290,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase first - last key " << tmp->first << ".\n" << COLOR_DEFAULT;
 			#endif
-			//this->c.erase(tmp->first);
+			this->c.erase(*tmp);
 		}
 		//Swap content (public member function )
 		void swap (map& x)

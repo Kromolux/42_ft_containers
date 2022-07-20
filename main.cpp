@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/19 21:26:14 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/20 11:27:04 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,9 @@ int	main(void)
 	std::cout << testCase << "::Test started at: " << myTimer.all.start << "\n";
 	
 	//test_vector(myTimer);
-	//test_stack(myTimer);
+	test_stack(myTimer);
 	//test_pair(myTimer);
-	test_map(myTimer);
+	//test_map(myTimer);
 	//test_set(myTimer);
 
 	
@@ -117,8 +117,8 @@ int	main(void)
 				<< " seconds\n";
 	std::cout	<< testCase << "::Time [stack] elapsed: " << static_cast<float>(myTimer.stack.end - myTimer.stack.start) / CLOCKS_PER_SEC
 				<< " seconds\n";
-	std::cout	<< testCase << "::Time [pair] elapsed: " << static_cast<float>(myTimer.pair.end - myTimer.pair.start) / CLOCKS_PER_SEC
-				<< " seconds\n";
+	// std::cout	<< testCase << "::Time [pair] elapsed: " << static_cast<float>(myTimer.pair.end - myTimer.pair.start) / CLOCKS_PER_SEC
+	// 			<< " seconds\n";
 	std::cout	<< testCase << "::Time [map] elapsed: " << static_cast<float>(myTimer.map.end - myTimer.map.start) / CLOCKS_PER_SEC
 				<< " seconds\n";
 	std::cout	<< testCase << "::Time [set] elapsed: " << static_cast<float>(myTimer.set.end - myTimer.set.start) / CLOCKS_PER_SEC
@@ -449,12 +449,20 @@ void test_vector(t_testTime & myTimer)
 	std::cout << "vec2\n";
 	displayInfo(vec2);
 	displayContent(vec2);
+
 	std::cout << "vector constructor InputIterator test\n";
 	it = vec2.begin();
 	ite = vec2.end();
 	ft::vector<myType> vec3(it, ite);
 	displayInfo(vec3);
 	displayContent(vec3);
+
+	std::cout << "vector copy constructor test\n";
+	
+	ft::vector<myType> vec4(vec3);
+	displayInfo(vec4);
+	displayContent(vec4);
+	
 	myTimer.vector.end = clock();
 }
 
@@ -466,6 +474,7 @@ void test_stack(t_testTime & myTimer)
 	
 	ft::stack<myType>	myStack;
 	ft::stack<myType>	my2Stack;
+	ft::stack<myType>	my3Stack;
 
 	#if TEST
 		std::cout << "std";
@@ -481,6 +490,9 @@ void test_stack(t_testTime & myTimer)
 	std::cout << "push(42)\n";
 	myStack.push(42);
 	my2Stack.push(42);
+	my3Stack.push(4242);
+	my3Stack.push(50);
+	my3Stack.push(599);
 	std::cout << (myStack < my2Stack) << " < comparison\n";
 	std::cout << (myStack > my2Stack) << " > comparison\n";
 	std::cout << (myStack <= my2Stack) << " <= comparison\n";
@@ -492,7 +504,7 @@ void test_stack(t_testTime & myTimer)
 	std::cout << "pop()\n";
 	std::cout << "top element: " << myStack.top() << "\n";
 	std::cout << "populating stack\n";
-	for (size_t i = 0; i < 7; ++i)
+	for (size_t i = 0; i < 15; ++i)
 		myStack.push(i);
 	std::cout << "iterating through stack and poping elements\n";
 	while (myStack.empty() == false)
@@ -625,20 +637,33 @@ void test_map(t_testTime & myTimer)
 	ft::map<int, int>::const_iterator cit = myMap.begin();
 	std::cout << "const_iterator created cite end\n";
 	ft::map<int, int>::const_iterator cite = myMap.end();
-	//cit->second = 666;
+	//cit->second = 666; //compiler error because of const iterator
 	while (cit != cite)
 	{
 		std::cout << cit->first << ":" << cit->second << " ";
 		++cit;
 	}
 	
-	std::cout << "\nbackwards\n";
-	--cit;
-	while (cit != cite)
-	{
-		std::cout << cit->first << ":" << cit->second << " ";
-		--cit;
-	}
+	// std::cout << "\nbackwards\n";
+	// cit = myMap.end();
+	// --cit;
+	// int mapSize = myMap.size();
+	// std::cout << "myMap.size()= " << mapSize << "\n";
+	// //std::cout << cit->first << ":" << cit->second << " ";
+	// for (int i = 1; i < mapSize; ++i)
+	// {
+	// 	std::cout << cit->first << ":" << cit->second << " ";
+	// 	++cit;
+	// }
+	// std::cout << cit->first << ":" << cit->second << " ";
+	// std::cout << "\n\n";
+	//--cit;
+	
+	// while (cit != cite)
+	// {
+	// 	std::cout << cit->first << ":" << cit->second << " ";
+	// 	--cit;
+	// }
 	std::cout << "\n";
 	
 	std::cout << "reverse_iterator created rit begin\n";
@@ -652,13 +677,13 @@ void test_map(t_testTime & myTimer)
 		++rit;
 	}
 	
-	std::cout << "\nbackwards\n";
-	--rit;
-	while (rit != rite)
-	{
-		std::cout << rit->first << ":" << rit->second << " ";
-		--rit;
-	}
+	// std::cout << "\nbackwards\n";
+	// --rit;
+	// while (rit != rite)
+	// {
+	// 	std::cout << rit->first << ":" << rit->second << " ";
+	// 	--rit;
+	// }
 	std::cout << "\n";
 
 
@@ -673,13 +698,13 @@ void test_map(t_testTime & myTimer)
 		++crit;
 	}
 	//crit->second = 666;
-	std::cout << "\nbackwards\n";
-	--crit;
-	while (crit != crite)
-	{
-		std::cout << crit->first << ":" << crit->second << " ";
-		--crit;
-	}
+	// std::cout << "\nbackwards\n";
+	// --crit;
+	// while (crit != crite)
+	// {
+	// 	std::cout << crit->first << ":" << crit->second << " ";
+	// 	--crit;
+	// }
 	std::cout << "\n";
 
 	
@@ -757,9 +782,48 @@ void test_set(t_testTime & myTimer)
 	displaySetInfo(mySet);
 	displaySetContent(mySet);
 
-	mySet.insert(5);
+	mySet.insert(50);
+	mySet.insert(30);
+	mySet.insert(70);
+	mySet.insert(20);
+	mySet.insert(80);
+	mySet.insert(40);
+	mySet.insert(60);
+	mySet.insert(31);
+	mySet.insert(55);
+	mySet.insert(75);
+	mySet.insert(53);
+	mySet.insert(76);
+	mySet.insert(35);
+	mySet.insert(57);
 	displaySetInfo(mySet);
 	displaySetContent(mySet);
+
+	std::cout << "iterator created it begin\n";
+	ft::set<int>::iterator it = mySet.begin();
+	std::cout << "iterator created ite end\n";
+	ft::set<int>::iterator ite = mySet.end();
+	
+	std::cout << "\ncopying SET:\n";
+	std::cout << "first using copy constructor\n";
+	ft::set<int> mySet2(mySet);
+	displaySetInfo(mySet2);
+	displaySetContent(mySet2);
+	
+	std::cout << "\ncopying SET:\n";
+	std::cout << "second using assingment constructor\n";
+	ft::set<int> mySet3 = mySet;
+	displaySetInfo(mySet3);
+	displaySetContent(mySet3);
+
+	std::cout << "\ncopying SET:\n";
+	std::cout << "third using iterator constructor\n";
+	
+	ft::set<int> mySet4(it, ite);
+	displaySetInfo(mySet4);
+	displaySetContent(mySet4);
+	std::cout << "\n\n";
+
 
 	myTimer.set.end = clock();
 }

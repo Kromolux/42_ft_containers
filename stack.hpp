@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stack.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 17:49:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/06/28 10:48:00 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/20 11:27:54 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ namespace ft
 		//(constructor)
 		explicit stack (const container_type& ctnr = container_type()) : c(ctnr)
 		{}
+
+		~stack(void) {}
+
 		//empty
 		bool empty(void) const
 		{

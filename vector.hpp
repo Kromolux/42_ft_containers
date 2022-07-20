@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/06 13:03:14 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/20 11:31:23 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,11 +97,12 @@ namespace ft
 		~vector(void)
 		{
 			#if DEBUG
-				std::cout << COLOR_RED << "[vector] deconstructor called.\n" << COLOR_DEFAULT;
+				std::cout << COLOR_RED << "[vector] deconstructor called mem_cap: " << this->mem_cap << " mem_size: " << this->mem_size << "\n" << COLOR_DEFAULT;
 			#endif
 			MEM_destroy(*this);
-			mem_control.deallocate(mem_start, mem_cap);
+			mem_control.deallocate(this->mem_start, this->mem_cap);
 		}
+
 		//Assign content (public member function )
 		vector & operator= (const vector & x)
 		{
@@ -111,13 +112,13 @@ namespace ft
 			if (this->mem_size > 0)
 				MEM_destroy(*this);
 			if (this->mem_cap > 0)
-				mem_control.deallocate(mem_start, mem_cap);
+				this->mem_control.deallocate(this->mem_start, this->mem_cap);
 			this->mem_control = x.mem_control;
 			this->mem_size = x.mem_size;
 			this->mem_cap = x.mem_cap;
-			this->mem_start = mem_control.allocate(mem_cap);
+			this->mem_start = this->mem_control.allocate(this->mem_cap);
 			for (size_t i = 0; i < this->mem_size; i++)
-				mem_control.construct(mem_start + i, x[i]);
+				this->mem_control.construct(this->mem_start + i, x[i]);
 			return (*this );
 		}
 		//Iterators:
@@ -654,6 +655,7 @@ namespace ft
 			for (; i < x.mem_size; i++)
 				mem_control.destroy(x.mem_start + i);
 		}
+
 		void	MEM_reallocate(vector & x, size_type const & n)
 		{
 			vector	tmp(x);
