@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 09:52:47 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/19 21:28:03 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/20 16:34:46 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,7 @@ namespace ft
 			#endif
 			return (this->ptr == rhs.ptr);
 		}
+
 		bool	operator!=(rbt_iterator const & rhs) const
 		{
 			#if DEBUG

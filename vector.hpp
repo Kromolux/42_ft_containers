@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/20 11:31:23 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/20 15:18:56 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,12 @@ namespace ft
 			// 	mem_control.construct(mem_start + i, x[i]);
 			*this = x;
 		}
+
 		//Vector destructor (public member function )
 		~vector(void)
 		{
 			#if DEBUG
-				std::cout << COLOR_RED << "[vector] deconstructor called mem_cap: " << this->mem_cap << " mem_size: " << this->mem_size << "\n" << COLOR_DEFAULT;
+				std::cout << COLOR_RED << "[vector] deconstructor called mem_cap: " << this->mem_cap << " mem_size: " << this->mem_size << " Pointer: " << this->mem_start <<"\n" << COLOR_DEFAULT;
 			#endif
 			MEM_destroy(*this);
 			mem_control.deallocate(this->mem_start, this->mem_cap);
@@ -653,20 +654,23 @@ namespace ft
 		void	MEM_destroy(vector & x, size_type i = 0)
 		{
 			for (; i < x.mem_size; i++)
-				mem_control.destroy(x.mem_start + i);
+				this->mem_control.destroy(x.mem_start + i);
 		}
 
 		void	MEM_reallocate(vector & x, size_type const & n)
 		{
-			vector	tmp(x);
-
+			//vector	tmp(x);
+			pointer	tmp = x.mem_control.allocate(n);
+			
+			//x.mem_cap = n;
+			//x.mem_start = x.mem_control.allocate(x.mem_cap);
+			for (size_type i = 0; i < x.mem_size; i++)
+				x.mem_control.construct(tmp + i, x[i]);
 			MEM_destroy(x);
-			if (x.mem_cap > 0)
-				mem_control.deallocate(x.mem_start, x.mem_cap);
+			//if (x.mem_cap > 0)
+			mem_control.deallocate(x.mem_start, x.mem_cap);
+			x.mem_start = tmp;
 			x.mem_cap = n;
-			x.mem_start = x.mem_control.allocate(x.mem_cap);
-			for (size_type i = 0; i < tmp.mem_size; i++)
-				x.mem_control.construct(x.mem_start + i, tmp[i]);
 		}
 	};
 	

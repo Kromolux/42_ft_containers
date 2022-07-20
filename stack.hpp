@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 17:49:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/20 11:27:54 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/20 15:01:59 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,13 @@ namespace ft
 		public:
 		//Member functions
 		//(constructor)
-		explicit stack (const container_type& ctnr = container_type()) : c(ctnr)
-		{}
+		explicit stack (const container_type& ctnr = container_type())// : c(ctnr)
+		{
+			#if DEBUG
+				std::cout << COLOR_GREEN << "[stack] default constructor called.\n" << COLOR_DEFAULT;
+			#endif
+			this->c = ctnr;
+		}
 
 		~stack(void) {}
 

@@ -6,14 +6,14 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/20 11:27:04 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/20 17:23:50 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <string>
 #include <ctime>
-//#include <deque>
+#include <deque>
 #include "template.hpp"
 
 #ifndef TEST
@@ -46,24 +46,24 @@ struct Buffer
 
 #define COUNT (MAX_RAM / (int)sizeof(Buffer))
 
-// template<typename T>
-// class MutantStack : public ft::stack<T>
-// {
-// public:
-// 	MutantStack() {}
-// 	MutantStack(const MutantStack<T>& src) { *this = src; }
-// 	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
-// 	{
-// 		this->c = rhs.c;
-// 		return *this;
-// 	}
-// 	~MutantStack() {}
+template<typename T>
+class MutantStack : public ft::stack<T>
+{
+public:
+	MutantStack() {}
+	MutantStack(const MutantStack<T>& src) { *this = src; }
+	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
+	{
+		this->c = rhs.c;
+		return *this;
+	}
+	~MutantStack() {}
 
-// 	typedef typename ft::stack<T>::container_type::iterator iterator;
+	typedef typename ft::stack<T>::container_type::iterator iterator;
 
-// 	iterator begin() { return this->c.begin(); }
-// 	iterator end() { return this->c.end(); }
-// };
+	iterator begin() { return this->c.begin(); }
+	iterator end() { return this->c.end(); }
+};
 
 typedef struct s_Test {
 	clock_t		start;
@@ -103,9 +103,9 @@ int	main(void)
 	std::cout << testCase << "::Test started at: " << myTimer.all.start << "\n";
 	
 	//test_vector(myTimer);
-	test_stack(myTimer);
+	//test_stack(myTimer);
 	//test_pair(myTimer);
-	//test_map(myTimer);
+	test_map(myTimer);
 	//test_set(myTimer);
 
 	
@@ -146,6 +146,8 @@ int main(int argc, char** argv)
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
 	ft::map<int, int> map_int;
 
+	std::cout << "COUNT: " << COUNT << "\n";
+	
 	for (int i = 0; i < COUNT; i++)
 	{
 		vector_buffer.push_back(Buffer());
@@ -174,13 +176,16 @@ int main(int argc, char** argv)
 	
 	for (int i = 0; i < COUNT; ++i)
 	{
-		map_int.insert(ft::make_pair(rand(), rand()));
+		ft::pair<int, int> myPair = ft::make_pair(rand(), rand());
+		//std::cout << "i: " << i << " myPair.first: " << myPair.first << " myPair.second: " << myPair.second << "\n";
+		map_int.insert(myPair);
 	}
 
 	int sum = 0;
 	for (int i = 0; i < 10000; i++)
 	{
-		int access = rand();
+		int access = rand() % COUNT;
+		//std::cout << "access: " << access << " map_int: " << map_int[access] << "\n";
 		sum += map_int[access];
 	}
 	std::cout << "should be constant with the same seed: " << sum << std::endl;
@@ -230,6 +235,7 @@ void test_vector(t_testTime & myTimer)
 		std::cout << "i= " << i << " = " << *rit << " ";
 	
 	ft::vector<myType> vec2(vec);
+	ft::vector<myType> vec3 = vec;
 	displayContent(vec2);
 	
 	vec2 = vec;
@@ -453,15 +459,15 @@ void test_vector(t_testTime & myTimer)
 	std::cout << "vector constructor InputIterator test\n";
 	it = vec2.begin();
 	ite = vec2.end();
-	ft::vector<myType> vec3(it, ite);
-	displayInfo(vec3);
-	displayContent(vec3);
+	ft::vector<myType> vec4(it, ite);
+	displayInfo(vec4);
+	displayContent(vec4);
 
 	std::cout << "vector copy constructor test\n";
 	
-	ft::vector<myType> vec4(vec3);
-	displayInfo(vec4);
-	displayContent(vec4);
+	ft::vector<myType> vec5(vec3);
+	displayInfo(vec5);
+	displayContent(vec5);
 	
 	myTimer.vector.end = clock();
 }
@@ -474,7 +480,7 @@ void test_stack(t_testTime & myTimer)
 	
 	ft::stack<myType>	myStack;
 	ft::stack<myType>	my2Stack;
-	ft::stack<myType>	my3Stack;
+	ft::stack<int>	my3Stack;
 
 	#if TEST
 		std::cout << "std";
@@ -631,9 +637,29 @@ void test_map(t_testTime & myTimer)
 	std::cout << "lower_bound of 40 = " << myMap.lower_bound(40)->first << " upper_bound of 40 = " << myMap.upper_bound(40)->first << "\n";
 	std::cout << "lower_bound of 50 = " << myMap.lower_bound(50)->first << " upper_bound of 50 = " << myMap.upper_bound(50)->first << "\n";
 	std::cout << "equal_range of 75 = " << myRange.first->first << " = " << myRange.second->first << "\n";
-	std::cout << "iterator test start\n";
+	std::cout << "\n\niterator test start\n";
+	std::cout << "printing with standard iterator forward\n";
 	
-	std::cout << "const_iterator created cit begin\n";
+	while (it != ite)
+	{
+		std::cout << it->first << ":" << it->second << " ";
+		++it;
+	}
+	
+	// std::cout << "\nbackwards\n";
+	// // it = myMap.begin();
+	// // ++it;
+	// // ++it;
+	// // ++it;
+	// --it;
+	// while (it != ite)
+	// {
+	// 	std::cout << it->first << ":" << it->second << " ";
+	// 	--it;
+	// }
+
+	
+	std::cout << "\n\nconst_iterator created cit begin\n";
 	ft::map<int, int>::const_iterator cit = myMap.begin();
 	std::cout << "const_iterator created cite end\n";
 	ft::map<int, int>::const_iterator cite = myMap.end();
@@ -664,9 +690,8 @@ void test_map(t_testTime & myTimer)
 	// 	std::cout << cit->first << ":" << cit->second << " ";
 	// 	--cit;
 	// }
-	std::cout << "\n";
 	
-	std::cout << "reverse_iterator created rit begin\n";
+	std::cout << "\n\nreverse_iterator created rit begin\n";
 	ft::map<int, int>::reverse_iterator rit = myMap.rbegin();
 	std::cout << "reverse_iterator created rite end\n";
 	ft::map<int, int>::reverse_iterator rite = myMap.rend();
@@ -684,10 +709,8 @@ void test_map(t_testTime & myTimer)
 	// 	std::cout << rit->first << ":" << rit->second << " ";
 	// 	--rit;
 	// }
-	std::cout << "\n";
 
-
-	std::cout << "const_reverse_iterator created crit begin\n";
+	std::cout << "\n\nconst_reverse_iterator created crit begin\n";
 	ft::map<int, int>::const_reverse_iterator crit = myMap.rbegin();
 	std::cout << "const_reverse_iterator created crite end\n";
 	ft::map<int, int>::const_reverse_iterator crite = myMap.rend();
