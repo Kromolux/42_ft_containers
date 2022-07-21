@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 13:03:32 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/20 10:31:14 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/21 18:20:10 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ namespace ft
 		//typedef K													key_type;					//The first template parameter (Key)
 		//typedef V													mapped_type;				//The second template parameter (T)
 		//typedef ft::pair<const K, V> 								value_type;					//pair<const key_type,mapped_type>
-		typedef Compare		 						key_compare;				//The third template parameter (Compare)	defaults to: less<key_type>
-		//typedef typename std::less<extract_value(T)> 								value_compare;				//The second template parameter (Compare)	defaults to: less<value_type>
+		typedef Compare		 										key_compare;				//The third template parameter (Compare)	defaults to: less<key_type>
+		//typedef typename std::less<extract_value(T)> 				value_compare;				//The second template parameter (Compare)	defaults to: less<value_type>
 		typedef Alloc												allocator_type;				//The fourth template parameter (Alloc)	defaults to: allocator<value_type>
 		typedef typename allocator_type::reference					reference;					//for the default allocator: value_type&
 		typedef typename allocator_type::const_reference			const_reference;			//for the default allocator: const value_type&
@@ -228,7 +228,7 @@ namespace ft
 		node_ptr addNode (const value_type & input)
 		{
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[RBT] insert key/value called.\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[RBT] insert key:value " << extract_key(input) << ":" << extract_value(input) << " called.\n" << COLOR_DEFAULT;
 			#endif
 			if (this->root == NULL)
 			{
@@ -858,8 +858,11 @@ namespace ft
 		}
 		
 		public:
-		node_ptr findNode(const value_type & input)
+		node_ptr findNode(const value_type & input) const
 		{
+			//node_ptr tmp = getLeftNode(this->root);
+			// if (extract_key(input) < extract_key(tmp->data))
+			// 	return (tmp);
 			node_ptr tmp = this->root;
 			#if DEBUG
 				std::cout << COLOR_BLUE << "findNode called node: " << extract_key(input) << "\n" << COLOR_DEFAULT;
@@ -884,7 +887,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_BLUE << "findNode could not find node: " << extract_key(tmp) << "\n" << COLOR_DEFAULT;
 			#endif
-			return (tmp);
+			return (NULL);
 		}
 
 		int	height(void)

@@ -6,16 +6,31 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 12:59:00 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/19 13:32:58 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/21 22:08:30 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-#include "iterator.hpp"
+//#include "iterator.hpp"
 #include "colors.h"
 
 namespace ft
 {
+
+	template <bool flag, class IsTrueType, class IsFalseType>
+	struct choose;
+
+	template <class IsTrueType, class IsFalseType>
+	struct choose<true, IsTrueType, IsFalseType>
+	{
+		typedef IsTrueType type;
+	};
+
+	template <class IsTrueType, class IsFalseType>
+	struct choose<false, IsTrueType, IsFalseType>
+	{
+		typedef IsFalseType type;
+	};
 
 	template <class InputIterator1, class InputIterator2>
 	bool	equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)

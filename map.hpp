@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/20 10:25:58 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/21 18:07:40 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ namespace ft
 		typedef typename allocator_type::pointer						pointer;					//for the default allocator: value_type*
 		typedef typename allocator_type::const_pointer					const_pointer;				//for the default allocator: const value_type*
 		typedef RBT<value_type, Compare> 								tree_type;
-		typedef typename ft::rbt_iterator<value_type>					iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
-		typedef typename ft::rbt_iterator<const value_type>				const_iterator;				//a bidirectional iterator to const value_type
+		typedef typename ft::rbt_iterator<value_type, false>			iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
+		typedef typename ft::rbt_iterator<value_type, true>				const_iterator;				//a bidirectional iterator to const value_type
 		typedef typename ft::rbt_reverse_iterator<iterator>				reverse_iterator;			//reverse_iterator<iterator>
 		typedef typename ft::rbt_reverse_iterator<const_iterator>		const_reverse_iterator;	
 		// typedef typename ft::rbt_iterator<Key, T>					iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
@@ -70,7 +70,7 @@ namespace ft
 
 		template <class InputIterator>
 		map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
-		: c(comp, alloc)
+		: c(comp, alloc), mem_alloc(alloc)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[map] InputIterator constructor called.\n" << COLOR_DEFAULT;
@@ -125,6 +125,7 @@ namespace ft
 			#endif
 			return (const_iterator(this->c.begin(), this->c.begin(), this->c.end()));
 		}
+
 		//Return iterator to end (public member function )
 		iterator end(void)
 		{
@@ -140,12 +141,14 @@ namespace ft
 			#endif
 			return (const_iterator(NULL, this->c.begin(), this->c.end()));
 		}
+	
 		//Return reverse iterator to reverse beginning (public member function )
 		reverse_iterator rbegin(void)
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] reverse_iterator rbegin called.\n" << COLOR_DEFAULT;
 			#endif
+			//return (reverse_iterator(this->c.end(), this->c.begin(), this->c.end()));
 			return (reverse_iterator(this->end()));
 		}
 		const_reverse_iterator rbegin(void) const
@@ -153,6 +156,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const_reverse_iterator rbegin called.\n" << COLOR_DEFAULT;
 			#endif
+			//return (const_reverse_iterator(this->c.end(), this->c.begin(), this->c.end()));
 			return (const_reverse_iterator(this->end()));
 		}
 		//Return reverse iterator to reverse end (public member function )
@@ -161,6 +165,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] reverse_iterator rend called.\n" << COLOR_DEFAULT;
 			#endif
+			//return (reverse_iterator(this->c.begin(), this->c.begin(), this->c.end()));
 			return (reverse_iterator(this->begin()));
 		}
 		const_reverse_iterator rend(void) const
@@ -168,6 +173,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const_reverse_iterator rend called.\n" << COLOR_DEFAULT;
 			#endif
+			//return (const_reverse_iterator(this->c.begin(), this->c.begin(), this->c.end()));
 			return (const_reverse_iterator(this->begin()));
 		}
 		//Return const_iterator to beginning (public member function )
@@ -316,7 +322,7 @@ namespace ft
 		//***Observers:
 
 		//Return key comparison object (public member function )
-		key_compare key_comp() const
+		key_compare key_comp(void) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] key_comp called.\n" << COLOR_DEFAULT;
@@ -324,7 +330,7 @@ namespace ft
 			return (this->c.key_comp());
 		}
 		//Return value comparison object (public member function )
-		value_compare value_comp() const
+		value_compare value_comp(void) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] value_comp called.\n" << COLOR_DEFAULT;
@@ -363,8 +369,8 @@ namespace ft
 				std::cout << COLOR_YELLOW << "[map] lower_bound called.\n" << COLOR_DEFAULT;
 			#endif
 			iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
-			//if (it != iterator())
-			//--it;
+			//if (it == iterator())
+			//++it;
 			return (it);
 		}
 		const_iterator lower_bound (const key_type& k) const
@@ -373,8 +379,8 @@ namespace ft
 				std::cout << COLOR_YELLOW << "[map] const lower_bound called.\n" << COLOR_DEFAULT;
 			#endif
 			const_iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
-			//if (it != const_iterator())
-			//--it;
+			//if (it == const_iterator())
+			//++it;
 			return (it);
 		}
 		//Return iterator to upper bound (public member function )
@@ -383,6 +389,8 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] upper_bound called.\n" << COLOR_DEFAULT;
 			#endif
+			if (k < this->c.begin()->data.first)
+				return (this->begin());
 			iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
 			if (it != iterator())
 			++it;
@@ -393,11 +401,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const upper_bound called.\n" << COLOR_DEFAULT;
 			#endif
+			if (k < this->c.begin()->data.first)
+				return (this->begin());
 			const_iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
 			if (it != const_iterator())
 			++it;
 			return (it);
 		}
+
 		//Get range of equal elements (public member function )
 		pair<const_iterator, const_iterator>	equal_range (const key_type& k) const
 		{

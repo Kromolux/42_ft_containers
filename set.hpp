@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:38:15 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/20 10:42:02 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/21 22:09:11 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ namespace ft
 		typedef typename allocator_type::const_reference					const_reference;		//for the default allocator: const value_type&
 		typedef typename allocator_type::pointer							pointer;				//for the default allocator: value_type*
 		typedef typename allocator_type::const_pointer						const_pointer;			//for the default allocator: const value_type*
-		typedef typename ft::rbt_iterator<value_type>						iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
-		typedef typename ft::rbt_iterator<const value_type>					const_iterator;				//a bidirectional iterator to const value_type
+		typedef typename ft::rbt_iterator<value_type, false>						iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
+		typedef typename ft::rbt_iterator<value_type, true>					const_iterator;				//a bidirectional iterator to const value_type
 		typedef typename ft::rbt_reverse_iterator<iterator>					reverse_iterator;			//reverse_iterator<iterator>
 		typedef typename ft::rbt_reverse_iterator<const_iterator>			const_reverse_iterator;	
 		

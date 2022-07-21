@@ -6,13 +6,14 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 12:36:54 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/19 20:20:49 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/21 22:38:37 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <iterator>
 #include <cstddef>
+#include "Utils.hpp"
 #include "colors.h"
 //#include "reverse_iterator.hpp"
 //#include "algorithm.hpp"
@@ -27,9 +28,9 @@ namespace ft
 
 	struct input_iterator_tag {};
 	struct forward_iterator_tag {};
-	struct bidirectional_iterator_tag {};
-	struct random_access_iterator_tag {};
-	struct output_iterator_tag {};
+	struct bidirectional_iterator_tag	: public input_iterator_tag {};
+	struct random_access_iterator_tag	: public forward_iterator_tag {};
+	struct output_iterator_tag			: public bidirectional_iterator_tag {};
 
 	template <class Iterator>
 	struct iterator_traits
@@ -66,15 +67,15 @@ namespace ft
 namespace ft
 {
 
-	template <class T, class nonconst_T>
+	template <typename T, bool isConst>
 	class iterator
 	{
 		public:
-		typedef T								value_type;
-		typedef ptrdiff_t						difference_type;
-		typedef T *								pointer;
-		typedef T &								reference;
-		typedef random_access_iterator_tag		iterator_category;
+		typedef T												value_type;
+		typedef ptrdiff_t										difference_type;
+		typedef typename choose<isConst, const T *, T *>::type	pointer;
+		typedef typename choose<isConst, const T &, T &>::type	reference;
+		typedef random_access_iterator_tag						iterator_category;
 
 		private:
 		T * ptr;
@@ -98,6 +99,15 @@ namespace ft
 				std::cout << COLOR_GREEN << "[iterator] copy constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
+		
+		template<typename TypeT, bool TypeIsConst>
+		iterator(iterator<TypeT, TypeIsConst> const & other) : ptr(other.address())
+		{
+			#if DEBUG
+				std::cout << COLOR_GREEN << "[iterator] template constructor called.\n" << COLOR_DEFAULT;
+			#endif
+		}
+
 		// template <class It>
 		// iterator(const iterator<It, nonconst_T>& i,
 		// typename ft::enable_if<ft::is_same<It, nonconst_T>::value>::type* = NULL) : ptr(i.address())
@@ -112,6 +122,17 @@ namespace ft
 				std::cout << COLOR_RED << "[iterator] deconstructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
+
+		// operator iterator<const T>() const
+		// {
+		// 	return iterator<const T>((const T*)this->ptr);
+		// }
+
+		// operator iterator<T>() const
+		// {
+		// 	return iterator<T>((T*)this->ptr);
+		// }
+
 		iterator const & operator=(iterator const & rhs)
 		{
 			#if DEBUG
@@ -179,19 +200,21 @@ namespace ft
 			#endif
 			return (*this->ptr);
 		}
-		bool	operator==(iterator const & rhs) const
+		template<typename TypeT, bool TypeIsConst>
+		bool	operator==(iterator<TypeT, TypeIsConst> const & rhs) const
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] operator== called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->ptr == rhs.ptr);
+			return (this->ptr == rhs.address());
 		}
-		bool	operator!=(iterator const & rhs) const
+		template<typename TypeT, bool TypeIsConst>
+		bool	operator!=(iterator<TypeT, TypeIsConst> const & rhs) const
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] operator!= called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->ptr != rhs.ptr);
+			return (this->ptr != rhs.address());
 		}
 		// bool	operator!=(iterator & rhs)
 		// {
@@ -200,42 +223,47 @@ namespace ft
 		// 	#endif
 		// 	return (this->ptr != rhs.ptr);
 		// }
-		bool	operator<(iterator const & rhs) const
+		template<typename TypeT, bool TypeIsConst>
+		bool	operator<(iterator<TypeT, TypeIsConst> const & rhs) const
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] operator< called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->ptr < rhs.ptr);
+			return (this->ptr < rhs.address());
 		}
-		bool	operator<=(iterator const & rhs) const
+		template<typename TypeT, bool TypeIsConst>
+		bool	operator<=(iterator<TypeT, TypeIsConst> const & rhs) const
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] operator<= called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->ptr <= rhs.ptr);
+			return (this->ptr <= rhs.address());
 		}
-		bool	operator>(iterator const & rhs) const
+		template<typename TypeT, bool TypeIsConst>
+		bool	operator>(iterator<TypeT, TypeIsConst> const & rhs) const
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] operator> called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->ptr > rhs.ptr);
+			return (this->ptr > rhs.address());
 		}
-		bool	operator>=(iterator const & rhs) const
+		template<typename TypeT, bool TypeIsConst>
+		bool	operator>=(iterator<TypeT, TypeIsConst> const & rhs) const
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] operator>= called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->ptr >= rhs.ptr);
+			return (this->ptr >= rhs.address());
 		}
-		difference_type	operator-(iterator const & rhs)
+		template<typename TypeT, bool TypeIsConst>
+		difference_type	operator-(iterator<TypeT, TypeIsConst> const & rhs) const
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] difference_type operator- called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->ptr - rhs.ptr);
+			return (this->ptr - rhs.address());
 		}
-		iterator	operator-(difference_type n)
+		iterator	operator-(difference_type n) const
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] iterator operator- called.\n" << COLOR_DEFAULT;
@@ -249,14 +277,24 @@ namespace ft
 		// 	#endif
 		// 	return (this->ptr + rhs.ptr);
 		// }
-		friend iterator	operator+(difference_type n, iterator const & rhs)
+		template<typename TypeT, bool TypeIsConst>
+		friend iterator	operator-(difference_type n, iterator<TypeT, TypeIsConst> const & rhs)
+		{
+			#if DEBUG
+				std::cout << COLOR_MAGENTA << "[iterator] difference_type operator+ called.\n" << COLOR_DEFAULT;
+			#endif
+			return (iterator (rhs.ptr - n));
+		}
+		//does it works??
+		template<typename TypeT, bool TypeIsConst>
+		friend iterator	operator+(difference_type n, iterator<TypeT, TypeIsConst> const & rhs)
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] difference_type operator+ called.\n" << COLOR_DEFAULT;
 			#endif
 			return (iterator (rhs.ptr + n));
 		}
-		iterator	operator+(difference_type n)
+		iterator	operator+(difference_type n) const
 		{
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[iterator] iterator operator+ called.\n" << COLOR_DEFAULT;
@@ -290,6 +328,68 @@ namespace ft
 
 	};
 
+	// template<typename Iter1<typename TypeT, bool TypeIsConst>, typename Iter2<typename TypeT, bool TypeIsConst>>
+	// typename iterator<Iter1>::difference_type	operator-(iterator<Iter1> const & lhs, iterator<Iter2> const & rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[iterator] difference_type operator- called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return (lhs.address() - rhs.address());
+	// }
+
+	// template<class iter1, class iter2>
+	// bool	operator==(iterator<iter1> const & lhs, iterator<iter1> const & rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[iterator] operator== called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return (lhs.address() == rhs.address());
+	// }
+
+	// template<class T>
+	// bool	operator!=(iterator<T> const & lhs, iterator<const T> const & rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[iterator] operator!= called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return (lhs.address() != rhs.address());
+	// }
+	
+	// template<class T>
+	// bool	operator<(iterator<T> const & lhs, iterator<const T> const & rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[iterator] operator< called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return (lhs.address() < rhs.address());
+	// }
+	
+	// template<class T>
+	// bool	operator<=(iterator<T> const & lhs, iterator<const T> const & rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[iterator] operator<= called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return (lhs.address() <= rhs.address());
+	// }
+	
+	// template<class T>
+	// bool	operator>(iterator<T> const & lhs, iterator<const T> const & rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[iterator] operator> called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return lhs.address() > rhs.address();
+	// }
+	
+	// template<class T>
+	// bool	operator>=(iterator<T> const & lhs, iterator<const T> const & rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[iterator] operator>= called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return lhs.address() >= rhs.address();
+	// }
 }
 
 namespace ft
@@ -329,12 +429,18 @@ namespace ft
 				std::cout << COLOR_GREEN << "[reverse_iterator] constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
-		reverse_iterator (const reverse_iterator<Iterator>& rev_it) : _base(rev_it._base)
+		template<typename Iter>
+		reverse_iterator (const reverse_iterator<Iter>& other) : _base(other.base())
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[reverse_iterator] copy constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
+		
+		// operator reverse_iterator<const Iterator>() const
+		// {
+		// 	return reverse_iterator<const Iterator>((const Iterator *)this->_base);
+		// }
 
 		iterator_type base() const
 		{
@@ -380,14 +486,15 @@ namespace ft
 			return (reverse_iterator(this->_base - n));
 		}
 		
-		// friend iterator	operator+(difference_type n, iterator const & rhs)
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] difference_type operator+ called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (iterator (rhs.ptr + n));
-		// }
-		// iterator	operator+(difference_type n)
+		template<typename Iter>
+		friend reverse_iterator	operator+(difference_type n, reverse_iterator<Iter> const & rhs)
+		{
+			#if DEBUG
+				std::cout << COLOR_MAGENTA << "[reverse_iterator] difference_type operator+ called.\n" << COLOR_DEFAULT;
+			#endif
+			return (reverse_iterator(rhs.base() - n));
+		}
+		// reverse_iterator	operator+(difference_type n)
 		// {
 		// 	#if DEBUG
 		// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] iterator operator+ called.\n" << COLOR_DEFAULT;
@@ -431,16 +538,18 @@ namespace ft
 			#endif
 			return (reverse_iterator (this->_base + n));
 		}
+		
 		// typename reverse_iterator<Iterator>::difference_type operator- (
 		// const reverse_iterator<Iterator>& lhs,
 		// const reverse_iterator<Iterator>& rhs);
-		difference_type	operator-(reverse_iterator const & rhs)
-		{
-			#if DEBUG
-				std::cout << COLOR_MAGENTA << "[reverse_iterator] difference_type operator- called.\n" << COLOR_DEFAULT;
-			#endif
-			return (this->_base + rhs._base);
-		}
+		// template<typename Iter>
+		// difference_type	operator-(reverse_iterator<Iter> const & rhs)
+		// {
+		// 	#if DEBUG
+		// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] difference_type operator- called.\n" << COLOR_DEFAULT;
+		// 	#endif
+		// 	return (this->_base + rhs.base());
+		// }
 		reverse_iterator& operator--()
 		{
 			#if DEBUG
@@ -467,13 +576,13 @@ namespace ft
 			return (*this);
 		}
 
-		// reference operator[] (difference_type n) const
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] operator[] called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// 	return (*this->base()[-n -1]);
-		// }
+		reference operator[] (difference_type n) const
+		{
+			#if DEBUG
+				std::cout << COLOR_MAGENTA << "[reverse_iterator] operator[] called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->base()[-n -1]);
+		}
 
 		// difference_type	operator+(iterator const & rhs)
 		// {
@@ -491,6 +600,54 @@ namespace ft
 		// {
 		// 	return (this->ptr + rhs.prt);
 		// }
+		template<typename Iter>
+		bool operator==(const reverse_iterator<Iter>& other) const
+		{
+			#if DEBUG
+				std::cout << COLOR_MAGENTA << "[iterator] operator== called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->_base == other.base());
+		}
+		template<typename Iter>
+		bool operator!=(const reverse_iterator<Iter>& other) const
+		{
+			#if DEBUG
+				std::cout << COLOR_MAGENTA << "[iterator] operator!= called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->_base != other.base());
+		}
+		template<typename Iter>
+		bool	operator<(const reverse_iterator<Iter>& rhs) const
+		{
+			#if DEBUG
+				std::cout << COLOR_MAGENTA << "[iterator] operator< called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->_base > rhs.base());
+		}
+		template<typename Iter>
+		bool	operator<=(const reverse_iterator<Iter>& rhs) const
+		{
+			#if DEBUG
+				std::cout << COLOR_MAGENTA << "[iterator] operator<= called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->_base >= rhs.base());
+		}
+		template<typename Iter>
+		bool	operator>(const reverse_iterator<Iter>& rhs) const
+		{
+			#if DEBUG
+				std::cout << COLOR_MAGENTA << "[iterator] operator> called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->_base < rhs.base());
+		}
+		template<typename Iter>
+		bool	operator>=(const reverse_iterator<Iter>& rhs) const
+		{
+			#if DEBUG
+				std::cout << COLOR_MAGENTA << "[iterator] operator>= called.\n" << COLOR_DEFAULT;
+			#endif
+			return (this->_base <= rhs.base());
+		}
 
 		protected:
 
@@ -498,6 +655,15 @@ namespace ft
 
 	};
 
+	template<typename Iter1, typename Iter2>
+	typename reverse_iterator<Iter1>::difference_type	operator-(reverse_iterator<Iter1> const & lhs, reverse_iterator<Iter2> const & rhs)
+	{
+		#if DEBUG
+			std::cout << COLOR_MAGENTA << "[reverse_iterator] difference_type operator- called.\n" << COLOR_DEFAULT;
+		#endif
+		return (rhs.base() - lhs.base());
+	}
+	
 	// Addition operator
 	// Returns a reverse iterator pointing to the element located n positions away from the element pointed to by rev_it.
 	// The function returns the same as: rev_it+n (see reverse_iterator::operator+).
@@ -508,22 +674,24 @@ namespace ft
 	// {
 	// 	return ( (rev_it + n) );
 	// }
-	template <class Iterator>
-	bool operator== (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	{
-		#if DEBUG
-			std::cout << COLOR_MAGENTA << "[reverse_iterator] operator== called.\n" << COLOR_DEFAULT;
-		#endif
-		return (lhs.base() == rhs.base());
-	}
-	template <class Iterator>
-	bool operator!= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	{
-		#if DEBUG
-			std::cout << COLOR_MAGENTA << "[reverse_iterator] operator!= called.\n" << COLOR_DEFAULT;
-		#endif
-		return !(lhs.base() == rhs.base());
-	}
+	//template<class Iter1, class Iter2>
+	
+	// template <class Iterator>
+	// bool operator== (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] operator== called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return (lhs.base() == rhs.base());
+	// }
+	// template <class Iterator>
+	// bool operator!= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] operator!= called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return !(lhs.base() == rhs.base());
+	// }
 	// bool	operator!=(iterator & rhs)
 	// {
 	// 	#if DEBUG
@@ -531,37 +699,37 @@ namespace ft
 	// 	#endif
 	// 	return (this->ptr != rhs.ptr);
 	// }
-	template <class Iterator>
-	bool operator<  (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	{
-		#if DEBUG
-			std::cout << COLOR_MAGENTA << "[reverse_iterator] operator< called.\n" << COLOR_DEFAULT;
-		#endif
-		return (lhs.base() > rhs.base());
-	}
-	template <class Iterator>
-	bool operator<= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	{
-		#if DEBUG
-			std::cout << COLOR_MAGENTA << "[reverse_iterator] operator<= called.\n" << COLOR_DEFAULT;
-		#endif
-		return (lhs.base() >= rhs.base());
-	}
-	template <class Iterator>
-	bool operator>  (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	{
-		#if DEBUG
-			std::cout << COLOR_MAGENTA << "[reverse_iterator] operator> called.\n" << COLOR_DEFAULT;
-		#endif
-		return (lhs.base() < rhs.base());
-	}
-	template <class Iterator>
-	bool operator>= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	{
-		#if DEBUG
-			std::cout << COLOR_MAGENTA << "[reverse_iterator] operator>= called.\n" << COLOR_DEFAULT;
-		#endif
-		return (lhs.base() >= rhs.base());
-	}
+	// template <class Iterator>
+	// bool operator<  (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] operator< called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return (lhs.base() > rhs.base());
+	// }
+	// template <class Iterator>
+	// bool operator<= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] operator<= called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return (lhs.base() >= rhs.base());
+	// }
+	// template <class Iterator>
+	// bool operator>  (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] operator> called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return (lhs.base() < rhs.base());
+	// }
+	// template <class Iterator>
+	// bool operator>= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
+	// {
+	// 	#if DEBUG
+	// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] operator>= called.\n" << COLOR_DEFAULT;
+	// 	#endif
+	// 	return (lhs.base() >= rhs.base());
+	// }
 
 }
