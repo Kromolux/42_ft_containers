@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 09:52:47 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/21 22:17:14 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/22 21:34:18 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,7 +297,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[rbt_iterator] operator= called.\n" << COLOR_DEFAULT;
 			#endif
-			this->base = rhs._base;
+			this->_base = rhs._base;
 			return (*this);
 		}
 

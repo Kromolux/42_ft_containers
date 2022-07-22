@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/21 22:27:48 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/22 21:48:11 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,26 +90,45 @@ void initTimer(t_testTime & myTimer);
 #define T_SIZE_TYPE typename ft::vector<T>::size_type
 
 template <typename T>
-void	printSize(ft::vector<T> const &vct, bool print_content = true)
+std::string	printPair(const T &iterator, bool nl = true, std::ostream &o = std::cout)
 {
-	const T_SIZE_TYPE size = vct.size();
-	const T_SIZE_TYPE capacity = vct.capacity();
-	const std::string isCapacityOk = (capacity >= size) ? "OK" : "KO";
-	// Cannot limit capacity's max value because it's implementation dependent
+	o << "key: " << iterator->first << " | value: " << iterator->second;
+	if (nl)
+		o << std::endl;
+	return ("");
+}
 
-	std::cout << "size: " << size << std::endl;
-	std::cout << "capacity: " << isCapacityOk << std::endl;
-	std::cout << "max_size: " << vct.max_size() << std::endl;
+template <typename T_MAP>
+void	printSize(T_MAP const &mp, bool print_content = 1)
+{
+	std::cout << "size: " << mp.size() << std::endl;
+	std::cout << "max_size: " << mp.max_size() << std::endl;
 	if (print_content)
 	{
-		typename ft::vector<T>::const_iterator it = vct.begin();
-		typename ft::vector<T>::const_iterator ite = vct.end();
+		typename T_MAP::const_iterator it = mp.begin(), ite = mp.end();
 		std::cout << std::endl << "Content is:" << std::endl;
 		for (; it != ite; ++it)
-			std::cout << "- " << *it << std::endl;
+			std::cout << "- " << printPair(it, false) << std::endl;
 	}
 	std::cout << "###############################################" << std::endl;
 }
+
+template <typename T1, typename T2>
+void	printReverse(ft::map<T1, T2> &mp)
+{
+	typename ft::map<T1, T2>::iterator it = mp.end(), ite = mp.begin();
+
+	std::cout << "printReverse:" << std::endl;
+	while (it != ite) {
+		it--;
+		std::cout << "-> " << printPair(it, false) << std::endl;
+	}
+	std::cout << "_______________________________________________" << std::endl;
+}
+
+#define T1 char
+#define T2 int
+typedef ft::pair<const T1, T2> T3;
 
 typedef int myType;
 int	main(void)
@@ -125,25 +144,41 @@ int	main(void)
 
 	myTimer.all.start = clock();
 
-	std::cout << testCase << "::Test started at: " << myTimer.all.start << "\n";
-	
-	std::list<myType> lst;
-	std::list<myType>::iterator lst_it;
-	for (int i = 1; i < 5; ++i)
-		lst.push_back(i * 3);
+	std::list<T3> lst;
 
-	ft::vector<myType> vct(lst.begin(), lst.end());
-	printSize(vct);
+	unsigned int lst_size = 7;
+	for (unsigned int i = 0; i < lst_size; ++i)
+		lst.push_back(T3('a' + i, lst_size - i));
+	ft::map<T1, T2> foo(lst.begin(), lst.end());
 
-	lst_it = lst.begin();
-	for (int i = 1; lst_it != lst.end(); ++i)
-		*lst_it++ = i * 5;
-	vct.assign(lst.begin(), lst.end());
-	printSize(vct);
+	lst.clear(); lst_size = 4;
+	for (unsigned int i = 0; i < lst_size; ++i)
+		lst.push_back(T3('z' - i, i * 5));
+	ft::map<T1, T2> bar(lst.begin(), lst.end());
 
-	vct.insert(vct.end(), lst.rbegin(), lst.rend());
-	printSize(vct);
-	
+	ft::map<T1, T2>::const_iterator it_foo = foo.begin();
+	ft::map<T1, T2>::const_iterator it_bar = bar.begin();
+
+	std::cout << "BEFORE SWAP" << std::endl;
+
+	std::cout << "foo contains:" << std::endl;
+	printSize(foo);
+	std::cout << "bar contains:" << std::endl;
+	printSize(bar);
+
+	foo.swap(bar);
+
+	std::cout << "AFTER SWAP" << std::endl;
+
+	std::cout << "foo contains:" << std::endl;
+	printSize(foo);
+	std::cout << "bar contains:" << std::endl;
+	printSize(bar);
+
+	std::cout << "Iterator validity:" << std::endl;
+	std::cout << (it_foo == bar.begin()) << std::endl;
+	std::cout << (it_bar == foo.begin()) << std::endl;
+
 	//test_vector(myTimer);
 	//test_stack(myTimer);
 	//test_pair(myTimer);

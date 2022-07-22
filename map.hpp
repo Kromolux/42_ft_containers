@@ -6,11 +6,12 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/21 18:07:40 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/22 22:13:35 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
+#include <functional>
 #include "RBT.hpp"
 //#include "iterator.hpp"
 #include "rbt_iterator.hpp"
@@ -31,8 +32,9 @@ namespace ft
 		typedef Key														key_type;					//The first template parameter (Key)
 		typedef T														mapped_type;				//The second template parameter (T)
 		typedef pair<const key_type, mapped_type> 						value_type;					//pair<const key_type,mapped_type>
-		typedef typename std::less<key_type> 							key_compare;				//The third template parameter (Compare)	defaults to: less<key_type>
-		typedef Compare													value_compare;			//Nested function class to compare elements	see value_comp
+		typedef Compare													key_compare;				//The third template parameter (Compare)	defaults to: less<key_type>
+		class 															value_compare;			//Nested function class to compare elements	see value_comp
+		//class															key_value_compare;
 		typedef Alloc													allocator_type;				//The fourth template parameter (Alloc)	defaults to: allocator<value_type>
 		typedef typename allocator_type::reference						reference;					//for the default allocator: value_type&
 		typedef typename allocator_type::const_reference				const_reference;			//for the default allocator: const value_type&
@@ -235,11 +237,12 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] insert value called [Key:Val] [" << val.first << ":" << val.second << "]\n" << COLOR_DEFAULT;
 			#endif
-			iterator it(this->c.addNode(val), this->c.begin(), this->c.end());
+			iterator it;
+			it = iterator(this->c.findNode(val), this->c.begin(), this->c.end());
 			if (it != iterator())
-				return (ft::make_pair(it, true));
-			else
 				return (ft::make_pair(it, false));
+			it = iterator(this->c.addNode(val), this->c.begin(), this->c.end());
+				return (ft::make_pair(it, true));
 		}
 
 		iterator insert (iterator position, const value_type& val)
@@ -277,7 +280,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase key called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.erase(make_pair(k, mapped_type())));
+			return (this->c.erase(ft::make_pair(k, mapped_type())));
 		}
 
 		void erase (iterator first, iterator last)
@@ -285,18 +288,19 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase first - last called.\n" << COLOR_DEFAULT;
 			#endif
-			iterator tmp = first;
-			for (; first != last; tmp = first++)
+			iterator tmp;
+			for (; first != last;)
 			{
 				#if DEBUG
 					std::cout << COLOR_YELLOW << "[map] erase first - last key " << tmp->first << ".\n" << COLOR_DEFAULT;
 				#endif
+				tmp = first++;
 				this->c.erase(*tmp);
 			}
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase first - last key " << tmp->first << ".\n" << COLOR_DEFAULT;
 			#endif
-			this->c.erase(*tmp);
+			//this->c.erase(*tmp);
 		}
 		//Swap content (public member function )
 		void swap (map& x)
@@ -304,7 +308,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] swap called.\n" << COLOR_DEFAULT;
 			#endif
-			this->c.swap(x);
+			this->c.swap(x.c);
 		}
 		//Clear content (public member function )
 		void clear()
@@ -335,7 +339,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] value_comp called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.value_comp());
+			return (value_compare(key_comp()));
 		}
 
 		//***Operations:
@@ -345,14 +349,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] find called.\n" << COLOR_DEFAULT;
 			#endif
-			return (iterator(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end()));
+			return (iterator(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end()));
 		}
 		const_iterator find (const key_type& k) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const find called.\n" << COLOR_DEFAULT;
 			#endif
-			return (const_iterator(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end()));
+			return (const_iterator(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end()));
 		}
 		//Count elements with a specific key (public member function )
 		size_type count (const key_type& k) const
@@ -360,7 +364,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] count called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->c.count(make_pair(k, mapped_type())));
+			return (this->c.count(ft::make_pair(k, mapped_type())));
 		}
 		//Return iterator to lower bound (public member function )
 		iterator lower_bound (const key_type& k)
@@ -368,7 +372,9 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] lower_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
+			if (k < this->c.begin()->data.first)
+				return (this->begin());
+			iterator it(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end());
 			//if (it == iterator())
 			//++it;
 			return (it);
@@ -378,7 +384,9 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const lower_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			const_iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
+			if (k < this->c.begin()->data.first)
+				return (this->begin());
+			const_iterator it(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end());
 			//if (it == const_iterator())
 			//++it;
 			return (it);
@@ -391,7 +399,7 @@ namespace ft
 			#endif
 			if (k < this->c.begin()->data.first)
 				return (this->begin());
-			iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
+			iterator it(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end());
 			if (it != iterator())
 			++it;
 			return (it);
@@ -403,7 +411,7 @@ namespace ft
 			#endif
 			if (k < this->c.begin()->data.first)
 				return (this->begin());
-			const_iterator it(this->c.findNode(make_pair(k, mapped_type())), this->c.begin(), this->c.end());
+			const_iterator it(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end());
 			if (it != const_iterator())
 			++it;
 			return (it);
@@ -446,6 +454,97 @@ namespace ft
 			return (this->c.blackNodes());
 		}
 		
+		bool operator==(map const & rhs) const
+		{
+			if (this->size() != rhs.size())
+				return (false);
+			return (ft::equal(this->begin(), this->end(), rhs.begin()));
+		}
+
+		bool operator!=(map const & rhs) const
+		{
+			if (this->size() != rhs.size())
+				return (true);
+			return (!ft::equal(this->begin(), this->end(), rhs.begin()));
+		}
+		
+		bool operator<(map const & rhs) const
+		{
+			const_iterator it_lhs = this->begin();
+			const_iterator ite_lhs = this->end();
+			const_iterator it_rhs = rhs.begin();
+			const_iterator ite_rhs = rhs.end();
+
+			while (it_lhs != ite_lhs)
+			{
+				if (it_rhs == ite_rhs)
+					return (false);
+				if (*it_lhs < *it_rhs)
+					return (true);
+				if (*it_lhs > *it_rhs)
+					return (false);
+				++it_lhs;
+				++it_rhs;
+			}
+			return (it_rhs != ite_rhs);
+			//return (ft::lexicographical_compare(this->begin(), this->end(), rhs.begin(), rhs.end(), key_value_compare(key_compare())));
+		}
+		
+		bool operator<=(map const & rhs) const
+		{
+			return !(rhs < *this);
+		}
+		
+		bool operator>(map const & rhs) const
+		{
+			return (rhs < *this);
+		}
+		
+		bool operator>=(map const & rhs) const
+		{
+			return !(*this < rhs);
+		}
 	}; // class map
+
+
+	template <class Key, class T, class Compare, class Alloc>
+	class ft::map<Key, T, Compare, Alloc>::value_compare : public std::binary_function<value_type,value_type,bool>
+	{   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
+		friend class map;
+
+		protected:
+			Compare comp;
+			value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
+		
+		public:
+			typedef bool result_type;
+			typedef value_type first_argument_type;
+			typedef value_type second_argument_type;
+
+			bool operator() (const value_type& x, const value_type& y) const
+			{
+				return comp(x.first, y.first);
+			}
+	};
+
+	// template <class Key, class T, class Compare, class Alloc>
+	// class ft::map<Key, T, Compare, Alloc>::key_value_compare : public std::binary_function<value_type,value_type,bool>
+	// {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
+	// 	friend class map;
+
+	// 	protected:
+	// 		Compare comp;
+	// 		key_value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
+		
+	// 	public:
+	// 		typedef bool result_type;
+	// 		typedef value_type first_argument_type;
+	// 		typedef value_type second_argument_type;
+
+	// 		bool operator() (const value_type& x, const value_type& y) const
+	// 		{
+	// 			return (comp(x.first, y.first) && comp(x.second, y.second));
+	// 		}
+	// };
 
 } // namespace ft

@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 13:03:32 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/21 18:20:10 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/22 22:02:37 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,11 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[RBT] default constructor called.\n" << COLOR_DEFAULT;
 			#endif
-			*this = Copy;
+			this->mem_compare = Copy.mem_compare;
+			this->mem_control = Copy.mem_control;
+			this->mem_node_control = Copy.mem_node_control;
+			this->mem_size = 0;
+			copyTree(Copy);
 		}
 		
 		~RBT(void)
@@ -143,7 +147,7 @@ namespace ft
 				clearTree(this->root);
 			this->mem_compare = Copy.mem_compare;
 			this->mem_control = Copy.mem_control;
-			//this->mem_node_control = Copy.mem_node_control;
+			this->mem_node_control = Copy.mem_node_control;
 			this->mem_size = 0;
 			//TODO copy all nodes!
 			copyTree(Copy);
@@ -253,7 +257,7 @@ namespace ft
 			bool isLeft = false;
 			while (checkNode != NULL)
 			{
-				if (extract_key(input) < extract_key(checkNode->data))
+				if (this->mem_compare(extract_key(input),extract_key(checkNode->data)))
 				{
 					parentNode = checkNode;
 					checkNode = checkNode->left;
@@ -328,7 +332,7 @@ namespace ft
 					#endif
 					if (nodeToDelete == this->root)
 						this->root = NULL;
-					if (nodeToDelete->isLeftChild)
+					else if (nodeToDelete->isLeftChild)
 						nodeToDelete->parent->left = NULL;
 					else
 						nodeToDelete->parent->right = NULL;
@@ -460,17 +464,23 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[RBT] swap called.\n" << COLOR_DEFAULT;
 			#endif
-			RBT &tmp = x;
+			node_ptr					tmp_root				= x.root;
+			std::allocator<Node<T> >	tmp_mem_node_control	= x.mem_node_control;
+			key_compare					tmp_mem_compare			= x.mem_compare;
+			allocator_type				tmp_mem_control			= x.mem_control;
+			size_type					tmp_mem_size			= x.mem_size;
+
 			x.mem_compare = this->mem_compare;
 			x.mem_control = this->mem_control;
 			x.mem_node_control = this->mem_node_control;
 			x.mem_size = this->mem_size;
 			x.root = this->root;
-			this->mem_compare = tmp.mem_compare;
-			this->mem_control = tmp.mem_control;
-			this->mem_node_control = tmp.mem_node_control;
-			this->mem_size = tmp.mem_size;
-			this->root = tmp.root;
+
+			this->mem_compare = tmp_mem_compare;
+			this->mem_control = tmp_mem_control;
+			this->mem_node_control = tmp_mem_node_control;
+			this->mem_size = tmp_mem_size;
+			this->root = tmp_root;
 		}
 		//Clear content (public member function )
 		void clear(void)
@@ -872,14 +882,14 @@ namespace ft
 				#if DEBUG
 					std::cout << COLOR_BLUE << "findNode looking at node: " << extract_key(tmp->data) << "\n" << COLOR_DEFAULT;
 				#endif
-				if (extract_key(tmp->data) == extract_key(input))
+				if (!this->mem_compare(extract_key(tmp->data),extract_key(input)) && !this->mem_compare(extract_key(input),extract_key(tmp->data)))
 				{
 					#if DEBUG
 						std::cout << COLOR_BLUE << "findNode found node: " << extract_key(tmp->data) << "\n" << COLOR_DEFAULT;
 					#endif
 					return (tmp);
 				}
-				if (extract_key(input) < extract_key(tmp->data))
+				if (this->mem_compare(extract_key(input),extract_key(tmp->data)))
 					tmp = tmp->left;
 				else
 					tmp = tmp->right;
