@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/22 21:48:11 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/23 14:35:24 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,50 +86,6 @@ void test_map(t_testTime & myTimer);
 void test_set(t_testTime & myTimer);
 void initTimer(t_testTime & myTimer);
 
-#include <list>
-#define T_SIZE_TYPE typename ft::vector<T>::size_type
-
-template <typename T>
-std::string	printPair(const T &iterator, bool nl = true, std::ostream &o = std::cout)
-{
-	o << "key: " << iterator->first << " | value: " << iterator->second;
-	if (nl)
-		o << std::endl;
-	return ("");
-}
-
-template <typename T_MAP>
-void	printSize(T_MAP const &mp, bool print_content = 1)
-{
-	std::cout << "size: " << mp.size() << std::endl;
-	std::cout << "max_size: " << mp.max_size() << std::endl;
-	if (print_content)
-	{
-		typename T_MAP::const_iterator it = mp.begin(), ite = mp.end();
-		std::cout << std::endl << "Content is:" << std::endl;
-		for (; it != ite; ++it)
-			std::cout << "- " << printPair(it, false) << std::endl;
-	}
-	std::cout << "###############################################" << std::endl;
-}
-
-template <typename T1, typename T2>
-void	printReverse(ft::map<T1, T2> &mp)
-{
-	typename ft::map<T1, T2>::iterator it = mp.end(), ite = mp.begin();
-
-	std::cout << "printReverse:" << std::endl;
-	while (it != ite) {
-		it--;
-		std::cout << "-> " << printPair(it, false) << std::endl;
-	}
-	std::cout << "_______________________________________________" << std::endl;
-}
-
-#define T1 char
-#define T2 int
-typedef ft::pair<const T1, T2> T3;
-
 typedef int myType;
 int	main(void)
 {
@@ -144,42 +100,7 @@ int	main(void)
 
 	myTimer.all.start = clock();
 
-	std::list<T3> lst;
-
-	unsigned int lst_size = 7;
-	for (unsigned int i = 0; i < lst_size; ++i)
-		lst.push_back(T3('a' + i, lst_size - i));
-	ft::map<T1, T2> foo(lst.begin(), lst.end());
-
-	lst.clear(); lst_size = 4;
-	for (unsigned int i = 0; i < lst_size; ++i)
-		lst.push_back(T3('z' - i, i * 5));
-	ft::map<T1, T2> bar(lst.begin(), lst.end());
-
-	ft::map<T1, T2>::const_iterator it_foo = foo.begin();
-	ft::map<T1, T2>::const_iterator it_bar = bar.begin();
-
-	std::cout << "BEFORE SWAP" << std::endl;
-
-	std::cout << "foo contains:" << std::endl;
-	printSize(foo);
-	std::cout << "bar contains:" << std::endl;
-	printSize(bar);
-
-	foo.swap(bar);
-
-	std::cout << "AFTER SWAP" << std::endl;
-
-	std::cout << "foo contains:" << std::endl;
-	printSize(foo);
-	std::cout << "bar contains:" << std::endl;
-	printSize(bar);
-
-	std::cout << "Iterator validity:" << std::endl;
-	std::cout << (it_foo == bar.begin()) << std::endl;
-	std::cout << (it_bar == foo.begin()) << std::endl;
-
-	//test_vector(myTimer);
+	test_vector(myTimer);
 	//test_stack(myTimer);
 	//test_pair(myTimer);
 	//test_map(myTimer);
@@ -290,6 +211,10 @@ void test_vector(t_testTime & myTimer)
 
 	displayInfo(vec);
 	displayContent(vec);
+	
+	for (int i = 0; i < 10000; ++i)
+		vec.push_back(i);
+
 	ft::vector<myType>::iterator it = vec.begin();
 	ft::vector<myType>::iterator ite = vec.end();
 	ft::vector<myType>::reverse_iterator rit = vec.rbegin();
@@ -311,9 +236,15 @@ void test_vector(t_testTime & myTimer)
 	for (size_t i = 0; rit != rite; rit++, i++)
 		std::cout << "i= " << i << " = " << *rit << " ";
 	
+	std::cout << "\nVector copy constructor\n";
 	ft::vector<myType> vec2(vec);
-	ft::vector<myType> vec3 = vec;
 	displayContent(vec2);
+	for (int i = 0; i < 100; ++i)
+		vec.pop_back();
+	std::cout << "\nVector assginement constructor\n";
+	ft::vector<myType> vec3 = vec;
+	displayContent(vec3);
+
 	
 	vec2 = vec;
 	
@@ -446,7 +377,7 @@ void test_vector(t_testTime & myTimer)
 	displayInfo(vec2);
 	displayContent(vec2);
 
-	for (size_t i = 0; i < vec.capacity(); i++)
+	for (size_t i = 0; i < 50; i++)
 		vec.push_back(i);
 	displayInfo(vec);
 	displayContent(vec);
@@ -499,7 +430,7 @@ void test_vector(t_testTime & myTimer)
 	displayInfo(vec2);
 	displayContent(vec2);
 	vec2.clear();
-	for (size_t i = 0; i < vec2.capacity(); i++)
+	for (size_t i = 0; i < 20; i++)
 		vec2.push_back(i);
 	vec2.push_back(1234567989);
 	displayInfo(vec2);

@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 12:59:00 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/22 21:26:20 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/23 13:08:27 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,6 @@ namespace ft
 				return (false);
 		}
 		return (true);
-	}
-
-	template <class T>
-	void	swap(T & a, T & b)
-	{
-		#if DEBUG
-			std::cout << COLOR_YELLOW << "[swap] function template called.\n" << COLOR_DEFAULT;
-		#endif
-		T	tmp(a);
-
-		a = b;
-		b = tmp;
 	}
 
 	//https://cplusplus.com/reference/algorithm/lexicographical_compare/?kw=lexicographical_compare

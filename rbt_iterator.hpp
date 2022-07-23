@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 09:52:47 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/22 21:34:18 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/23 12:26:58 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ namespace ft
 		{
 			return (this->ptr);
 		}
-
+		
 		node_ptr	getSmall(void) const
 		{
 			return (this->smallest);

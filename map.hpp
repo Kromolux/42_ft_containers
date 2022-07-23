@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/22 22:13:35 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/23 13:01:48 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,7 +242,7 @@ namespace ft
 			if (it != iterator())
 				return (ft::make_pair(it, false));
 			it = iterator(this->c.addNode(val), this->c.begin(), this->c.end());
-				return (ft::make_pair(it, true));
+			return (ft::make_pair(it, true));
 		}
 
 		iterator insert (iterator position, const value_type& val)
@@ -413,7 +413,7 @@ namespace ft
 				return (this->begin());
 			const_iterator it(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end());
 			if (it != const_iterator())
-			++it;
+				++it;
 			return (it);
 		}
 

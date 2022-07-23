@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/22 20:40:11 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/23 17:22:54 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,11 @@
 #include <memory>
 #include "iterator.hpp"
 #include "Utils.hpp"
-//#include "algorithm.hpp"
 
 namespace ft
 {
 
-	template <	class T,
-				class Alloc = std::allocator<T>
-				>
+	template <	class T, class Alloc = std::allocator<T> >
 	class vector
 	{
 
@@ -48,6 +45,7 @@ namespace ft
 
 		public:
 		//Member functions
+
 		//Construct vector (public member function )
 		explicit vector (const allocator_type & alloc = allocator_type())
 		: mem_control(alloc), mem_start(NULL), mem_size(0), mem_cap(0)
@@ -56,6 +54,7 @@ namespace ft
 				std::cout << COLOR_GREEN << "[vector] default constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
+
 		explicit vector (size_type n, const value_type & val = value_type(), const allocator_type& alloc = allocator_type())
 		: mem_control(alloc), mem_start(NULL), mem_size(n), mem_cap(n)
 		{
@@ -71,7 +70,7 @@ namespace ft
 		vector (InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
 		: mem_control(alloc)
 		{
-			this->mem_size = 0; //static_cast<size_type>(last - first);
+			this->mem_size = 0;
 			for (InputIterator tmp = first; tmp != last; ++tmp, ++this->mem_size)
 				;
 			this->mem_cap = this->mem_size;
@@ -81,7 +80,6 @@ namespace ft
 			for (; first != last; ++first, ++i)
 			{
 				this->mem_control.construct(this->mem_start + i, *first);
-				//++this->mem_size;
 			}
 			this->mem_cap = this->mem_size;
 			#if DEBUG
@@ -95,10 +93,12 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[vector] copy constructor called. Size: " << x.mem_size << " Sizeof T: " << sizeof(x[0]) << " Pointer: " << mem_start << "\n" << COLOR_DEFAULT;
 			#endif
-			// mem_start = mem_control.allocate(mem_cap);
-			// for (size_t i = 0; i < this->mem_size; i++)
-			// 	mem_control.construct(mem_start + i, x[i]);
-			*this = x;
+			this->mem_control = x.mem_control;
+			this->mem_size = x.mem_size;
+			this->mem_cap = x.mem_cap;
+			this->mem_start = this->mem_control.allocate(this->mem_cap);
+			for (size_t i = 0; i < this->mem_size; i++)
+				this->mem_control.construct(this->mem_start + i, x[i]);
 		}
 
 		//Vector destructor (public member function )
@@ -130,7 +130,6 @@ namespace ft
 			return (*this );
 		}
 
-
 		//Iterators:
 		//Return iterator to beginning (public member function )
 		iterator begin(void)
@@ -140,8 +139,6 @@ namespace ft
 			#endif
 			return (iterator(this->mem_start));
 		}
-		//template < class T, class Alloc = std::allocator<T> >
-		//template <const class T>
 		const_iterator begin(void) const
 		{
 			#if DEBUG
@@ -149,6 +146,7 @@ namespace ft
 			#endif
 			return (const_iterator(this->mem_start));
 		}
+
 		//Return iterator to end (public member function )
 		iterator end(void)
 		{
@@ -157,7 +155,6 @@ namespace ft
 			#endif
 			return (iterator(this->mem_start + this->mem_size));
 		}
-		//template <iterator<T
 		const_iterator end(void) const
 		{
 			#if DEBUG
@@ -165,6 +162,7 @@ namespace ft
 			#endif
 			return (const_iterator(this->mem_start + this->mem_size));
 		}
+
 		//Return reverse iterator to reverse beginning (public member function )
 		reverse_iterator rbegin(void)
 		{
@@ -180,6 +178,7 @@ namespace ft
 			#endif
 			return (const_reverse_iterator(this->mem_start));
 		}
+	
 		//Return reverse iterator to reverse end (public member function )
 		reverse_iterator rend(void)
 		{
@@ -195,6 +194,7 @@ namespace ft
 			#endif
 			return (const_reverse_iterator(this->mem_start + this->mem_size));
 		}
+
 		//Return const_iterator to beginning (public member function )
 		//C++11
 		//Return const_iterator to end (public member function )
@@ -233,7 +233,7 @@ namespace ft
 			{
 				MEM_reallocate(*this, n);
 				for (size_type i = this->mem_size; i < n; i++)
-				mem_control.construct(this->mem_start + i, val);
+					mem_control.construct(this->mem_start + i, val);
 			}
 			this->mem_size = n;
 		}
@@ -282,6 +282,7 @@ namespace ft
 			#endif
 			return (this->mem_start[n]);
 		}
+
 		//Access element (public member function )
 		reference at (size_type n)
 		{
@@ -301,6 +302,7 @@ namespace ft
 				throw std::out_of_range("vector::Index out of bounds!");
 			return (this->mem_start[n]);
 		}
+
 		//Access first element (public member function )
 		reference front(void)
 		{
@@ -316,6 +318,7 @@ namespace ft
 			#endif
 			return (this->mem_start[0]);
 		}
+
 		//Access last element (public member function )
 		reference back(void)
 		{
@@ -331,6 +334,7 @@ namespace ft
 			#endif
 			return (this->mem_start[this->mem_size - 1]);
 		}
+
 		//Access data (public member function )
 		pointer data()
 		{
@@ -349,10 +353,9 @@ namespace ft
 
 		//Modifiers:
 		//Assign vector content (public member function )
-
-		//template <typename Integer, ft::enable_if<ft::is_integral<Integer>::value, bool> = true>
 		void assign (size_type n, const value_type& val)
 		{
+			//size_type	tmp = static_cast<size_type>(n);
 			if (this->mem_size > 0)
 				MEM_destroy(*this);
 			if (n > this->mem_cap)
@@ -365,16 +368,11 @@ namespace ft
 				this->mem_control.construct(this->mem_start + i, val);
 			this->mem_size = n;
 		}
+
 		template <class InputIterator>
-		void assign (InputIterator first, InputIterator last)
+		void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
 		{
-			help_assign(first, last, ft::is_integral<InputIterator>());
-		}
-		private:
-		template <class InputIterator>
-		void	help_assign(InputIterator first, InputIterator last, ft::false_type)
-		{
-			size_type	tmp_cap = 0; //static_cast<size_type>(last - first);
+			size_type	tmp_cap = 0;
 			InputIterator tmp = first;
 			while (tmp != last)
 			{
@@ -394,23 +392,7 @@ namespace ft
 				this->mem_control.construct(this->mem_start + i, *first);
 			this->mem_size = tmp_cap;
 		}
-		template <class Integer>
-		void	help_assign(Integer n, Integer val, ft::true_type)
-		{
-			size_type	tmp = static_cast<size_type>(n);
-			if (this->mem_size > 0)
-				MEM_destroy(*this);
-			if (tmp > this->mem_cap)
-			{
-				this->mem_control.deallocate(this->mem_start, this->mem_cap);
-				this->mem_cap = tmp;
-				this->mem_start = this->mem_control.allocate(this->mem_cap);
-			}
-			for (size_type i = 0; i < tmp; i++)
-				this->mem_control.construct(this->mem_start + i, val);
-			this->mem_size = tmp;
-		}
-		public:
+
 		//Add element at the end (public member function )
 		void push_back (const value_type& val)
 		{
@@ -418,19 +400,17 @@ namespace ft
 				std::cout << COLOR_YELLOW << "[vector] push_back called.\n" << COLOR_DEFAULT;
 			#endif
 			if (this->mem_size < this->mem_cap)
-			{
 				mem_control.construct(mem_start + this->mem_size, val);
-				this->mem_size++;
-			}
 			else
 			{
 				if (this->mem_cap == 0)
-					MEM_reallocate(*this, 1);
+					this->mem_cap = 1;
 				MEM_reallocate(*this, 2 * this->mem_cap);
 				mem_control.construct(mem_start + this->mem_size, val);
-				this->mem_size++;
 			}
+			this->mem_size++;
 		}
+
 		//Delete last element (public member function )
 		void pop_back(void)
 		{
@@ -440,286 +420,101 @@ namespace ft
 			this->mem_size--;
 			mem_control.destroy(this->mem_start + this->mem_size);
 		}
+
 		//Insert elements (public member function )
 		iterator insert (iterator position, const value_type& val)
 		{
-			pointer	tmp_start;
-			//vector		copy(*this);
-			size_t	returnPos = position - this->begin();
-
-			//size_t	size_to = n;
-			size_t	newCap = this->mem_cap;
-			// InputIterator tmp = first;
-			// while (tmp != last)
-			// {
-			// 	++size_to;
-			// 	++tmp;
-			// }
-
-			if (this->mem_size + 1 > this->mem_cap)
-				newCap = 2 * this->mem_size + 1;
-			tmp_start = this->mem_control.allocate(newCap);
-			
-			size_t	pos = 0;
-			iterator	it = iterator(this->mem_start);
-			//insert before position
-			for (; it != position; ++it, ++pos)
-				this->mem_control.construct(tmp_start + pos, *it);
-
-			//insert in between
-			//for (size_t i = 0; i != n; ++i, ++pos)
-			this->mem_control.construct(tmp_start + pos, val);
-			++pos;
-
-			iterator	ite = iterator(this->mem_start + this->mem_size);
-			//insert after position including position
-			for (; it != ite; ++it, ++pos)
-				this->mem_control.construct(tmp_start + pos, *it);
-
-			MEM_destroy(*this);
-			this->mem_control.deallocate(this->mem_start, this->mem_cap);
-
-			this->mem_cap = newCap;
-			this->mem_size = pos;
-			this->mem_start = tmp_start;
-
-			// vector		copy(*this);
-			// size_type	pos = position - this->begin();
-			// this->mem_size++;
-			// if (this->mem_size > this->mem_cap)
-			// {
-			// 	MEM_destroy(*this);
-			// 	this->mem_control.deallocate(this->mem_start, this->mem_cap);
-			// 	this->mem_cap = 2 * (this->mem_size - 1);
-			// 	this->mem_start = this->mem_control.allocate(this->mem_cap);
-			// 	iterator	it = copy.begin();
-			// 	size_type	i = 0;
-			// 	for (; i != pos; ++it, ++i)
-			// 		this->mem_control.construct(this->mem_start + i, *it);
-			// 	this->mem_control.construct(this->mem_start + i, val);
-			// 	++i;
-			// 	for (; i < this->mem_size; ++it, ++i)
-			// 		this->mem_control.construct(this->mem_start + i, *it);
-			// }
-			// else
-			// {
-			// 	if (position == this->end())
-			// 		this->push_back(val);
-				// iterator	tmp = position;
-				// size_type	i = pos + 1;
-				// size_type	ii = pos;
-
-				// MEM_destroy(*this, pos);
-				// //this->mem_control.destroy(tmp.address());
-				// this->mem_control.construct(tmp.address(), val);
-				// for (; i < this->mem_size; ++ii, ++i)
-				// {
-				// 	//this->mem_control.destroy(this->mem_start + i);
-				// 	this->mem_control.construct(this->mem_start + i, copy[ii]);
-				// }
-			// }
+			size_t		returnPos = position - this->begin();
+			this->insert(position, 1, val);
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] insert iterator position value_type called.\n" << COLOR_DEFAULT;
+			#endif
 			return (iterator(this->mem_start + returnPos));
 		}
 
-		void insert (iterator position, size_type n, const value_type& val);
-		template <class InputIterator>
-		void insert (iterator position, InputIterator first, InputIterator last)
+		void insert (iterator position, size_type n, const value_type& val)
 		{
-			help_insert(position, first, last, ft::is_integral<InputIterator>());
+			vector	toInsert(n, val);
+			this->insert(position, toInsert.begin(), toInsert.end());
+			#if DEBUG
+				std::cout << COLOR_YELLOW << "[vector] insert position, n, value_type called.\n" << COLOR_DEFAULT;
+			#endif
 		}
 
-		private:
 		template <class InputIterator>
-		void	help_insert(iterator position, InputIterator first, InputIterator last, ft::false_type)
+		void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
 		{
-			pointer	tmp_start;
-			//vector		copy(*this);
-			//size_type	pos = position - this->begin();
+			pointer		tmp_start = this->mem_start;
+			size_t		size_to = 0;
+			size_t		newCap = this->mem_cap;
+			size_t		pos = 0;
+			iterator	it = iterator(this->mem_start);
+			iterator	ite = iterator(this->mem_start + this->mem_size);
 
-			size_t	size_to = 0; //static_cast<size_t>(last - first);
-			size_t	newCap = this->mem_cap;
 			InputIterator tmp = first;
 			while (tmp != last)
 			{
 				++size_to;
 				++tmp;
 			}
-
-			if (this->mem_size + size_to > this->mem_cap)
-			// {
+			
+			if (this->mem_size + size_to > this->mem_cap) //new element extends capacitiy, need to allocate more mem
+			{
 				newCap = 2 * this->mem_size + size_to;
+				tmp_start = this->mem_control.allocate(newCap);
+
+				//insert before position
+				for (; it != position; ++it, ++pos)
+					this->mem_control.construct(tmp_start + pos, *it);
+
+				//insert in between
+				for (; first != last; ++first, ++pos)
+					this->mem_control.construct(tmp_start + pos, *first);
 				
-			// }
-			// else
-			// {
-			// 	//newCap = this->mem_size;
-			// 	tmp_start = this->mem_control.allocate(this->mem_cap);
-			// }
-			tmp_start = this->mem_control.allocate(newCap);
-			
-			size_t	pos = 0;
-			iterator	it = iterator(this->mem_start);
-			//insert before position
-			for (; it != position; ++it, ++pos)
-				this->mem_control.construct(tmp_start + pos, *it);
+				//insert after position including position
+				for (; it != ite; ++it, ++pos)
+					this->mem_control.construct(tmp_start + pos, *it);
 
-			//insert in between
-			for (; first != last; ++first, ++pos)
-				this->mem_control.construct(tmp_start + pos, *first);
+				MEM_destroy(*this);
+				this->mem_control.deallocate(this->mem_start, this->mem_cap);
+			}
+			else
+			{
+				vector	copy(*this);
+				pos = position - this->begin();
+				it = copy.begin() + pos;
+				ite = copy.end();
 
-			iterator	ite = iterator(this->mem_start + this->mem_size);
-			//insert after position including position
-			for (; it != ite; ++it, ++pos)
-				this->mem_control.construct(tmp_start + pos, *it);
-
-			MEM_destroy(*this);
-			this->mem_control.deallocate(this->mem_start, this->mem_cap);
-
-			this->mem_cap = newCap;
-			this->mem_size = pos;
-			this->mem_start = tmp_start;
-			// 	iterator	it = copy.begin();
-			// 	size_type	i = 0;
-			// 	for (; i != pos; ++it, ++i)
-			// 		this->mem_control.construct(this->mem_start + i, *it);
-			// 	this->mem_size += size_to;
-			// 	for (; first != last; ++first, ++i)
-			// 		this->mem_control.construct(this->mem_start + i, *first);
-			// 	for (; i < this->mem_size; ++it, ++i)
-			// 		this->mem_control.construct(this->mem_start + i, *it);
-			// 	MEM_destroy(*this);
-			// 	this->mem_control.deallocate(this->mem_start, this->mem_cap);
-			// }
-			// else
-			// {
-			// 	//iterator	tmp = position;
-			// 	size_type	i = pos;
-			// 	size_type	ii = pos;
-			// 	MEM_destroy(*this, pos);
-			// 	this->mem_size += size_to;
-			// 	//this->mem_control.destroy(tmp.address());
-			// 	//this->mem_control.construct(tmp.address(), val);
-			// 	for (; first != last; ++first, ++i)
-			// 	{
-			// 		//this->mem_control.destroy(this->mem_start + i);
-			// 		this->mem_control.construct(this->mem_start + i, *first);
-			// 	}
-			// 	for (; i < this->mem_size; ++ii, ++i)
-			// 	{
-			// 		//this->mem_control.destroy(this->mem_start + i);
-			// 		this->mem_control.construct(this->mem_start + i, copy[ii]);
-			// 	}
-			// }
-			#if DEBUG
-				std::cout << COLOR_YELLOW << "[vector] insert iterator range called.\n" << COLOR_DEFAULT;
-			#endif
-		}
-
-		void 	help_insert(iterator position, size_type n, const value_type& val, ft::true_type)
-		{
-			pointer	tmp_start;
-			//vector		copy(*this);
-			//size_type	pos = position - this->begin();
-
-			size_t	size_to = n;
-			size_t	newCap = this->mem_cap;
-			// InputIterator tmp = first;
-			// while (tmp != last)
-			// {
-			// 	++size_to;
-			// 	++tmp;
-			// }
-
-			if (this->mem_size + size_to > this->mem_cap)
-				newCap = 2 * this->mem_size + size_to;
-			tmp_start = this->mem_control.allocate(newCap);
-			
-			size_t	pos = 0;
-			iterator	it = iterator(this->mem_start);
-			//insert before position
-			for (; it != position; ++it, ++pos)
-				this->mem_control.construct(tmp_start + pos, *it);
-
-			//insert in between
-			for (size_t i = 0; i != n; ++i, ++pos)
-				this->mem_control.construct(tmp_start + pos, val);
-
-			iterator	ite = iterator(this->mem_start + this->mem_size);
-			//insert after position including position
-			for (; it != ite; ++it, ++pos)
-				this->mem_control.construct(tmp_start + pos, *it);
-
-			MEM_destroy(*this);
-			this->mem_control.deallocate(this->mem_start, this->mem_cap);
+				//insert in between
+				for (; first != last; ++first, ++pos)
+				{
+					this->mem_control.destroy(this->mem_start + pos);
+					this->mem_control.construct(this->mem_start + pos, *first);
+				}
+				
+				//insert after position including position
+				for (; it != ite; ++it, ++pos)
+				{
+					this->mem_control.destroy(this->mem_start + pos);
+					this->mem_control.construct(this->mem_start + pos, *it);
+				}
+			}
 
 			this->mem_cap = newCap;
 			this->mem_size = pos;
 			this->mem_start = tmp_start;
-			
-			// vector		copy(*this);
-			// size_type	pos = position - this->begin();
-
-			// if (this->mem_size + n > this->mem_cap)
-			// {
-			// 	MEM_destroy(*this);
-			// 	this->mem_control.deallocate(this->mem_start, this->mem_cap);
-			// 	this->mem_cap = 2 * this->mem_size + n;
-			// 	this->mem_start = this->mem_control.allocate(this->mem_cap);
-			// 	iterator	it = copy.begin();
-			// 	size_type	i = 0;
-			// 	for (; i != pos; ++it, ++i)
-			// 		this->mem_control.construct(this->mem_start + i, *it);
-			// 	this->mem_size += n;
-			// 	for (size_type ii = 0; ii < n; ++ii, ++pos)
-			// 		this->mem_control.construct(this->mem_start + pos, val);
-			// 	for (; pos < this->mem_size; ++it, ++pos)
-			// 		this->mem_control.construct(this->mem_start + i, *it);
-			// }
-			// else
-			// {
-			// 	//iterator	tmp = position;
-			// 	size_type	i = pos;
-			// 	size_type	ii = 0;
-			// 	MEM_destroy(*this, pos);
-			// 	this->mem_size += n;
-			// 	//this->mem_control.destroy(tmp.address());
-			// 	//this->mem_control.construct(tmp.address(), val);
-			// 	for (; ii < n; ++i, ++ii)
-			// 	{
-			// 		//this->mem_control.destroy(this->mem_start + i);
-			// 		this->mem_control.construct(this->mem_start + i, val);
-			// 	}
-			// 	for (; i < this->mem_size; ++pos, ++i)
-			// 	{
-			// 		//this->mem_control.destroy(this->mem_start + i);
-			// 		this->mem_control.construct(this->mem_start + i, copy[pos]);
-			// 	}
-			// }
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[vector] insert iterator n val called.\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[vector] insert postion, first, last called.\n" << COLOR_DEFAULT;
 			#endif
 		}
 
-		public:
 		//Erase elements (public member function )
 		iterator erase (iterator position)
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[vector] erase position called.\n" << COLOR_DEFAULT;
 			#endif
-			iterator it = position;
-			this->mem_control.destroy(position.address());
-			
-			iterator ite = this->end();
-			++it;
-			while (it != ite)
-			{
-				this->mem_control.construct(it.address() - 1, *it);
-				this->mem_control.destroy(it.address());
-				it++;
-			}
-			this->mem_size--;
-			return (position);
+			return (this->erase(position, iterator(position) + 1));
 		}
 
 		iterator erase (iterator first, iterator last)
@@ -729,20 +524,19 @@ namespace ft
 			#endif
 			iterator it = first;
 			iterator ite = this->end();
+	
 			for (; it != last; ++it)
 			{
 				this->mem_control.destroy(it.address());
-				this->mem_size--;
+				--this->mem_size;
 			}
 
 			iterator it_to = first;
 			it = last;
-			while (it != ite)
+			for (;it != ite; ++it, ++it_to)
 			{
 				this->mem_control.construct(it_to.address(), *it);
 				this->mem_control.destroy(it.address());
-				++it;
-				++it_to;
 			}
 			return (first);
 		}
@@ -768,6 +562,7 @@ namespace ft
 			x.mem_size = tmp_size;
 			x.mem_cap = tmp_cap;
 		}
+
 		//Clear content (public member function )
 		void clear(void)
 		{
@@ -777,6 +572,7 @@ namespace ft
 			MEM_destroy(*this);
 			this->mem_size = 0;
 		}
+
 		//Construct and insert element (public member function )
 		//C++11
 		//Construct and insert element at the end (public member function )
@@ -791,6 +587,7 @@ namespace ft
 			#endif
 			return (this->mem_control);
 		}
+
 		protected:
 		void	MEM_destroy(vector & x, size_type i = 0)
 		{
@@ -800,15 +597,11 @@ namespace ft
 
 		void	MEM_reallocate(vector & x, size_type const & n)
 		{
-			//vector	tmp(x);
 			pointer	tmp = x.mem_control.allocate(n);
 			
-			//x.mem_cap = n;
-			//x.mem_start = x.mem_control.allocate(x.mem_cap);
 			for (size_type i = 0; i < x.mem_size; i++)
 				x.mem_control.construct(tmp + i, x[i]);
 			MEM_destroy(x);
-			//if (x.mem_cap > 0)
 			mem_control.deallocate(x.mem_start, x.mem_cap);
 			x.mem_start = tmp;
 			x.mem_cap = n;
@@ -859,6 +652,7 @@ namespace ft
 	{
 		return !(lhs < rhs);
 	}
+
 	//Exchange contents of vectors (function template )
 	template <class T, class Alloc>
 	void swap (ft::vector<T,Alloc> & x, ft::vector<T,Alloc> & y)
