@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 17:49:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/20 15:01:59 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/23 18:00:47 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ namespace ft
 		container_type	c;
 		
 		public:
+
 		//Member functions
 		//(constructor)
 		explicit stack (const container_type& ctnr = container_type())// : c(ctnr)
@@ -64,13 +65,16 @@ namespace ft
 		{
 			c.push_back(val);
 		}
+
 		//emplace 
 		//C++ 11
+		
 		//pop
 		void pop(void)
 		{
 			c.pop_back();
 		}
+		
 		//swap 
 		//C++ 11
 
@@ -80,36 +84,36 @@ namespace ft
 		//Non-member function overloads
 		//relational operators
 		//template <class T, class Container>
-		friend bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+		bool operator== (const stack<T,Container>& rhs) const
 		{
-			return (lhs.c == rhs.c);
+			return (this->c == rhs.c);
 		}
 		//template <class T, class Container>
-		friend bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
+		bool operator!= (const stack<T,Container>& rhs) const
 		{
-			return (!(lhs == rhs));
-		}
-		//template <class T, class Container>
-		friend bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-		{
-			return (lhs.c < rhs.c);
-		}
-		//template <class T, class Container>
-		friend bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-		{
-			return !(rhs < lhs);
-		}
-		//template <class T, class Container>
-		friend bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-		{
-			return (rhs < lhs);
-		}
-		//template <class T, class Container>
-		friend bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs)
-		{
-			return !(lhs < rhs);
+			return (!(*this == rhs));
 		}
 
+		//template <class T, class Container>
+		bool operator<  (const stack<T,Container>& rhs) const
+		{
+			return (this->c < rhs.c);
+		}
+		//template <class T, class Container>
+		bool operator<= (const stack<T,Container>& rhs) const
+		{
+			return !(rhs < *this);
+		}
+		//template <class T, class Container>
+		bool operator>  (const stack<T,Container>& rhs) const
+		{
+			return (rhs < *this);
+		}
+		//template <class T, class Container>
+		bool operator>= (const stack<T,Container>& rhs) const
+		{
+			return !(*this < rhs);
+		}
 	};
 
 }

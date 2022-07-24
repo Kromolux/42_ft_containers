@@ -6,44 +6,30 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 09:52:47 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/23 12:26:58 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/23 18:47:14 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-//#include <iterator>
 #include <cstddef>
 #include "RBT.hpp"
-//#include "pair.hpp"
-//#include "algorithm.hpp"
-//#include "rbt_reverse_iterator.hpp"
-//class RBT;
 
 namespace ft
 {
-	//template <class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<ft::pair<const Key, T> > >
-	//class RBT;
 	template <class Key, bool isConst>
-	class rbt_iterator //: public ft::iterator<ft::bidirectional_iterator_tag, T>
+	class rbt_iterator
 	{
 		public:
 		typedef Key 																					key_type;
-		//typedef key_type																				value_type;
 		typedef const key_type																			const_key_type;
 		typedef	key_type																				normal_key_type;
 		typedef typename choose<isConst, const_key_type, normal_key_type>::type							value_type;
-		//typedef T																						mapped_type;
-		//typedef typename Tree::value_type 																value_type;
-		//typedef ft::pair<const key_type, mapped_type>													value_type;
 		typedef typename std::iterator<ft::bidirectional_iterator_tag, value_type>::difference_type		difference_type;
 		typedef typename std::iterator<ft::bidirectional_iterator_tag, value_type>::pointer				pointer;
 		typedef typename std::iterator<ft::bidirectional_iterator_tag, value_type>::reference				reference;
 		typedef typename std::iterator<ft::bidirectional_iterator_tag, value_type>::iterator_category		iterator_category;
 		
-		//typedef typename ft::RBT<key_type, mapped_type>::node * node_ptr;
-		//typedef value_type *node_ptr;
 		private:
-		//typedef Node<Key> * node_ptr;
 		typedef const Node<Key>		const_node;
 		typedef Node<Key>			normal_node;
 		typedef typename choose<isConst, const_node, normal_node>::type * node_ptr;
@@ -59,18 +45,21 @@ namespace ft
 				std::cout << COLOR_GREEN << "[rbt_iterator] default constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
+
 		rbt_iterator(node_ptr input, node_ptr small, node_ptr big) : ptr(input), smallest(small), biggest(big)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[rbt_iterator] constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
+
 		rbt_iterator(rbt_iterator const & copy) : ptr(copy.ptr), smallest(copy.smallest), biggest(copy.biggest)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[rbt_iterator] copy constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
+
 		template<typename TypeKey, bool TypeIsConst>
 		rbt_iterator(rbt_iterator<TypeKey, TypeIsConst> const & other) : ptr(other.getPtr()), smallest(other.getSmall()), biggest(other.getBig())
 		{
@@ -79,14 +68,6 @@ namespace ft
 			#endif
 		}
 
-		// template <class It>
-		// rbt_iterator(const rbt_iterator<It, nonconst_T>& i,
-		// typename ft::enable_if<ft::is_same<It, nonconst_T>::value>::type* = NULL) : ptr(i.address())
-		// {
-		// 	#if DEBUG
-		// 		std::cout << COLOR_GREEN << "[rbt_iterator] const constructor called.\n" << COLOR_DEFAULT;
-		// 	#endif
-		// }
 		~rbt_iterator(void)
 		{
 			#if DEBUG
@@ -142,6 +123,7 @@ namespace ft
 			increment();
 			return (tmp);
 		}
+
 		rbt_iterator &	operator--(void)
 		{
 			#if DEBUG
@@ -173,7 +155,6 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_MAGENTA << "[rbt_iterator] operator* called.\n" << COLOR_DEFAULT;
 			#endif
-			//return (static_cast<node_ptr>(this->ptr)->data);
 			return ((this->ptr->data));
 		}
 		
@@ -254,13 +235,7 @@ namespace ft
 		typedef typename ft::iterator_traits<Iterator>::difference_type		difference_type;	//Preserves Iterator's difference type
 		typedef typename ft::iterator_traits<Iterator>::pointer				pointer;			//Preserves Iterator's pointer type
 		typedef typename ft::iterator_traits<Iterator>::reference			reference;			//Preserves Iterator's reference type
-		/*
-			typedef T								value_type;
-			typedef ptrdiff_t						difference_type;
-			typedef T *								pointer;
-			typedef T &								reference;
-			typedef random_access_iterator_tag		iterator_category;
-		*/
+
 		private:
 		iterator_type	_base;
 
@@ -271,12 +246,14 @@ namespace ft
 				std::cout << COLOR_GREEN << "[rbt_reverse_iterator] default constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
+
 		explicit rbt_reverse_iterator (iterator_type it) : _base(it)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[rbt_reverse_iterator] constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
+
 		rbt_reverse_iterator (const rbt_reverse_iterator<Iterator>& rev_it) : _base(rev_it._base)
 		{
 			#if DEBUG
@@ -387,36 +364,5 @@ namespace ft
 		#endif
 		return !(lhs.base() == rhs.base());
 	}
-	// template <class Iterator>
-	// bool operator<  (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	// {
-	// 	#if DEBUG
-	// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] operator< called.\n" << COLOR_DEFAULT;
-	// 	#endif
-	// 	return (lhs.base() > rhs.base());
-	// }
-	// template <class Iterator>
-	// bool operator<= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	// {
-	// 	#if DEBUG
-	// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] operator<= called.\n" << COLOR_DEFAULT;
-	// 	#endif
-	// 	return (lhs.base() >= rhs.base());
-	// }
-	// template <class Iterator>
-	// bool operator>  (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	// {
-	// 	#if DEBUG
-	// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] operator> called.\n" << COLOR_DEFAULT;
-	// 	#endif
-	// 	return (lhs.base() < rhs.base());
-	// }
-	// template <class Iterator>
-	// bool operator>= (const reverse_iterator<Iterator>& lhs, const reverse_iterator<Iterator>& rhs)
-	// {
-	// 	#if DEBUG
-	// 		std::cout << COLOR_MAGENTA << "[reverse_iterator] operator>= called.\n" << COLOR_DEFAULT;
-	// 	#endif
-	// 	return (lhs.base() >= rhs.base());
-	// }
+
 } // namespace ft

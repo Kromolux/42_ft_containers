@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/23 14:35:24 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/24 22:41:00 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ void test_pair(t_testTime & myTimer);
 void test_map(t_testTime & myTimer);
 void test_set(t_testTime & myTimer);
 void initTimer(t_testTime & myTimer);
+void testRBT(void);
 
 typedef int myType;
 int	main(void)
@@ -100,12 +101,13 @@ int	main(void)
 
 	myTimer.all.start = clock();
 
-	test_vector(myTimer);
+	//test_vector(myTimer);
 	//test_stack(myTimer);
 	//test_pair(myTimer);
 	//test_map(myTimer);
 	//test_set(myTimer);
 
+	testRBT();
 	
 	myTimer.all.end = clock();
 	
@@ -579,24 +581,86 @@ void test_map(t_testTime & myTimer)
 
 	displayMapInfo(myMap);
 	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	// myMap.insert(ft::pair<int, int>(50, 1));
+	// //std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	// myMap.insert(ft::pair<int, int>(30, 2));
+	// myMap.insert(ft::pair<int, int>(70, 3));
+	// //std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	// myMap.insert(ft::pair<int, int>(20, 4));
+	// myMap.insert(ft::pair<int, int>(80, 5));
+	// myMap.insert(ft::pair<int, int>(40, 6));
+	// myMap.insert(ft::pair<int, int>(60, 7));
+	// //std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	// myMap.insert(ft::pair<int, int>(31, 8));
+	// myMap.insert(ft::pair<int, int>(55, 9));
+	// myMap.insert(ft::pair<int, int>(75, 10));
+	// myMap.insert(ft::pair<int, int>(53, 11));
+	// //std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	// myMap.insert(ft::pair<int, int>(76, 12));
+	// myMap.insert(ft::pair<int, int>(35, 13));
+	// myMap.insert(ft::pair<int, int>(57, 14));
+	std::cout << "insert 30\n";
+	myMap.insert(ft::pair<int, int>(30, 1));
+
+	std::cout << "insert 50\n";
 	myMap.insert(ft::pair<int, int>(50, 1));
-	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	myMap.insert(ft::pair<int, int>(30, 2));
-	myMap.insert(ft::pair<int, int>(70, 3));
-	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	myMap.insert(ft::pair<int, int>(20, 4));
-	myMap.insert(ft::pair<int, int>(80, 5));
-	myMap.insert(ft::pair<int, int>(40, 6));
-	myMap.insert(ft::pair<int, int>(60, 7));
-	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	myMap.insert(ft::pair<int, int>(31, 8));
-	myMap.insert(ft::pair<int, int>(55, 9));
-	myMap.insert(ft::pair<int, int>(75, 10));
-	myMap.insert(ft::pair<int, int>(53, 11));
-	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	myMap.insert(ft::pair<int, int>(76, 12));
-	myMap.insert(ft::pair<int, int>(35, 13));
-	myMap.insert(ft::pair<int, int>(57, 14));
+
+	myMap.printTree();
+	std::cout << "insert 60\n";
+	myMap.insert(ft::pair<int, int>(60, 1));
+
+	myMap.printTree();
+	//return ;
+	std::cout << "insert 70\n";
+	myMap.insert(ft::pair<int, int>(70, 1));
+	myMap.printTree();
+	std::cout << "erase 50\n";
+	myMap.erase(50);
+
+	myMap.printTree();
+	//return ;
+	std::cout << "insert 20\n";
+	myMap.insert(ft::pair<int, int>(20, 1));
+	myMap.printTree();
+	std::cout << "erase 70\n";
+	myMap.erase(70);
+	
+	myMap.printTree();
+	//return ;
+	myMap.insert(ft::pair<int, int>(50, 1));
+	std::cout << "insert 50\n";
+	myMap.insert(ft::pair<int, int>(70, 1));
+	std::cout << "insert 70\n";
+	myMap.printTree();
+	//return ;
+	myMap.erase(20);
+	std::cout << "erase 20\n";
+	myMap.printTree();
+	//return ;
+	std::cout << "erase 60\n";
+	myMap.erase(60);
+	//return ;
+	myMap.printTree();
+	//return ;
+	myMap.insert(ft::pair<int, int>(20, 1));
+	std::cout << "insert 20\n";
+	myMap.insert(ft::pair<int, int>(40, 1));
+	std::cout << "insert 40\n";
+	myMap.insert(ft::pair<int, int>(60, 1));
+	std::cout << "insert 60\n";
+	myMap.insert(ft::pair<int, int>(80, 1));
+	std::cout << "insert 80\n";
+	myMap.insert(ft::pair<int, int>(100, 1));
+	std::cout << "insert 100\n";
+
+	myMap.printTree();
+	//return ;
+	std::cout << "erase 70\n";
+	myMap.erase(70);
+	//return;
+	//std::cout << "before print Tree\n";
+	myMap.printTree();
+	//return ;
 	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	// myMap.insert(ft::pair<int, int>(50, 1));
 	// myMap.insert(ft::pair<int, int>(70, 2));
@@ -609,50 +673,50 @@ void test_map(t_testTime & myTimer)
 	// myMap.insert(ft::pair<int, int>(20, 4));
 	// myMap.insert(ft::pair<int, int>(10, 5));
 	
-	displayMapInfo(myMap);
-	displayMapContent(myMap);
+	// displayMapInfo(myMap);
+	// displayMapContent(myMap);
 	
-	std::cout << "iterator created it begin\n";
-	ft::map<int, int>::iterator it = myMap.begin();
-	it->second = 666;
-	std::cout << "iterator created ite end\n";
-	ft::map<int, int>::iterator ite = myMap.end();
+	// std::cout << "iterator created it begin\n";
+	// ft::map<int, int>::iterator it = myMap.begin();
+	// it->second = 666;
+	// std::cout << "iterator created ite end\n";
+	// ft::map<int, int>::iterator ite = myMap.end();
 	
-	std::cout << "\ncopying map:\n";
-	std::cout << "first using copy constructor\n";
-	ft::map<int, int> myMap2(myMap);
-	displayMapInfo(myMap2);
-	displayMapContent(myMap2);
+	// std::cout << "\ncopying map:\n";
+	// std::cout << "first using copy constructor\n";
+	// ft::map<int, int> myMap2(myMap);
+	// displayMapInfo(myMap2);
+	// displayMapContent(myMap2);
 	
-	std::cout << "\ncopying map:\n";
-	std::cout << "second using assingment constructor\n";
-	ft::map<int, int> myMap3 = myMap;
-	displayMapInfo(myMap3);
-	displayMapContent(myMap3);
+	// std::cout << "\ncopying map:\n";
+	// std::cout << "second using assingment constructor\n";
+	// ft::map<int, int> myMap3 = myMap;
+	// displayMapInfo(myMap3);
+	// displayMapContent(myMap3);
 
-	std::cout << "\ncopying map:\n";
-	std::cout << "third using iterator constructor\n";
+	// std::cout << "\ncopying map:\n";
+	// std::cout << "third using iterator constructor\n";
 	
-	ft::map<int, int> myMap4(it, ite);
-	displayMapInfo(myMap4);
-	displayMapContent(myMap4);
-	std::cout << "\n\n";
+	// ft::map<int, int> myMap4(it, ite);
+	// displayMapInfo(myMap4);
+	// displayMapContent(myMap4);
+	// std::cout << "\n\n";
 	
-	myMap[50] = 42;
+	// myMap[50] = 42;
 
 	
-	ft::pair<ft::map<int, int>::iterator, ft::map<int, int>::iterator> myRange = myMap.equal_range(75);
-	std::cout << "lower_bound of 40 = " << myMap.lower_bound(40)->first << " upper_bound of 40 = " << myMap.upper_bound(40)->first << "\n";
-	std::cout << "lower_bound of 50 = " << myMap.lower_bound(50)->first << " upper_bound of 50 = " << myMap.upper_bound(50)->first << "\n";
-	std::cout << "equal_range of 75 = " << myRange.first->first << " = " << myRange.second->first << "\n";
-	std::cout << "\n\niterator test start\n";
-	std::cout << "printing with standard iterator forward\n";
+	// ft::pair<ft::map<int, int>::iterator, ft::map<int, int>::iterator> myRange = myMap.equal_range(75);
+	// std::cout << "lower_bound of 40 = " << myMap.lower_bound(40)->first << " upper_bound of 40 = " << myMap.upper_bound(40)->first << "\n";
+	// std::cout << "lower_bound of 50 = " << myMap.lower_bound(50)->first << " upper_bound of 50 = " << myMap.upper_bound(50)->first << "\n";
+	// std::cout << "equal_range of 75 = " << myRange.first->first << " = " << myRange.second->first << "\n";
+	// std::cout << "\n\niterator test start\n";
+	// std::cout << "printing with standard iterator forward\n";
 	
-	while (it != ite)
-	{
-		std::cout << it->first << ":" << it->second << " ";
-		++it;
-	}
+	// while (it != ite)
+	// {
+	// 	std::cout << it->first << ":" << it->second << " ";
+	// 	++it;
+	// }
 	
 	// std::cout << "\nbackwards\n";
 	// // it = myMap.begin();
@@ -667,16 +731,16 @@ void test_map(t_testTime & myTimer)
 	// }
 
 	
-	std::cout << "\n\nconst_iterator created cit begin\n";
-	ft::map<int, int>::const_iterator cit = myMap.begin();
-	std::cout << "const_iterator created cite end\n";
-	ft::map<int, int>::const_iterator cite = myMap.end();
-	//cit->second = 666; //compiler error because of const iterator
-	while (cit != cite)
-	{
-		std::cout << cit->first << ":" << cit->second << " ";
-		++cit;
-	}
+	// std::cout << "\n\nconst_iterator created cit begin\n";
+	// ft::map<int, int>::const_iterator cit = myMap.begin();
+	// std::cout << "const_iterator created cite end\n";
+	// ft::map<int, int>::const_iterator cite = myMap.end();
+	// //cit->second = 666; //compiler error because of const iterator
+	// while (cit != cite)
+	// {
+	// 	std::cout << cit->first << ":" << cit->second << " ";
+	// 	++cit;
+	// }
 	
 	// std::cout << "\nbackwards\n";
 	// cit = myMap.end();
@@ -699,16 +763,16 @@ void test_map(t_testTime & myTimer)
 	// 	--cit;
 	// }
 	
-	std::cout << "\n\nreverse_iterator created rit begin\n";
-	ft::map<int, int>::reverse_iterator rit = myMap.rbegin();
-	std::cout << "reverse_iterator created rite end\n";
-	ft::map<int, int>::reverse_iterator rite = myMap.rend();
-	//cit->second = 666;
-	while (rit != rite)
-	{
-		std::cout << rit->first << ":" << rit->second << " ";
-		++rit;
-	}
+	// std::cout << "\n\nreverse_iterator created rit begin\n";
+	// ft::map<int, int>::reverse_iterator rit = myMap.rbegin();
+	// std::cout << "reverse_iterator created rite end\n";
+	// ft::map<int, int>::reverse_iterator rite = myMap.rend();
+	// //cit->second = 666;
+	// while (rit != rite)
+	// {
+	// 	std::cout << rit->first << ":" << rit->second << " ";
+	// 	++rit;
+	// }
 	
 	// std::cout << "\nbackwards\n";
 	// --rit;
@@ -718,16 +782,16 @@ void test_map(t_testTime & myTimer)
 	// 	--rit;
 	// }
 
-	std::cout << "\n\nconst_reverse_iterator created crit begin\n";
-	ft::map<int, int>::const_reverse_iterator crit = myMap.rbegin();
-	std::cout << "const_reverse_iterator created crite end\n";
-	ft::map<int, int>::const_reverse_iterator crite = myMap.rend();
-	//cit->second = 666;
-	while (crit != crite)
-	{
-		std::cout << crit->first << ":" << crit->second << " ";
-		++crit;
-	}
+	// std::cout << "\n\nconst_reverse_iterator created crit begin\n";
+	// ft::map<int, int>::const_reverse_iterator crit = myMap.rbegin();
+	// std::cout << "const_reverse_iterator created crite end\n";
+	// ft::map<int, int>::const_reverse_iterator crite = myMap.rend();
+	// //cit->second = 666;
+	// while (crit != crite)
+	// {
+	// 	std::cout << crit->first << ":" << crit->second << " ";
+	// 	++crit;
+	// }
 	//crit->second = 666;
 	// std::cout << "\nbackwards\n";
 	// --crit;
@@ -736,20 +800,20 @@ void test_map(t_testTime & myTimer)
 	// 	std::cout << crit->first << ":" << crit->second << " ";
 	// 	--crit;
 	// }
-	std::cout << "\n";
+	// std::cout << "\n";
 
 	
-	myMap.erase(55);
-	std::cout << "deleted number 55\n\n";
-	std::cout << "lower_bound of 40 = " << myMap.lower_bound(40)->first << " upper_bound of 40 = " << myMap.upper_bound(40)->first << "\n";
-	displayMapContent(myMap);
-	ft::map<int, int>::iterator erase_it = myMap.find(75);
-	myMap.erase(erase_it);
-	std::cout << "erase key 75 with iterator\n";
-	displayMapContent(myMap);
-	std::cout << "iterator tests\n";
-	it = myMap.begin();
-	ite = myMap.end();
+	// myMap.erase(55);
+	// std::cout << "deleted number 55\n\n";
+	// std::cout << "lower_bound of 40 = " << myMap.lower_bound(40)->first << " upper_bound of 40 = " << myMap.upper_bound(40)->first << "\n";
+	// displayMapContent(myMap);
+	// ft::map<int, int>::iterator erase_it = myMap.find(75);
+	// myMap.erase(erase_it);
+	// std::cout << "erase key 75 with iterator\n";
+	// displayMapContent(myMap);
+	// std::cout << "iterator tests\n";
+	// it = myMap.begin();
+	// ite = myMap.end();
 	
 	//--ite;
 	// while (it != ite)
@@ -780,25 +844,25 @@ void test_map(t_testTime & myTimer)
 	
 	//displayMapContent(myMap);
 
-	it = myMap.begin();
-	ite = myMap.end();
-	++it;
-	++it;
-	//++it;
-	//++it;
-	--ite;
-	--ite;
-	std::cout << "deleting map content with iterators start: " << it->first << " end: " << ite->first << "\n";
-	myMap.erase(it, ite);
-	myMap.insert(ft::pair<int, int>(90, 99));
-	// myMap.erase(it);
-	// myMap.erase(60);
-	// myMap.erase(70);
-	// myMap.erase(80);
-	displayMapContent(myMap);
-	//myMap.insert(ft::pair<int, int>(5, 1));
-	//displayMapContent(myMap);
-	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
+	// it = myMap.begin();
+	// ite = myMap.end();
+	// ++it;
+	// ++it;
+	// //++it;
+	// //++it;
+	// --ite;
+	// --ite;
+	// std::cout << "deleting map content with iterators start: " << it->first << " end: " << ite->first << "\n";
+	// myMap.erase(it, ite);
+	// myMap.insert(ft::pair<int, int>(90, 99));
+	// // myMap.erase(it);
+	// // myMap.erase(60);
+	// // myMap.erase(70);
+	// // myMap.erase(80);
+	// displayMapContent(myMap);
+	// //myMap.insert(ft::pair<int, int>(5, 1));
+	// //displayMapContent(myMap);
+	// //std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myTimer.map.end = clock();
 }
 
@@ -857,4 +921,111 @@ void test_set(t_testTime & myTimer)
 
 
 	myTimer.set.end = clock();
+}
+
+#define T1 int
+#define T2 std::string
+typedef ft::map<T1, T2>::value_type T3;
+
+static int iter = 0;
+
+template <typename MAP>
+void	ft_erase(MAP &mp, const T1 param)
+{
+	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+	mp.erase(param);
+	//printSize(mp);
+}
+
+void	testRBT(void)
+{
+	ft::map<T1, T2> mp;
+
+	mp[5] = "1";
+	mp[8] = "2";
+	mp[15] = "3";
+	mp[12] = "4";
+	mp[19] = "5";
+	mp[9] = "6";
+	mp[13] = "7";
+	mp[23] = "8";
+
+	mp.printTree();
+	mp[10] = "new";
+
+	mp.printTree();
+	return;
+	mp[42] = "lol";
+
+	mp[50] = "mdr";
+	mp[25] = "funny";
+
+
+	mp[18] = "bee";
+	mp[23] = "coconut";
+	mp[28] = "diary";
+	mp[35] = "fiesta";
+	mp[44] = "hello";
+	mp[48] = "world";
+	mp[53] = "this is a test";
+	mp[80] = "hey";
+
+	mp[46] = "bunny";
+	mp[21] = "fizz";
+	mp[30] = "buzz";
+	mp[55] = "fuzzy";
+
+
+	mp[43] = "1";
+	mp[45] = "2";
+	mp[47] = "3";
+	mp[49] = "4";
+	mp[51] = "5";
+	mp[54] = "6";
+	mp[60] = "7";
+	mp[90] = "8";
+
+	mp[12] = "no";
+	mp[20] = "idea";
+	mp[22] = "123";
+	mp[24] = "345";
+	mp[27] = "27";
+	mp[29] = "29";
+	mp[33] = "33";
+	mp[38] = "38";
+	return ;
+	//printSize(mp);
+
+	/* A classic btree should give this:
+	 *                                      42
+	 *                     /                                            \
+	 *                    25                                            50
+	 *           /                 \                         /                       \
+	 *          21                 30                       46                       55
+	 *      /       \           /      \                /       \             /           \
+	 *     18       23        28        35            44         48         53             80
+	 *   /   \    /    \    /    \     /   \        /   \       /   \     /    \         /     \
+	 *  12   20  22    24  27    29  33    38     43    45    47    49   51    54       60      90
+	 *
+	 * */
+
+	ft_erase(mp, 25); // right != NULL; left != NULL
+	ft_erase(mp, 55); // right != NULL; left != NULL
+
+	/* After deleting 25 and 55, I would get:
+	 *                                      42
+	 *                     /                                            \
+	 *                    24                                            50
+	 *           /                 \                         /                      \
+	 *          21                 30                       46                      54
+	 *      /       \           /      \                /       \             /           \
+	 *     18       23        28        35            44         48         53             80
+	 *   /   \    /         /    \     /   \        /   \       /   \     /              /     \
+	 *  12   20  22        27    29  33    38     43    45    47    49   51             60      90
+	 *
+	 * */
+
+	ft_erase(mp, 24); // right != NULL; left != NULL
+	ft_erase(mp, 54); // right != NULL; left != NULL
+
 }

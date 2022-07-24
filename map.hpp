@@ -6,35 +6,31 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/23 13:01:48 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/23 19:03:17 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include <functional>
 #include "RBT.hpp"
-//#include "iterator.hpp"
 #include "rbt_iterator.hpp"
 
 namespace ft
 {
 
-	template <	class Key,											// map::key_type
-				class T,											// map::mapped_type
-				class Compare = std::less<Key>,						// map::key_compare
+	template <	class Key,												// map::key_type
+				class T,												// map::mapped_type
+				class Compare = std::less<Key>,							// map::key_compare
 				class Alloc = std::allocator<ft::pair<const Key,T> >	// map::allocator_type
 				>
 	class map
 	{
-
-		
 		public:
 		typedef Key														key_type;					//The first template parameter (Key)
 		typedef T														mapped_type;				//The second template parameter (T)
 		typedef pair<const key_type, mapped_type> 						value_type;					//pair<const key_type,mapped_type>
 		typedef Compare													key_compare;				//The third template parameter (Compare)	defaults to: less<key_type>
-		class 															value_compare;			//Nested function class to compare elements	see value_comp
-		//class															key_value_compare;
+		class 															value_compare;				//Nested function class to compare elements	see value_comp
 		typedef Alloc													allocator_type;				//The fourth template parameter (Alloc)	defaults to: allocator<value_type>
 		typedef typename allocator_type::reference						reference;					//for the default allocator: value_type&
 		typedef typename allocator_type::const_reference				const_reference;			//for the default allocator: const value_type&
@@ -45,17 +41,10 @@ namespace ft
 		typedef typename ft::rbt_iterator<value_type, true>				const_iterator;				//a bidirectional iterator to const value_type
 		typedef typename ft::rbt_reverse_iterator<iterator>				reverse_iterator;			//reverse_iterator<iterator>
 		typedef typename ft::rbt_reverse_iterator<const_iterator>		const_reverse_iterator;	
-		// typedef typename ft::rbt_iterator<Key, T>					iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
-		// typedef typename ft::rbt_iterator<const Key, T>				const_iterator;				//a bidirectional iterator to const value_type
-		// typedef typename ft::rbt_reverse_iterator<iterator>			reverse_iterator;			//reverse_iterator<iterator>
-		// typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;		//reverse_iterator<const_iterator>
 		typedef typename allocator_type::difference_type				difference_type;			//a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
 		typedef typename allocator_type::size_type						size_type;					//an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
 	
 		private:
-		
-		//typedef RBT<Key, T, Compare, Alloc> tree_type;
-		//RBT<Key, T, Compare, Alloc> c;
 		tree_type c;
 		allocator_type mem_alloc;
 		
@@ -78,9 +67,7 @@ namespace ft
 				std::cout << COLOR_GREEN << "[map] InputIterator constructor called.\n" << COLOR_DEFAULT;
 			#endif
 			for (; first != last; ++first)
-			{
 				this->c.addNode(*first);
-			}
 		}
 
 		map (const map& x)
@@ -97,10 +84,9 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_RED << "[map] deconstructor called.\n" << COLOR_DEFAULT;
 			#endif
-			//MEM_destroy(*this);
-			//mem_control.deallocate(mem_start, mem_cap);
+
 		}
-		//operator=		Copy container content (public member function )
+
 		map& operator= (const map& x)
 		{
 			#if DEBUG
@@ -161,6 +147,7 @@ namespace ft
 			//return (const_reverse_iterator(this->c.end(), this->c.begin(), this->c.end()));
 			return (const_reverse_iterator(this->end()));
 		}
+
 		//Return reverse iterator to reverse end (public member function )
 		reverse_iterator rend(void)
 		{
@@ -178,6 +165,7 @@ namespace ft
 			//return (const_reverse_iterator(this->c.begin(), this->c.begin(), this->c.end()));
 			return (const_reverse_iterator(this->begin()));
 		}
+
 		//Return const_iterator to beginning (public member function )
 		// C++ 11
 		//Return const_iterator to end (public member function )
@@ -196,6 +184,7 @@ namespace ft
 			#endif
 			return (this->c.empty());
 		}
+
 		//Return container size (public member function )
 		size_type size() const
 		{
@@ -204,6 +193,7 @@ namespace ft
 			#endif
 			return (this->c.size());
 		}
+
 		//Return maximum size (public member function )
 		size_type max_size() const
 		{
@@ -222,6 +212,7 @@ namespace ft
 			#endif
 			return ( (*( (this->insert(ft::make_pair(k, mapped_type()))).first)).second );
 		}
+
 		//at Access element (public member function )
 		// C++ 11
 
@@ -261,9 +252,7 @@ namespace ft
 				std::cout << COLOR_YELLOW << "[map] insert iterator called.\n" << COLOR_DEFAULT;
 			#endif
 			for (; first != last; ++first)
-			{
 				this->c.addNode(*first);
-			}
 		}
 		
 		//Erase elements (public member function )
@@ -300,8 +289,8 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase first - last key " << tmp->first << ".\n" << COLOR_DEFAULT;
 			#endif
-			//this->c.erase(*tmp);
 		}
+
 		//Swap content (public member function )
 		void swap (map& x)
 		{
@@ -310,6 +299,7 @@ namespace ft
 			#endif
 			this->c.swap(x.c);
 		}
+
 		//Clear content (public member function )
 		void clear()
 		{
@@ -324,7 +314,6 @@ namespace ft
 		// C++ 11
 
 		//***Observers:
-
 		//Return key comparison object (public member function )
 		key_compare key_comp(void) const
 		{
@@ -333,6 +322,7 @@ namespace ft
 			#endif
 			return (this->c.key_comp());
 		}
+
 		//Return value comparison object (public member function )
 		value_compare value_comp(void) const
 		{
@@ -358,6 +348,7 @@ namespace ft
 			#endif
 			return (const_iterator(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end()));
 		}
+
 		//Count elements with a specific key (public member function )
 		size_type count (const key_type& k) const
 		{
@@ -366,17 +357,18 @@ namespace ft
 			#endif
 			return (this->c.count(ft::make_pair(k, mapped_type())));
 		}
+
 		//Return iterator to lower bound (public member function )
 		iterator lower_bound (const key_type& k)
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] lower_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			if (k < this->c.begin()->data.first)
-				return (this->begin());
-			iterator it(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end());
-			//if (it == iterator())
-			//++it;
+			iterator it = this->begin();
+			iterator ite = this->end();
+			for (; it != ite; ++it)
+				if (this->c.key_comp()(it->first, k) == false)
+					break;
 			return (it);
 		}
 		const_iterator lower_bound (const key_type& k) const
@@ -384,24 +376,25 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const lower_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			if (k < this->c.begin()->data.first)
-				return (this->begin());
-			const_iterator it(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end());
-			//if (it == const_iterator())
-			//++it;
+			const_iterator it = this->begin();
+			const_iterator ite = this->end();
+			for (; it != ite; ++it)
+				if (this->c.key_comp()(it->first, k) == false)
+					break;
 			return (it);
 		}
+
 		//Return iterator to upper bound (public member function )
 		iterator upper_bound (const key_type& k)
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] upper_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			if (k < this->c.begin()->data.first)
-				return (this->begin());
-			iterator it(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end());
-			if (it != iterator())
-			++it;
+			iterator it = this->begin();
+			iterator ite = this->end();
+			for (; it != ite; ++it)
+				if (this->c.key_comp()(k, it->first))
+					break;
 			return (it);
 		}
 		const_iterator upper_bound (const key_type& k) const
@@ -409,24 +402,23 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] const upper_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			if (k < this->c.begin()->data.first)
-				return (this->begin());
-			const_iterator it(this->c.findNode(ft::make_pair(k, mapped_type())), this->c.begin(), this->c.end());
-			if (it != const_iterator())
-				++it;
+			const_iterator it = this->begin();
+			const_iterator ite = this->end();
+			for (; it != ite; ++it)
+				if (this->c.key_comp()(k, it->first))
+					break;
 			return (it);
 		}
 
 		//Get range of equal elements (public member function )
-		pair<const_iterator, const_iterator>	equal_range (const key_type& k) const
+		pair<iterator, iterator>				equal_range (const key_type& k)
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] equal_range called.\n" << COLOR_DEFAULT;
 			#endif
 			return (ft::make_pair(lower_bound(k), upper_bound(k)));
 		}
-
-		pair<iterator, iterator>				equal_range (const key_type& k)
+		pair<const_iterator, const_iterator>	equal_range (const key_type& k) const
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] equal_range called.\n" << COLOR_DEFAULT;
@@ -443,17 +435,7 @@ namespace ft
 			#endif
 			return (this->mem_alloc);
 		}
-		
-		int	height(void)
-		{
-			return (this->c.height());
-		}
-
-		int	blackNodes(void)
-		{
-			return (this->c.blackNodes());
-		}
-		
+			
 		bool operator==(map const & rhs) const
 		{
 			if (this->size() != rhs.size())
@@ -487,7 +469,6 @@ namespace ft
 				++it_rhs;
 			}
 			return (it_rhs != ite_rhs);
-			//return (ft::lexicographical_compare(this->begin(), this->end(), rhs.begin(), rhs.end(), key_value_compare(key_compare())));
 		}
 		
 		bool operator<=(map const & rhs) const
@@ -503,6 +484,21 @@ namespace ft
 		bool operator>=(map const & rhs) const
 		{
 			return !(*this < rhs);
+		}
+
+		int	height(void)
+		{
+			return (this->c.height());
+		}
+
+		int	blackNodes(void)
+		{
+			return (this->c.blackNodes());
+		}
+
+		void printTree(void)
+		{
+			this->c.printTree();
 		}
 	}; // class map
 
@@ -526,25 +522,5 @@ namespace ft
 				return comp(x.first, y.first);
 			}
 	};
-
-	// template <class Key, class T, class Compare, class Alloc>
-	// class ft::map<Key, T, Compare, Alloc>::key_value_compare : public std::binary_function<value_type,value_type,bool>
-	// {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
-	// 	friend class map;
-
-	// 	protected:
-	// 		Compare comp;
-	// 		key_value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
-		
-	// 	public:
-	// 		typedef bool result_type;
-	// 		typedef value_type first_argument_type;
-	// 		typedef value_type second_argument_type;
-
-	// 		bool operator() (const value_type& x, const value_type& y) const
-	// 		{
-	// 			return (comp(x.first, y.first) && comp(x.second, y.second));
-	// 		}
-	// };
 
 } // namespace ft

@@ -6,12 +6,11 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 12:59:00 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/23 13:08:27 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/23 18:05:40 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
-//#include "iterator.hpp"
 #include "colors.h"
 
 namespace ft
@@ -130,12 +129,6 @@ namespace ft
 	{
 		typedef T type;
 	};
-
-	// template<class T, class U>
-	// struct is_same : ft::false_type {};
-	
-	// template<class T>
-	// struct is_same<T, T> : ft::true_type {};
 
 	template <typename T, typename U>
 	struct is_same

@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 11:02:36 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/10 21:04:49 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/23 18:04:44 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,9 @@
 	namespace ft = std;
 #else
 	#include "set.hpp"
-	//#include <set>
 	#include "map.hpp"
-	//#include <map>
 	#include "stack.hpp"
 	#include "vector.hpp"
-	//#include "iterator.hpp"
 #endif
 
 #include <iostream>

@@ -6,13 +6,12 @@
 /*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:38:15 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/23 13:07:11 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/23 18:35:22 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "RBT.hpp"
-//#include "iterator.hpp"
 #include "rbt_iterator.hpp"
 
 namespace ft
@@ -41,18 +40,15 @@ namespace ft
 		typedef typename ft::rbt_reverse_iterator<iterator>					reverse_iterator;			//reverse_iterator<iterator>
 		typedef typename ft::rbt_reverse_iterator<const_iterator>			const_reverse_iterator;	
 		
-		// typedef typename ft::rbt_iterator<T, T>						iterator;				//a bidirectional iterator to value_type	convertible to const_iterator
-		// typedef typename ft::rbt_iterator<const T, T>				const_iterator;			//a bidirectional iterator to const value_type	
-		// typedef typename ft::rbt_reverse_iterator<iterator>			reverse_iterator;		//reverse_iterator<iterator>
-		// typedef typename ft::rbt_reverse_iterator<const_iterator>	const_reverse_iterator;	//reverse_iterator<const_iterator>	
+
 		typedef typename allocator_type::difference_type			difference_type;		//a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
 		typedef typename allocator_type::size_type					size_type;				//an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
 
 		private:
-		//RBT<T, T, Compare, Alloc> c;
 		tree_type c;
 		
 		public:
+
 		//Member functions
 		//(constructor) Construct set (public member function )
 		explicit set (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type())
@@ -71,9 +67,7 @@ namespace ft
 				std::cout << COLOR_GREEN << "[set] InputIterator constructor called.\n" << COLOR_DEFAULT;
 			#endif
 			for (; first != last; ++first)
-			{
 				this->c.addNode(*first);
-			}
 		}
 		
 		set (const set& x)
@@ -120,6 +114,7 @@ namespace ft
 			#endif
 			return (const_iterator(this->c.begin(), this->c.begin(), this->c.end()));
 		}
+
 		//Return iterator to end (public member function )
 		iterator end(void)
 		{
@@ -135,6 +130,7 @@ namespace ft
 			#endif
 			return (const_iterator(NULL, this->c.begin(), this->c.end()));
 		}
+
 		//Return reverse iterator to reverse beginning (public member function )
 		reverse_iterator rbegin(void)
 		{
@@ -150,6 +146,7 @@ namespace ft
 			#endif
 			return (const_reverse_iterator(this->end()));
 		}
+
 		//Return reverse iterator to reverse end (public member function )
 		reverse_iterator rend(void)
 		{
@@ -165,6 +162,7 @@ namespace ft
 			#endif
 			return (const_reverse_iterator(this->begin()));
 		}
+	
 		//Return const_iterator to beginning (public member function )
 		// C++ 11
 		//Return const_iterator to end (public member function )
@@ -183,6 +181,7 @@ namespace ft
 			#endif
 			return (this->c.empty());
 		}
+
 		//Return container size (public member function )
 		size_type size(void) const
 		{
@@ -191,6 +190,7 @@ namespace ft
 			#endif
 			return (this->c.size());
 		}
+
 		//Return maximum size (public member function )
 		size_type max_size(void) const
 		{
@@ -268,6 +268,7 @@ namespace ft
 				this->c.erase(*tmp);
 			}
 		}
+
 		//Swap content (public member function )
 		void swap (set& x)
 		{
@@ -285,6 +286,7 @@ namespace ft
 			#endif
 			this->c.clear();
 		}
+
 		//Construct and insert element (public member function )
 		// C++ 11
 		//Construct and insert element with hint (public member function )
@@ -299,6 +301,7 @@ namespace ft
 			#endif
 			return (this->c.key_comp());
 		}
+
 		//Return comparison object (public member function )
 		value_compare value_comp() const
 		{
@@ -317,6 +320,7 @@ namespace ft
 			#endif
 			return (iterator(this->c.findNode(val), this->c.begin(), this->c.end()));
 		}
+
 		//Count elements with a specific value (public member function )
 		size_type count (const value_type& val) const
 		{
@@ -325,6 +329,7 @@ namespace ft
 			#endif
 			return (this->c.count(val));
 		}
+
 		//Return iterator to lower bound (public member function )
 		iterator lower_bound (const value_type& val)
 		{
@@ -336,13 +341,6 @@ namespace ft
 			for (; it != ite; ++it)
 				if (this->c.key_comp()(*it, val) == false)
 					break;
-			// if (val < this->c.begin()->data)
-			// 	return (this->begin());
-			// if (val > --(this->c.end())->data)
-			// 	return (this->end());
-			// iterator it(this->c.findNode(val), this->c.begin(), this->c.end());
-			// if (*it < val)
-			// 	++it;
 			return (it);
 		}
 		const_iterator lower_bound (const value_type& val) const
@@ -350,13 +348,6 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] lower_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			// if (val < this->c.begin()->data)
-			// 	return (this->begin());
-			// if (val > --(this->c.end())->data)
-			// 	return (this->end());
-			// const_iterator it(this->c.findNode(val), this->c.begin(), this->c.end());
-			// if (*it < val)
-			// ++it;
 			const_iterator it = this->begin();
 			const_iterator ite = this->end();
 			for (; it != ite; ++it)
@@ -364,19 +355,13 @@ namespace ft
 					break;
 			return (it);
 		}
+
 		//Return iterator to upper bound (public member function )
 		iterator upper_bound (const value_type& val)
 		{
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] upper_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			// if (val < this->c.begin()->data)
-			// 	return (this->begin());
-			// if (val > --(this->c.end())->data)
-			// 	return (this->end());
-			// iterator it(this->c.findNode(val), this->c.begin(), this->c.end());
-			// if (it != iterator())
-			// 	++it;
 			iterator it = this->begin();
 			iterator ite = this->end();
 			for (; it != ite; ++it)
@@ -389,13 +374,6 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[set] upper_bound called.\n" << COLOR_DEFAULT;
 			#endif
-			// if (val < this->c.begin()->data)
-			// 	return (this->begin());
-			// if (val > --(this->c.end())->data)
-			// 	return (this->end());
-			// const_iterator it(this->c.findNode(val), this->c.begin(), this->c.end());
-			// if (it != const_iterator())
-			// 	++it;
 			const_iterator it = this->begin();
 			const_iterator ite = this->end();
 			for (; it != ite; ++it)
@@ -403,6 +381,7 @@ namespace ft
 					break;
 			return (it);
 		}
+
 		//Get range of equal elements (public member function )
 		pair<iterator,iterator> equal_range (const value_type& val)
 		{
@@ -418,6 +397,7 @@ namespace ft
 			#endif
 			return (ft::make_pair(lower_bound(val), upper_bound(val)));
 		}
+
 		//***Allocator:
 		//Get allocator (public member function )
 		allocator_type get_allocator(void) const
@@ -444,23 +424,6 @@ namespace ft
 		
 		bool operator<(set const & rhs) const
 		{
-			// const_iterator it_lhs = this->begin();
-			// const_iterator ite_lhs = this->end();
-			// const_iterator it_rhs = rhs.begin();
-			// const_iterator ite_rhs = rhs.end();
-
-			// while (it_lhs != ite_lhs)
-			// {
-			// 	if (it_rhs == ite_rhs)
-			// 		return (false);
-			// 	if (*it_lhs < *it_rhs)
-			// 		return (true);
-			// 	if (*it_lhs > *it_rhs)
-			// 		return (false);
-			// 	++it_lhs;
-			// 	++it_rhs;
-			// }
-			// return (it_rhs != ite_rhs);
 			return (ft::lexicographical_compare(this->begin(), this->end(), rhs.begin(), rhs.end(), key_compare()));
 		}
 		
