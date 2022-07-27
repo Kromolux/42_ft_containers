@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:38:15 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/23 18:35:22 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/27 15:39:23 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,16 +256,29 @@ namespace ft
 		void erase (iterator first, iterator last)
 		{
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[set] erase first - last called.\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[set] erase first: " << *first << "- last: " << *last << " called \n" << COLOR_DEFAULT;
 			#endif
-			iterator tmp;
-			for (; first != last;)
+			iterator tmp = first;
+			size_t elements = 0;
+			for (; tmp != last; ++tmp, ++elements)
+				;
+			T elementsToDelete[elements];
+			for (size_t i = 0; i < elements; ++i, ++first)
 			{
+				elementsToDelete[i] = *first;
 				#if DEBUG
-					std::cout << COLOR_YELLOW << "[map] erase first - last key " << tmp->first << ".\n" << COLOR_DEFAULT;
+					std::cout << COLOR_YELLOW << "[set] elementsToDelete[" << i << "] : [" << *first << "]\n" << COLOR_DEFAULT;
+					
 				#endif
-				tmp = first++;
-				this->c.erase(*tmp);
+			}
+			for (size_t i = 0; i < elements; ++i)
+			{
+				//tmp = first++;
+				// #if DEBUG
+				// 	std::cout << COLOR_YELLOW << "[set] erase tmp: [" << *tmp << "]\n" << COLOR_DEFAULT;
+				// 	std::cout << COLOR_YELLOW << "[set] erase first: [" << *first << "]\n" << COLOR_DEFAULT;
+				// #endif
+				this->c.erase(elementsToDelete[i]);
 			}
 		}
 
@@ -440,6 +453,11 @@ namespace ft
 		bool operator>=(set const & rhs) const
 		{
 			return !(*this < rhs);
+		}
+
+		void printTree(void)
+		{
+			this->c.printTree();
 		}
 	}; // class set
 

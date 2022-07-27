@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/24 22:41:00 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/27 16:15:56 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,9 @@ int	main(void)
 	//test_stack(myTimer);
 	//test_pair(myTimer);
 	//test_map(myTimer);
-	//test_set(myTimer);
+	test_set(myTimer);
 
-	testRBT();
+	//testRBT();
 	
 	myTimer.all.end = clock();
 	
@@ -866,134 +866,428 @@ void test_map(t_testTime & myTimer)
 	myTimer.map.end = clock();
 }
 
+#define _pair ft::pair
+
+template <typename T>
+std::string	printPair(const T &iterator, bool nl = true, std::ostream &o = std::cout)
+{
+	o << "value: " << *iterator;
+	if (nl)
+		o << std::endl;
+	return ("");
+}
+
+template <typename T_SET>
+void	printSize(T_SET const &st, bool print_content = 1)
+{
+	std::cout << "size: " << st.size() << std::endl;
+	std::cout << "max_size: " << st.max_size() << std::endl;
+	if (print_content)
+	{
+		typename T_SET::const_iterator it = st.begin(), ite = st.end();
+		std::cout << std::endl << "Content is:" << std::endl;
+		for (; it != ite; ++it)
+			std::cout << "- " << printPair(it, false) << std::endl;
+	}
+	std::cout << "###############################################" << std::endl;
+}
+
+template <typename T1>
+void	printReverse(ft::set<T1> &st)
+{
+	typename ft::set<T1>::iterator it = st.end(), ite = st.begin();
+
+	std::cout << "printReverse:" << std::endl;
+	while (it-- != ite)
+		std::cout << "-> " << printPair(it, false) << std::endl;
+	std::cout << "_______________________________________________" << std::endl;
+}
+
+#include <list>
+#define T1 int
+
+static int iter = 0;
+
+template <typename SET, typename U>
+void	ft_erase(SET &st, U param)
+{
+	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+	st.erase(param);
+	printSize(st);
+}
+
+template <typename SET, typename U, typename V>
+void	ft_erase(SET &st, U param, V param2)
+{
+	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+	st.erase(param, param2);
+	printSize(st);
+}
+
 void test_set(t_testTime & myTimer)
 {
 	myTimer.set.start = clock();
 
-	ft::set<int> mySet;
+	// std::list<T1> lst;
+	// unsigned int lst_size = 10;
+	// for (unsigned int i = 0; i < lst_size; ++i)
+	// 	lst.push_back(std::string((lst_size - i), i + 65));
+	// ft::set<T1> st(lst.begin(), lst.end());
+	// printSize(st);
+	// st.printTree();
+	// ft_erase(st, ++st.begin());
+	// st.printTree();
+	// ft_erase(st, st.begin());
+	// st.printTree();
+	// ft_erase(st, --st.end());
+	// std::cout << "begin points to: " << *st.begin() << " 3 times ++ points to: " << *(++(++(++st.begin()))) <<  "\n";
+	// st.printTree();
+	// ft_erase(st, st.begin(), ++(++(++st.begin())));
 	
-	std::cout << "Testing SET\n";
+	// ft_erase(st, --(--(--st.end())), --st.end());
 
-	displaySetInfo(mySet);
-	displaySetContent(mySet);
+	// st.insert("Hello");
+	// st.insert("Hi there");
+	// printSize(st);
+	// ft_erase(st, --(--(--st.end())), st.end());
 
-	mySet.insert(50);
-	mySet.insert(30);
-	mySet.insert(70);
-	mySet.insert(20);
-	mySet.insert(80);
-	mySet.insert(40);
-	mySet.insert(60);
-	mySet.insert(31);
-	mySet.insert(55);
-	mySet.insert(75);
-	mySet.insert(53);
-	mySet.insert(76);
-	mySet.insert(35);
-	mySet.insert(57);
-	displaySetInfo(mySet);
-	displaySetContent(mySet);
+	// st.insert("ONE");
+	// st.insert("TWO");
+	// st.insert("THREE");
+	// st.insert("FOUR");
+	// printSize(st);
+	// ft_erase(st, st.begin(), st.end());
 
-	std::cout << "iterator created it begin\n";
-	ft::set<int>::iterator it = mySet.begin();
-	std::cout << "iterator created ite end\n";
-	ft::set<int>::iterator ite = mySet.end();
+	ft::set<T1> st;
+
+	st.insert(42);
+
+	st.insert(50);
+	st.insert(25);
+
+	st.insert(46);
+	st.insert(21);
+	st.insert(30);
+	st.insert(55);
+
+	st.insert(18);
+	st.insert(23);
+	st.insert(28);
+	st.insert(35);
+	st.insert(44);
+	st.insert(48);
+	st.insert(53);
+	st.insert(80);
+
+	st.insert(12);
+	st.insert(20);
+	st.insert(22);
+	st.insert(24);
+	st.insert(27);
+	st.insert(29);
+	st.insert(33);
+	st.insert(38);
+
+	st.insert(43);
+	st.insert(45);
+	st.insert(47);
+	st.insert(49);
+	st.insert(51);
+	st.insert(54);
+	st.insert(60);
+	st.insert(90);
+
+	printSize(st);
+
+	/* A classic btree should give this:
+	 *                                      42
+	 *                     /                                            \
+	 *                    25                                            50
+	 *           /                 \                         /                       \
+	 *          21                 30                       46                       55
+	 *      /       \           /      \                /       \             /           \
+	 *     18       23        28        35            44         48         53             80
+	 *   /   \    /    \    /    \     /   \        /   \       /   \     /    \         /     \
+	 *  12   20  22    24  27    29  33    38     43    45    47    49   51    54       60      90
+	 *
+	 * */
+	st.printTree();
+	ft_erase(st, 25); // right != NULL; left != NULL
+	st.printTree();
+	ft_erase(st, 55); // right != NULL; left != NULL
+	st.printTree();
+	//return ;
+	/* After deleting 25 and 55, I would get:
+	 *                                      42
+	 *                     /                                            \
+	 *                    24                                            50
+	 *           /                 \                         /                      \
+	 *          21                 30                       46                      54
+	 *      /       \           /      \                /       \             /           \
+	 *     18       23        28        35            44         48         53             80
+	 *   /   \    /         /    \     /   \        /   \       /   \     /              /     \
+	 *  12   20  22        27    29  33    38     43    45    47    49   51             60      90
+	 *
+	 * */
+
+	ft_erase(st, 24); // right != NULL; left != NULL
+	st.printTree();
+	//return;
+	ft_erase(st, 54); // right != NULL; left != NULL
+
+	/* After deleting 24 and 54, I would get:
+	 *                                      42
+	 *                     /                                            \
+	 *                    23                                            50
+	 *           /                 \                         /                      \
+	 *          21                 30                       46                      53
+	 *      /       \           /      \                /       \             /           \
+	 *     18       22        28        35            44         48         51             80
+	 *   /   \              /    \     /   \        /   \       /   \                    /     \
+	 *  12   20            27    29  33    38     43    45    47    49                  60      90
+	 *
+	 * */
+
+	ft_erase(st, 22); // right == NULL; left == NULL
+	ft_erase(st, 51); // right == NULL; left == NULL
+
+	ft_erase(st, 21); // right == NULL; left != NULL
+	ft_erase(st, 53); // right != NULL; left == NULL
+
+	/* After deleting 22, 51 and then 21, 53, I would get:
+	 *                                      42
+	 *                     /                                            \
+	 *                    23                                            50
+	 *           /                 \                         /                      \
+	 *          20                 30                       46                      80
+	 *      /                   /      \                /       \                /        \
+	 *     18                 28        35            44         48             60         90
+	 *   /                  /    \     /   \        /   \       /   \
+	 *  12                 27    29  33    38     43    45    47    49
+	 *
+	 * */
+
+	ft_erase(st, 20); // right == NULL; left != NULL
+
+	/* After deleting 20, I would get:
+	 *                                      42
+	 *                     /                                            \
+	 *                    23                                            50
+	 *           /                 \                         /                      \
+	 *          18                 30                       46                      80
+	 *      /                   /      \                /       \                /        \
+	 *     12                 28        35            44         48             60         90
+	 *                      /    \     /   \        /   \       /   \
+	 *                     27    29  33    38     43    45    47    49
+	 *
+	 * */
+
+	ft_erase(st, 23); // right != NULL; left != NULL
+
+	/* After deleting 23, I would get:
+	 *                                      42
+	 *                     /                                            \
+	 *                    18                                            50
+	 *           /                 \                         /                      \
+	 *          12                 30                       46                      80
+	 *                          /      \                /       \                /        \
+	 *                        28        35            44         48             60         90
+	 *                      /    \     /   \        /   \       /   \
+	 *                     27    29  33    38     43    45    47    49
+	 *
+	 * */
+
+	ft_erase(st, 42); // right != NULL; left != NULL; parent == NULL
+
+	/* After deleting 42, I would get:
+	 *                                      38
+	 *                     /                                            \
+	 *                    18                                            50
+	 *           /                 \                         /                      \
+	 *          12                 30                       46                      80
+	 *                          /      \                /       \                /        \
+	 *                        28        35            44         48             60         90
+	 *                      /    \     /            /   \       /   \
+	 *                     27    29  33           43    45    47    49
+	 *
+	 * */
+
+	ft_erase(st, 38); // right != NULL; left != NULL; parent == NULL
+
+	/* After deleting 38, I would get:
+	 *                                      35
+	 *                     /                                            \
+	 *                    18                                            50
+	 *           /                 \                         /                      \
+	 *          12                 30                       46                      80
+	 *                          /      \                /       \                /        \
+	 *                        28        33            44         48             60         90
+	 *                      /    \                  /   \       /   \
+	 *                     27    29               43    45    47    49
+	 *
+	 * */
+
+	ft_erase(st, 35); // right != NULL; left != NULL; parent == NULL
+
+	/* After deleting 35, I would get:
+	 *                                      33
+	 *                     /                                            \
+	 *                    18                                            50
+	 *           /                 \                         /                      \
+	 *          12                 30                       46                      80
+	 *                          /                       /       \                /        \
+	 *                        28                      44         48             60         90
+	 *                      /    \                  /   \       /   \
+	 *                     27    29               43    45    47    49
+	 *
+	 * */
+
+	ft_erase(st, 33); // right != NULL; left != NULL; parent == NULL
+
+	/* After deleting 33, I would get:
+	 *                                      30
+	 *                     /                                            \
+	 *                    18                                            50
+	 *           /                 \                         /                      \
+	 *          12                 28                       46                      80
+	 *                          /      \                /       \                /        \
+	 *                        27       29             44         48             60         90
+	 *                                              /   \       /   \
+	 *                                            43    45    47    49
+	 *
+	 * */
+
+
+
+
+
+
+
+
+
+
+	// ft::set<int> mySet;
 	
-	std::cout << "\ncopying SET:\n";
-	std::cout << "first using copy constructor\n";
-	ft::set<int> mySet2(mySet);
-	displaySetInfo(mySet2);
-	displaySetContent(mySet2);
-	
-	std::cout << "\ncopying SET:\n";
-	std::cout << "second using assingment constructor\n";
-	ft::set<int> mySet3 = mySet;
-	displaySetInfo(mySet3);
-	displaySetContent(mySet3);
+	// std::cout << "Testing SET\n";
 
-	std::cout << "\ncopying SET:\n";
-	std::cout << "third using iterator constructor\n";
+	// displaySetInfo(mySet);
+	// displaySetContent(mySet);
+
+	// mySet.insert(50);
+	// mySet.insert(30);
+	// mySet.insert(70);
+	// mySet.insert(20);
+	// mySet.insert(80);
+	// mySet.insert(40);
+	// mySet.insert(60);
+	// mySet.insert(31);
+	// mySet.insert(55);
+	// mySet.insert(75);
+	// mySet.insert(53);
+	// mySet.insert(76);
+	// mySet.insert(35);
+	// mySet.insert(57);
+	// displaySetInfo(mySet);
+	// displaySetContent(mySet);
+
+	// std::cout << "iterator created it begin\n";
+	// ft::set<int>::iterator it = mySet.begin();
+	// std::cout << "iterator created ite end\n";
+	// ft::set<int>::iterator ite = mySet.end();
 	
-	ft::set<int> mySet4(it, ite);
-	displaySetInfo(mySet4);
-	displaySetContent(mySet4);
-	std::cout << "\n\n";
+	// std::cout << "\ncopying SET:\n";
+	// std::cout << "first using copy constructor\n";
+	// ft::set<int> mySet2(mySet);
+	// displaySetInfo(mySet2);
+	// displaySetContent(mySet2);
+	
+	// std::cout << "\ncopying SET:\n";
+	// std::cout << "second using assingment constructor\n";
+	// ft::set<int> mySet3 = mySet;
+	// displaySetInfo(mySet3);
+	// displaySetContent(mySet3);
+
+	// std::cout << "\ncopying SET:\n";
+	// std::cout << "third using iterator constructor\n";
+	
+	// ft::set<int> mySet4(it, ite);
+	// displaySetInfo(mySet4);
+	// displaySetContent(mySet4);
+	// std::cout << "\n\n";
 
 
 	myTimer.set.end = clock();
 }
 
-#define T1 int
-#define T2 std::string
-typedef ft::map<T1, T2>::value_type T3;
+// #define T1 int
+// #define T2 std::string
+// typedef ft::map<T1, T2>::value_type T3;
 
-static int iter = 0;
-
-template <typename MAP>
-void	ft_erase(MAP &mp, const T1 param)
-{
-	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
-	mp.erase(param);
-	//printSize(mp);
-}
+// template <typename MAP>
+// void	ft_erase(MAP &mp, const T1 param)
+// {
+// 	std::cout << "\t-- [" << iter++ << "] --" << std::endl;
+// 	mp.erase(param);
+// 	//printSize(mp);
+// }
 
 void	testRBT(void)
 {
-	ft::map<T1, T2> mp;
+	// ft::map<T1, T2> mp;
 
-	mp[5] = "1";
-	mp[8] = "2";
-	mp[15] = "3";
-	mp[12] = "4";
-	mp[19] = "5";
-	mp[9] = "6";
-	mp[13] = "7";
-	mp[23] = "8";
+	// mp[5] = "1";
+	// mp[8] = "2";
+	// mp[15] = "3";
+	// mp[12] = "4";
+	// mp[19] = "5";
+	// mp[9] = "6";
+	// mp[13] = "7";
+	// mp[23] = "8";
 
-	mp.printTree();
-	mp[10] = "new";
+	// mp.printTree();
+	// mp[10] = "new";
 
-	mp.printTree();
-	return;
-	mp[42] = "lol";
+	// mp.printTree();
+	// //return;
+	// mp[42] = "lol";
 
-	mp[50] = "mdr";
-	mp[25] = "funny";
-
-
-	mp[18] = "bee";
-	mp[23] = "coconut";
-	mp[28] = "diary";
-	mp[35] = "fiesta";
-	mp[44] = "hello";
-	mp[48] = "world";
-	mp[53] = "this is a test";
-	mp[80] = "hey";
-
-	mp[46] = "bunny";
-	mp[21] = "fizz";
-	mp[30] = "buzz";
-	mp[55] = "fuzzy";
+	// mp[50] = "mdr";
+	// mp[25] = "funny";
 
 
-	mp[43] = "1";
-	mp[45] = "2";
-	mp[47] = "3";
-	mp[49] = "4";
-	mp[51] = "5";
-	mp[54] = "6";
-	mp[60] = "7";
-	mp[90] = "8";
+	// mp[18] = "bee";
+	// mp[23] = "coconut";
+	// mp[28] = "diary";
+	// mp[35] = "fiesta";
+	// mp[44] = "hello";
+	// mp[48] = "world";
+	// mp[53] = "this is a test";
+	// mp[80] = "hey";
 
-	mp[12] = "no";
-	mp[20] = "idea";
-	mp[22] = "123";
-	mp[24] = "345";
-	mp[27] = "27";
-	mp[29] = "29";
-	mp[33] = "33";
-	mp[38] = "38";
-	return ;
+	// mp[46] = "bunny";
+	// mp[21] = "fizz";
+	// mp[30] = "buzz";
+	// mp[55] = "fuzzy";
+
+
+	// mp[43] = "1";
+	// mp[45] = "2";
+	// mp[47] = "3";
+	// mp[49] = "4";
+	// mp[51] = "5";
+	// mp[54] = "6";
+	// mp[60] = "7";
+	// mp[90] = "8";
+
+	// mp[12] = "no";
+	// mp[20] = "idea";
+	// mp[22] = "123";
+	// mp[24] = "345";
+	// mp[27] = "27";
+	// mp[29] = "29";
+	// mp[33] = "33";
+	// mp[38] = "38";
+	//return ;
 	//printSize(mp);
 
 	/* A classic btree should give this:
@@ -1009,8 +1303,8 @@ void	testRBT(void)
 	 *
 	 * */
 
-	ft_erase(mp, 25); // right != NULL; left != NULL
-	ft_erase(mp, 55); // right != NULL; left != NULL
+	// ft_erase(mp, 25); // right != NULL; left != NULL
+	// ft_erase(mp, 55); // right != NULL; left != NULL
 
 	/* After deleting 25 and 55, I would get:
 	 *                                      42
@@ -1025,7 +1319,7 @@ void	testRBT(void)
 	 *
 	 * */
 
-	ft_erase(mp, 24); // right != NULL; left != NULL
-	ft_erase(mp, 54); // right != NULL; left != NULL
+	// ft_erase(mp, 24); // right != NULL; left != NULL
+	// ft_erase(mp, 54); // right != NULL; left != NULL
 
 }

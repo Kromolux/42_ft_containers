@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RBT.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 13:03:32 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/24 22:51:51 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/27 16:14:57 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,7 +284,7 @@ namespace ft
 					std::cout << "⇘";
 				if (!nd->isBlack)
 					std::cout << COLOR_RED;
-				std::cout << "[" << nd->data.first << "]\n" << COLOR_DEFAULT;
+				std::cout << "[" << extract_key(nd->data) << "]\n" << COLOR_DEFAULT;
 			}
 
 			if (nd->right)
@@ -371,11 +371,11 @@ namespace ft
 					parent->isBlack = false;
 					sibling->isBlack = true;
 					
-					//RotateToParent(nephew);
-					if (parent->isLeftChild)
-						rightRotate(parent);
-					else
-						leftRotate(parent);
+					RotateToParent(sibling);
+					// if (parent->isLeftChild)
+					// 	rightRotate(parent);
+					// else
+					// 	leftRotate(parent);
 				}
 				else if (nephew && nephew->isBlack == false)	//case 2 works
 				{
@@ -387,11 +387,11 @@ namespace ft
 						sibling->isBlack = parent->isBlack;
 					parent->isBlack = true;
 					nephew->isBlack = true;
-					if (parent->isLeftChild)
-						rightRotate(parent);
-					else
-						leftRotate(parent);
-					//RotateToParent(nephew);
+					// if (parent->isLeftChild)
+					// 	rightRotate(parent);
+					// else
+					// 	leftRotate(parent);
+					RotateToParent(sibling);
 					//x = root;
 					leafNode = this->root;
 					break;
@@ -444,8 +444,9 @@ namespace ft
 					// 	nodeToDelete->parent->left = NULL;
 					// else
 					// 	nodeToDelete->parent->right = NULL;
-					cutLeaf(nodeToDelete);
+					//cutLeaf(nodeReplaceDeleted);
 					fixTreeAfterErase(nodeToDelete);
+					cutLeaf(nodeToDelete);
 					//checkColor(nodeToDelete);
 					deleteNode(nodeToDelete);
 					//checkColor
@@ -474,10 +475,16 @@ namespace ft
 				#endif
 				//printTree();
 				swapNodes(nodeToDelete, nodeReplaceDeleted);
+				if (nodeReplaceDeleted->left)
+				{
+					swapNodes(nodeReplaceDeleted, nodeReplaceDeleted->left);
+					nodeReplaceDeleted = nodeReplaceDeleted->left;
+				}
 				//printTree();
 				//nodeToDelete->isBlack = nodeReplaceDeleted->isBlack;
-				cutLeaf(nodeReplaceDeleted);
+				//cutLeaf(nodeReplaceDeleted);
 				fixTreeAfterErase(nodeReplaceDeleted);
+				cutLeaf(nodeReplaceDeleted);
 				this->root->isBlack = true;
 				//checkColor(nodeReplaceDeleted);
 				//cutLeaf(nodeToDelete);
@@ -959,15 +966,15 @@ namespace ft
 			// {
 				if ((aunt && aunt->isBlack) || !aunt)
 				//if (node->parent->parent->right == NULL || node->parent->parent->right->isBlack)
-					return (rotate(node));
+					return (rotateShort(node));
 				//if (aunt)
 				//if (node->parent->parent->right != NULL)
 				//{
 					//node->parent->parent->right->isBlack = true;
-					aunt->isBlack = true;
-					#if DEBUG
-						std::cout << COLOR_YELLOW << "[RBT] changed color at " << extract_key(node->parent->parent->right->data) << " to black\n" << COLOR_DEFAULT;
-					#endif
+				aunt->isBlack = true;
+				#if DEBUG
+					std::cout << COLOR_YELLOW << "[RBT] changed color at " << extract_key(node->parent->parent->right->data) << " to black\n" << COLOR_DEFAULT;
+				#endif
 				//}
 				node->parent->parent->isBlack = false;
 				node->parent->isBlack = true;
@@ -1061,7 +1068,7 @@ namespace ft
 				//if (parent->isLeftChild)
 				{
 					//rightRotate(node->parent->parent);
-					RotateToParent(node);
+					RotateToParent(node->parent);
 					node->isBlack = false;
 					parent->isBlack = true;
 					sibling = getSibling(node);
@@ -1071,7 +1078,7 @@ namespace ft
 				}
 				//rightLeftRotate(node->parent->parent);
 				//rightLeftRotate(node);
-				RotateToParent(node->parent);
+				RotateToParent(node);
 				RotateToParent(node);
 				node->isBlack = true;
 				node->right->isBlack = false;
@@ -1113,7 +1120,7 @@ namespace ft
 			   / \
 			 (D) (B)
 		*/
-		void	rightRotate(node_ptr node) //grandparent node
+		void	rightRotate(node_ptr node) //grandparent node - node that changes position
 		{
 			#if DEBUG
 				std::cout << COLOR_BLUE<< "[RBT] rightRotate called - " << extract_key(node->data) << "\n" << COLOR_DEFAULT;
@@ -1209,99 +1216,111 @@ namespace ft
 			node->parent = tmp;
 		}
 
-		void	RotateToParent(node_ptr node)
+
+void	RotateToParent(node_ptr node)
 		{
 			#if DEBUG
-				std::cout << COLOR_BLUE<< "[RBT] RotateToParent called - " << extract_key(node->data) << "\n" << COLOR_DEFAULT;
+				std::cout << COLOR_BLUE<< "[RBT] RotateToParent called node: " << extract_key(node->data) << " parent: " << extract_key(node->parent->data) << "\n" << COLOR_DEFAULT;
 			#endif
-			// if (!node->isLeftChild)
-			// 	rightRotate(node->parent->parent);
-			// else
-			// 	leftRotate(node->parent->parent);
-			node_ptr parent = node->parent;
-			node_ptr grandParent = parent->parent;
-			node_ptr sibling = getSibling(node);
-			
-			if (parent->isLeftChild)	//right rotate
-			{
-				#if DEBUG
-					std::cout << COLOR_BLUE<< "[RBT] right rotate \n" << COLOR_DEFAULT;
-				#endif
-				grandParent->left = sibling;
-				if (grandParent->left != NULL)
-				{
-					sibling->parent = grandParent;
-					sibling->isLeftChild = true;
-				}
-				// grandParent->isLeftChild = false;
-				// parent->right = grandParent;
-				// node->isLeftChild = false;
-			}
-			else					//left rotate
-			{
-				#if DEBUG
-					std::cout << COLOR_BLUE<< "[RBT] left rotate \n" << COLOR_DEFAULT;
-				#endif
-				grandParent->right = sibling;
-				if (grandParent->right != NULL)
-				{
-					sibling->parent = grandParent;
-					sibling->isLeftChild = false;
-				}
-				// grandParent->isLeftChild = true;
-				// parent->left = grandParent;
-				// node->isLeftChild = true;
-			}
-
-			if (grandParent->parent == NULL) //Root node
-			{
-				this->root = parent;
-				parent->isBlack = true;
-				parent->parent = NULL;
-				//sibling = grandParent;
-				//grandParent = NULL;
-				
-				#if DEBUG
-					std::cout << COLOR_BLUE<< "[RBT] changed root node - " << extract_key(this->root->data) << "\n" << COLOR_DEFAULT;
-				#endif
-				//return ;
-			}
+			if (node->isLeftChild)
+				rightRotate(node->parent);
 			else
-			{
-				parent->parent = grandParent->parent;
-				if (grandParent->isLeftChild)
-				{
-					//grandParent->isLeftChild = false;
-					//grandParent->left = parent;
-					grandParent->parent->left = parent;
-				}
-				else
-				{
-					//grandParent->isLeftChild = true;
-					//grandParent->right = parent;
-					grandParent->parent->right = parent;
-				}
-			}
-
-			if (parent->isLeftChild)
-			{
-				grandParent->isLeftChild = false;
-				parent->right = grandParent;
-				//node->isLeftChild = false;
-			}
-			else
-			{
-				grandParent->isLeftChild = true;
-				parent->left = grandParent;
-				//node->isLeftChild = true;
-			}
-			//sibling = grandParent;
-			// if (node->isLeftChild)
-			// 	node->parent->right = grandParent;
-			// else
-			// 	node->parent->left = grandParent;
-			grandParent->parent = parent;
+				leftRotate(node->parent);
 		}
+		
+		// void	RotateToParent(node_ptr node)
+		// {
+		// 	#if DEBUG
+		// 		std::cout << COLOR_BLUE<< "[RBT] RotateToParent called - " << extract_key(node->data) << "\n" << COLOR_DEFAULT;
+		// 	#endif
+		// 	// if (!node->isLeftChild)
+		// 	// 	rightRotate(node->parent->parent);
+		// 	// else
+		// 	// 	leftRotate(node->parent->parent);
+		// 	node_ptr parent = node->parent;
+		// 	node_ptr grandParent = parent->parent;
+		// 	node_ptr sibling = getSibling(node);
+			
+		// 	if (parent->isLeftChild)	//right rotate
+		// 	{
+		// 		#if DEBUG
+		// 			std::cout << COLOR_BLUE<< "[RBT] right rotate \n" << COLOR_DEFAULT;
+		// 		#endif
+		// 		grandParent->left = sibling;
+		// 		if (grandParent->left != NULL)
+		// 		{
+		// 			sibling->parent = grandParent;
+		// 			sibling->isLeftChild = true;
+		// 		}
+		// 		// grandParent->isLeftChild = false;
+		// 		// parent->right = grandParent;
+		// 		// node->isLeftChild = false;
+		// 	}
+		// 	else					//left rotate
+		// 	{
+		// 		#if DEBUG
+		// 			std::cout << COLOR_BLUE<< "[RBT] left rotate \n" << COLOR_DEFAULT;
+		// 		#endif
+		// 		grandParent->right = sibling;
+		// 		if (grandParent->right != NULL)
+		// 		{
+		// 			sibling->parent = grandParent;
+		// 			sibling->isLeftChild = false;
+		// 		}
+		// 		// grandParent->isLeftChild = true;
+		// 		// parent->left = grandParent;
+		// 		// node->isLeftChild = true;
+		// 	}
+
+		// 	if (grandParent->parent == NULL) //Root node
+		// 	{
+		// 		this->root = parent;
+		// 		parent->isBlack = true;
+		// 		parent->parent = NULL;
+		// 		//sibling = grandParent;
+		// 		//grandParent = NULL;
+				
+		// 		#if DEBUG
+		// 			std::cout << COLOR_BLUE<< "[RBT] changed root node - " << extract_key(this->root->data) << "\n" << COLOR_DEFAULT;
+		// 		#endif
+		// 		//return ;
+		// 	}
+		// 	else
+		// 	{
+		// 		parent->parent = grandParent->parent;
+		// 		if (grandParent->isLeftChild)
+		// 		{
+		// 			//grandParent->isLeftChild = false;
+		// 			//grandParent->left = parent;
+		// 			grandParent->parent->left = parent;
+		// 		}
+		// 		else
+		// 		{
+		// 			//grandParent->isLeftChild = true;
+		// 			//grandParent->right = parent;
+		// 			grandParent->parent->right = parent;
+		// 		}
+		// 	}
+
+		// 	if (parent->isLeftChild)
+		// 	{
+		// 		grandParent->isLeftChild = false;
+		// 		parent->right = grandParent;
+		// 		//node->isLeftChild = false;
+		// 	}
+		// 	else
+		// 	{
+		// 		grandParent->isLeftChild = true;
+		// 		parent->left = grandParent;
+		// 		//node->isLeftChild = true;
+		// 	}
+		// 	//sibling = grandParent;
+		// 	// if (node->isLeftChild)
+		// 	// 	node->parent->right = grandParent;
+		// 	// else
+		// 	// 	node->parent->left = grandParent;
+		// 	grandParent->parent = parent;
+		// }
 
 		/*
 		https://www.youtube.com/watch?v=4I_vnGpS-Io

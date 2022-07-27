@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/23 19:03:17 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/27 14:31:18 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,7 +277,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase first - last called.\n" << COLOR_DEFAULT;
 			#endif
-			iterator tmp;
+			iterator tmp = first;
 			for (; first != last;)
 			{
 				#if DEBUG
