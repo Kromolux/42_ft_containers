@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   iterator.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 12:36:54 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/23 18:08:23 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/29 11:32:15 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,14 +249,7 @@ namespace ft
 			#endif
 			return (iterator (this->ptr - n));
 		}
-		template<typename TypeT, bool TypeIsConst>
-		friend iterator	operator-(difference_type n, iterator<TypeT, TypeIsConst> const & rhs)
-		{
-			#if DEBUG
-				std::cout << COLOR_MAGENTA << "[iterator] difference_type operator+ called.\n" << COLOR_DEFAULT;
-			#endif
-			return (iterator (rhs.ptr - n));
-		}
+
 		iterator &	operator-=(difference_type n)
 		{
 			#if DEBUG
@@ -266,14 +259,6 @@ namespace ft
 			return (*this);
 		}
 		
-		template<typename TypeT, bool TypeIsConst>
-		friend iterator	operator+(difference_type n, iterator<TypeT, TypeIsConst> const & rhs)
-		{
-			#if DEBUG
-				std::cout << COLOR_MAGENTA << "[iterator] difference_type operator+ called.\n" << COLOR_DEFAULT;
-			#endif
-			return (iterator (rhs.ptr + n));
-		}
 		iterator	operator+(difference_type n) const
 		{
 			#if DEBUG
@@ -291,6 +276,24 @@ namespace ft
 		}
 
 	};
+	
+	template<typename TypeT, bool TypeIsConst>
+	iterator<TypeT, TypeIsConst>	operator-(typename iterator<TypeT, TypeIsConst>::difference_type n, iterator<TypeT, TypeIsConst> const & rhs) //friend
+	{
+		#if DEBUG
+			std::cout << COLOR_MAGENTA << "[iterator] difference_type operator+ called.\n" << COLOR_DEFAULT;
+		#endif
+		return ((rhs - n));
+	}
+		
+	template<typename TypeT, bool TypeIsConst>
+	iterator<TypeT, TypeIsConst>	operator+(typename iterator<TypeT, TypeIsConst>::difference_type n, iterator<TypeT, TypeIsConst> const & rhs) //friend
+	{
+		#if DEBUG
+			std::cout << COLOR_MAGENTA << "[iterator] difference_type operator+ called.\n" << COLOR_DEFAULT;
+		#endif
+		return (((rhs + n)));
+	}
 }
 
 namespace ft
@@ -378,15 +381,6 @@ namespace ft
 		reverse_iterator operator+ (difference_type n) const
 		{
 			return (reverse_iterator(this->_base - n));
-		}
-		
-		template<typename Iter>
-		friend reverse_iterator	operator+(difference_type n, reverse_iterator<Iter> const & rhs)
-		{
-			#if DEBUG
-				std::cout << COLOR_MAGENTA << "[reverse_iterator] difference_type operator+ called.\n" << COLOR_DEFAULT;
-			#endif
-			return (reverse_iterator(rhs.base() - n));
 		}
 
 		reverse_iterator &	operator++()
@@ -512,6 +506,15 @@ namespace ft
 		}
 	};
 
+	template<typename Iter>
+	reverse_iterator<Iter>	operator+(typename reverse_iterator<Iter>::difference_type n, reverse_iterator<Iter> const & rhs) //friend
+	{
+		#if DEBUG
+			std::cout << COLOR_MAGENTA << "[reverse_iterator] difference_type operator+ called.\n" << COLOR_DEFAULT;
+		#endif
+		return (reverse_iterator<Iter>(rhs.base() - n));
+	}
+		
 	template<typename Iter1, typename Iter2>
 	typename reverse_iterator<Iter1>::difference_type	operator-(reverse_iterator<Iter1> const & lhs, reverse_iterator<Iter2> const & rhs)
 	{

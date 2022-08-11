@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 12:59:00 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/23 18:05:40 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/11 10:48:07 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,18 @@ namespace ft {
 		return (lhs.first == rhs.first && lhs.second == rhs.second);
 	}
 
+	template <class T1, class T2>
+	bool operator== (const pair<T1,T2>& lhs, const std::pair<T1,T2>& rhs)
+	{
+		return (lhs.first == rhs.first && lhs.second == rhs.second);
+	}
+	
+	template <class T1, class T2>
+	bool operator== (const std::pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	{
+		return (lhs.first == rhs.first && lhs.second == rhs.second);
+	}
+	
 	template <class T1, class T2>
 	bool operator!= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
 	{

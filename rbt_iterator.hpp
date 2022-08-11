@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rbt_iterator.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 09:52:47 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/23 18:47:14 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/11 11:28:57 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ namespace ft
 		value_type *	operator->() const
 		{
 			#if DEBUG
-				std::cout << COLOR_MAGENTA << "[rbt_iterator] operator-> called.\n" << COLOR_DEFAULT;
+				//std::cout << COLOR_MAGENTA << "[rbt_iterator] operator-> called.\n" << COLOR_DEFAULT;
 			#endif
 			return (&(this->ptr->data));
 		}
@@ -301,7 +301,7 @@ namespace ft
 		pointer operator->() const
 		{
 			#if DEBUG
-				std::cout << COLOR_MAGENTA << "[reverse_iterator] operator-> called.\n" << COLOR_DEFAULT;
+				//std::cout << COLOR_MAGENTA << "[reverse_iterator] operator-> called.\n" << COLOR_DEFAULT;
 			#endif
 			return (&(operator*()));
 		}

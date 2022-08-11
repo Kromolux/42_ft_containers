@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkaufman <rkaufman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/23 17:22:54 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/07/28 15:44:46 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,18 +87,18 @@ namespace ft
 			#endif
 		}
 		
-		vector (const vector & x)
-		: mem_control(x.mem_control), mem_start(NULL), mem_size(0), mem_cap(0)
+		vector (const vector & Copy)
+		: mem_control(Copy.mem_control), mem_start(NULL), mem_size(0), mem_cap(0)
 		{
 			#if DEBUG
-				std::cout << COLOR_GREEN << "[vector] copy constructor called. Size: " << x.mem_size << " Sizeof T: " << sizeof(x[0]) << " Pointer: " << mem_start << "\n" << COLOR_DEFAULT;
+				std::cout << COLOR_GREEN << "[vector] copy constructor called. Size: " << Copy.mem_size << " Sizeof T: " << sizeof(Copy[0]) << " Pointer: " << mem_start << "\n" << COLOR_DEFAULT;
 			#endif
-			this->mem_control = x.mem_control;
-			this->mem_size = x.mem_size;
-			this->mem_cap = x.mem_cap;
+			this->mem_control = Copy.mem_control;
+			this->mem_size = Copy.mem_size;
+			this->mem_cap = Copy.mem_size; //x.mem_cap;
 			this->mem_start = this->mem_control.allocate(this->mem_cap);
 			for (size_t i = 0; i < this->mem_size; i++)
-				this->mem_control.construct(this->mem_start + i, x[i]);
+				this->mem_control.construct(this->mem_start + i, Copy[i]);
 		}
 
 		//Vector destructor (public member function )
@@ -112,21 +112,21 @@ namespace ft
 		}
 
 		//Assign content (public member function )
-		vector & operator= (const vector & x)
+		vector & operator= (const vector & rhs)
 		{
 			#if DEBUG
-				std::cout << COLOR_GREEN << "[vector] assignement constructor called. Size: " << x.mem_size << " Sizeof T: " << sizeof(x[0]) << " Pointer: " << x.mem_start << "\n" << COLOR_DEFAULT;
+				std::cout << COLOR_GREEN << "[vector] assignement constructor called. Size: " << rhs.mem_size << " Sizeof T: " << sizeof(rhs[0]) << " Pointer: " << rhs.mem_start << "\n" << COLOR_DEFAULT;
 			#endif
 			if (this->mem_size > 0)
 				MEM_destroy(*this);
 			if (this->mem_cap > 0)
 				this->mem_control.deallocate(this->mem_start, this->mem_cap);
-			this->mem_control = x.mem_control;
-			this->mem_size = x.mem_size;
-			this->mem_cap = x.mem_cap;
+			this->mem_control = rhs.mem_control;
+			this->mem_size = rhs.mem_size;
+			this->mem_cap = rhs.mem_cap;
 			this->mem_start = this->mem_control.allocate(this->mem_cap);
 			for (size_t i = 0; i < this->mem_size; i++)
-				this->mem_control.construct(this->mem_start + i, x[i]);
+				this->mem_control.construct(this->mem_start + i, rhs[i]);
 			return (*this );
 		}
 
@@ -514,7 +514,7 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[vector] erase position called.\n" << COLOR_DEFAULT;
 			#endif
-			return (this->erase(position, iterator(position) + 1));
+			return (this->erase(position, ++iterator(position)));
 		}
 
 		iterator erase (iterator first, iterator last)

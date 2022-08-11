@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/27 14:31:18 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/11 14:58:35 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ namespace ft
 		typedef T														mapped_type;				//The second template parameter (T)
 		typedef pair<const key_type, mapped_type> 						value_type;					//pair<const key_type,mapped_type>
 		typedef Compare													key_compare;				//The third template parameter (Compare)	defaults to: less<key_type>
-		class 															value_compare;				//Nested function class to compare elements	see value_comp
+		//class 															value_compare;				//Nested function class to compare elements	see value_comp
 		typedef Alloc													allocator_type;				//The fourth template parameter (Alloc)	defaults to: allocator<value_type>
 		typedef typename allocator_type::reference						reference;					//for the default allocator: value_type&
 		typedef typename allocator_type::const_reference				const_reference;			//for the default allocator: const value_type&
@@ -47,6 +47,28 @@ namespace ft
 		private:
 		tree_type c;
 		allocator_type mem_alloc;
+		
+		private:
+		//The comparison object returned is an object of the member type map::value_compare, 
+		//which is a nested class that uses the internal comparison object to generate the appropriate comparison functional class.
+		//template <class KeyC, class TC, class CompareC, class AllocC>
+		class value_compare : public std::binary_function<value_type,value_type,bool>
+		{   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
+			//friend class map;
+
+			public:
+				Compare comp;
+				value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
+			
+				typedef bool result_type;
+				typedef value_type first_argument_type;
+				typedef value_type second_argument_type;
+
+				bool operator() (const value_type& x, const value_type& y) const
+				{
+					return comp(x.first, y.first);
+				}
+		};
 		
 		public:
 		//***Member functions
@@ -241,8 +263,10 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] insert position called [Key:Val] [" << val.first << ":" << val.second << "]\n" << COLOR_DEFAULT;
 			#endif
-			(void) position;
-			return (iterator(this->c.addNode(val), this->c.begin(), this->c.end()));
+			static_cast<void>(position);
+			//if (position != iterator())
+				return (iterator(this->c.addNode(val), this->c.begin(), this->c.end()));
+			//return (position);
 		}
 
 		template <class InputIterator>
@@ -277,17 +301,31 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase first - last called.\n" << COLOR_DEFAULT;
 			#endif
+			size_t SizeToDelete = 0;
 			iterator tmp = first;
-			for (; first != last;)
+			for (; tmp != last; ++tmp)
+				++SizeToDelete;
+			Key KeysToDelete[SizeToDelete];
+			tmp = first;
+			for (size_t i = 0; tmp != last; ++tmp, ++i)
 			{
-				#if DEBUG
-					std::cout << COLOR_YELLOW << "[map] erase first - last key " << tmp->first << ".\n" << COLOR_DEFAULT;
-				#endif
-				tmp = first++;
-				this->c.erase(*tmp);
+				KeysToDelete[i] = tmp->first;
 			}
+			for (size_t i = 0; i < SizeToDelete; ++i)
+				this->c.erase((ft::make_pair(KeysToDelete[i], mapped_type())));
+			// iterator tmp = first;
+			// for (; first != last;)
+			// {
+			// 	tmp = first++;
+			// 	#if DEBUG
+			// 		std::cout << COLOR_YELLOW << "[map] erase first - last key in for loop: " << tmp->first << ".\n" << COLOR_DEFAULT;
+			// 	#endif
+			// 	//this->c.printTree();
+			// 	this->c.erase(*tmp);
+			// }
+			
 			#if DEBUG
-				std::cout << COLOR_YELLOW << "[map] erase first - last key " << tmp->first << ".\n" << COLOR_DEFAULT;
+				std::cout << COLOR_YELLOW << "[map] erase first - last key done!\n" << COLOR_DEFAULT;
 			#endif
 		}
 
@@ -452,23 +490,26 @@ namespace ft
 		
 		bool operator<(map const & rhs) const
 		{
-			const_iterator it_lhs = this->begin();
-			const_iterator ite_lhs = this->end();
-			const_iterator it_rhs = rhs.begin();
-			const_iterator ite_rhs = rhs.end();
+			// const_iterator it_lhs = this->begin();
+			// const_iterator ite_lhs = this->end();
+			// const_iterator it_rhs = rhs.begin();
+			// const_iterator ite_rhs = rhs.end();
 
-			while (it_lhs != ite_lhs)
-			{
-				if (it_rhs == ite_rhs)
-					return (false);
-				if (*it_lhs < *it_rhs)
-					return (true);
-				if (*it_lhs > *it_rhs)
-					return (false);
-				++it_lhs;
-				++it_rhs;
-			}
-			return (it_rhs != ite_rhs);
+			// while (it_lhs != ite_lhs)
+			// {
+			// 	if (it_rhs == ite_rhs)
+			// 		return (false);
+			// 	if (*it_lhs < *it_rhs)
+			// 		return (true);
+			// 	if (*it_lhs > *it_rhs)
+			// 		return (false);
+			// 	++it_lhs;
+			// 	++it_rhs;
+			// }
+			// return (it_rhs != ite_rhs);
+			if (ft::is_same<Key, T>::value == true)
+				return (ft::lexicographical_compare(this->begin(), this->end(), rhs.begin(), rhs.end(), value_compare(this->c.key_comp())));
+			return (ft::lexicographical_compare(this->begin(), this->end(), rhs.begin(), rhs.end()));
 		}
 		
 		bool operator<=(map const & rhs) const
@@ -486,41 +527,25 @@ namespace ft
 			return !(*this < rhs);
 		}
 
-		int	height(void)
-		{
-			return (this->c.height());
-		}
+		//additional functions for testing the red black tree
+		// int	height(void)
+		// {
+		// 	return (this->c.height());
+		// }
 
-		int	blackNodes(void)
-		{
-			return (this->c.blackNodes());
-		}
-
+		// int	blackNodes(void)
+		// {
+		// 	return (this->c.blackNodes());
+		// }
+		
 		void printTree(void)
 		{
 			this->c.printTree();
 		}
+	
 	}; // class map
 
 
-	template <class Key, class T, class Compare, class Alloc>
-	class ft::map<Key, T, Compare, Alloc>::value_compare : public std::binary_function<value_type,value_type,bool>
-	{   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
-		friend class map;
 
-		protected:
-			Compare comp;
-			value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
-		
-		public:
-			typedef bool result_type;
-			typedef value_type first_argument_type;
-			typedef value_type second_argument_type;
-
-			bool operator() (const value_type& x, const value_type& y) const
-			{
-				return comp(x.first, y.first);
-			}
-	};
 
 } // namespace ft
