@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/21 18:41:22 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 19:06:55 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,18 +314,6 @@ namespace ft
 			}
 			for (size_t i = 0; i < SizeToDelete; ++i)
 				this->c.erase((ft::make_pair(KeysToDelete[i], mapped_type())));
-				
-			// //is not working in all cases because of the value swap before rebalancing
-			// iterator tmp = first;
-			// for (; first != last;)
-			// {
-			// 	tmp = first++;
-			// 	#if DEBUG
-			// 		std::cout << COLOR_YELLOW << "[map] erase first - last key in for loop: " << tmp->first << ".\n" << COLOR_DEFAULT;
-			// 	#endif
-			// 	//this->c.printTree();
-			// 	this->c.erase(*tmp);
-			// }
 			
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[map] erase first - last key done!\n" << COLOR_DEFAULT;

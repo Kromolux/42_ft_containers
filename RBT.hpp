@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 13:03:32 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/21 18:48:31 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 19:12:14 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,13 +108,6 @@ namespace ft
 		
 		RBT & operator= (const RBT & Copy)
 		{
-			// if (this->mem_size > 0)
-			// 	clearTree(this->root);
-			// this->mem_compare = Copy.mem_compare;
-			// this->mem_control = Copy.mem_control;
-			// this->mem_node_control = Copy.mem_node_control;
-			// this->mem_size = 0;
-			// copyTree(Copy);
 			this->~RBT();
 			new (this) RBT(Copy);
 			return (*this);

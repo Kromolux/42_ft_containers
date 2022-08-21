@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:38:15 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/21 18:42:57 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 19:08:52 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,14 @@ namespace ft
 		typedef typename allocator_type::const_reference					const_reference;		//for the default allocator: const value_type&
 		typedef typename allocator_type::pointer							pointer;				//for the default allocator: value_type*
 		typedef typename allocator_type::const_pointer						const_pointer;			//for the default allocator: const value_type*
-		typedef typename ft::rbt_iterator<value_type, true>					iterator;					//a bidirectional iterator to value_type	convertible to const_iterator
-		typedef typename ft::rbt_iterator<value_type, true>					const_iterator;				//a bidirectional iterator to const value_type
-		typedef typename ft::rbt_reverse_iterator<iterator>					reverse_iterator;			//reverse_iterator<iterator>
+		typedef typename ft::rbt_iterator<value_type, true>					iterator;				//a bidirectional iterator to value_type	convertible to const_iterator
+		typedef typename ft::rbt_iterator<value_type, true>					const_iterator;			//a bidirectional iterator to const value_type
+		typedef typename ft::rbt_reverse_iterator<iterator>					reverse_iterator;		//reverse_iterator<iterator>
 		typedef typename ft::rbt_reverse_iterator<const_iterator>			const_reverse_iterator;	
 		
 
-		typedef typename allocator_type::difference_type			difference_type;		//a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
-		typedef typename allocator_type::size_type					size_type;				//an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
+		typedef typename allocator_type::difference_type					difference_type;		//a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
+		typedef typename allocator_type::size_type							size_type;				//an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
 
 		private:
 		tree_type c;

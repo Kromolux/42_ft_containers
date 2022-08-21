@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/21 18:19:37 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 19:10:40 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,16 +113,6 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[vector] assignement constructor called. Size: " << rhs.mem_size << " Sizeof T: " << sizeof(rhs[0]) << " Pointer: " << rhs.mem_start << "\n" << COLOR_DEFAULT;
 			#endif
-			// if (this->mem_size > 0)
-			// 	MEM_destroy(*this);
-			// if (this->mem_cap > 0)
-			// 	this->mem_control.deallocate(this->mem_start, this->mem_cap);
-			// this->mem_control = rhs.mem_control;
-			// this->mem_size = rhs.mem_size;
-			// this->mem_cap = rhs.mem_cap;
-			// this->mem_start = this->mem_control.allocate(this->mem_cap);
-			// for (size_t i = 0; i < this->mem_size; i++)
-			// 	this->mem_control.construct(this->mem_start + i, rhs[i]);
 			this->~vector();
 			new (this) vector(rhs);
 			return (*this );

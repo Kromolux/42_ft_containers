@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 09:52:47 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/11 11:28:57 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 19:09:47 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ namespace ft
 		typedef typename choose<isConst, const_key_type, normal_key_type>::type							value_type;
 		typedef typename std::iterator<ft::bidirectional_iterator_tag, value_type>::difference_type		difference_type;
 		typedef typename std::iterator<ft::bidirectional_iterator_tag, value_type>::pointer				pointer;
-		typedef typename std::iterator<ft::bidirectional_iterator_tag, value_type>::reference				reference;
-		typedef typename std::iterator<ft::bidirectional_iterator_tag, value_type>::iterator_category		iterator_category;
+		typedef typename std::iterator<ft::bidirectional_iterator_tag, value_type>::reference			reference;
+		typedef typename std::iterator<ft::bidirectional_iterator_tag, value_type>::iterator_category	iterator_category;
 		
 		private:
 		typedef const Node<Key>		const_node;
@@ -74,11 +74,6 @@ namespace ft
 				std::cout << COLOR_RED << "[rbt_iterator] deconstructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
-
-		// operator rbt_iterator<const Key>() const
-		// {
-		// 	return rbt_iterator<const Key>((Node<const Key>*)this->ptr, (Node<const Key>*)this->smallest, (Node<const Key>*)this->biggest);
-		// }
 		
 		rbt_iterator const & operator=(rbt_iterator const & rhs)
 		{
@@ -145,7 +140,7 @@ namespace ft
 		value_type *	operator->() const
 		{
 			#if DEBUG
-				//std::cout << COLOR_MAGENTA << "[rbt_iterator] operator-> called.\n" << COLOR_DEFAULT;
+				std::cout << COLOR_MAGENTA << "[rbt_iterator] operator-> called.\n" << COLOR_DEFAULT;
 			#endif
 			return (&(this->ptr->data));
 		}
@@ -278,11 +273,6 @@ namespace ft
 			return (*this);
 		}
 
-		// operator rbt_reverse_iterator<iterator_type>() const
-		// {
-		// 	return rbt_reverse_iterator<iterator_type>((Node<const Key>*)this->_base);
-		// }
-
 		iterator_type base() const
 		{
 			return (this->_base);
@@ -301,7 +291,7 @@ namespace ft
 		pointer operator->() const
 		{
 			#if DEBUG
-				//std::cout << COLOR_MAGENTA << "[reverse_iterator] operator-> called.\n" << COLOR_DEFAULT;
+				std::cout << COLOR_MAGENTA << "[reverse_iterator] operator-> called.\n" << COLOR_DEFAULT;
 			#endif
 			return (&(operator*()));
 		}

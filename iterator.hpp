@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/10 12:36:54 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/29 11:32:15 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 19:10:24 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,6 @@ namespace ft
 				std::cout << COLOR_RED << "[iterator] deconstructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
-
-		// operator iterator<const T>() const
-		// {
-		// 	return iterator<const T>((const T*)this->ptr);
-		// }
 
 		iterator const & operator=(iterator const & rhs)
 		{
@@ -336,11 +331,6 @@ namespace ft
 				std::cout << COLOR_GREEN << "[reverse_iterator] copy constructor called.\n" << COLOR_DEFAULT;
 			#endif
 		}
-		
-		// operator reverse_iterator<const Iterator>() const
-		// {
-		// 	return reverse_iterator<const Iterator>((const Iterator *)this->_base);
-		// }
 
 		iterator_type base() const
 		{
