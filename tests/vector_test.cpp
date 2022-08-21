@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 16:27:41 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/01 15:08:39 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/19 10:32:16 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,7 +281,7 @@ void test_vector(t_testTime & myTimer)
 	isEqual(ft::equal(myVec5.begin(), myVec5.end(), stdVec5.begin()), true);
 
 
-	std::cout << "\n\n201. Testing [Vector] assign:\n";
+	std::cout << "\n\n21. Testing [Vector] assign:\n";
 	
 	myVec.assign(6, 42);
 	stdVec.assign(6, 42);
@@ -355,14 +355,14 @@ void test_vector(t_testTime & myTimer)
 		ft::vector<myType>::const_iterator my_ite3 = myVec3.end();
 	
 		std::vector<myType>::iterator std_it = stdVec.begin();
-		//std::vector<myType>::iterator std_ite = stdVec.end();
+
 		std::vector<myType>::iterator std_it5 = stdVec5.begin();
-		//std::vector<myType>::iterator std_ite5 = stdVec5.end();
+
 
 		std::vector<myType>::const_iterator std_it2 = stdVec2.begin();
-		//std::vector<myType>::const_iterator std_ite2 = stdVec2.end();
+
 		std::vector<myType>::const_iterator std_it3 = stdVec3.begin();
-		//std::vector<myType>::const_iterator std_ite3 = stdVec3.end();
+
 
 		myVec.swap(myVec5);
 		stdVec.swap(stdVec5);

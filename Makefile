@@ -6,7 +6,7 @@
 #    By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/09 21:06:31 by rkaufman          #+#    #+#              #
-#    Updated: 2022/08/11 14:13:07 by rkaufman         ###   ########.fr        #
+#    Updated: 2022/08/21 17:55:27 by rkaufman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME		:=	containers
 
 CC			:=	c++
 
-SEED		:=	12345678901011
+SEED		:=	612345678901011
 
 SRC_MYTEST	:=	main.cpp \
 				tests/vector_test.cpp \
@@ -40,7 +40,7 @@ RBT			:=	-D TEST_RBT=1
 
 CFLAGS		=	-g -Wall -Wextra -Werror -std=c++98
 DFLAG		:=	-g -D DEBUG=1
-TFLAG		=	-D TEST_RBT=1
+TFLAG		=	-D TEST_ALL=1
 #TEST_ALL=1
 
 all:	$(NAME)
@@ -100,13 +100,13 @@ rbt: re
 #test: ft std
 #	diff -y --suppress-common-lines ft.out std.out
 
-std: CFLAGS += $(TFLAG)
-std: re
-	./$(NAME) > std.out
+#std: CFLAGS += $(TFLAG)
+#std: re
+#	./$(NAME) > std.out
 
-ft:
-	make re
-	./$(NAME) > ft.out
+#ft:
+#	make re
+#	./$(NAME) > ft.out
 
 #val: CFLAGS += $(TFLAG)
 val:

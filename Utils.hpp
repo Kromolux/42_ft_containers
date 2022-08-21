@@ -6,12 +6,13 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/06 12:59:00 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/11 10:48:07 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 17:48:20 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "colors.h"
+#include <utility>
 
 namespace ft
 {
@@ -92,6 +93,7 @@ namespace ft
 		return (first2 != last2);
 	}
 
+	//  https://cplusplus.com/reference/type_traits/is_integral/?kw=is_integral
 	template <class T, T v>
 	struct integral_constant 
 	{
@@ -120,7 +122,9 @@ namespace ft
 	template <> struct is_integral<long long> : public true_type { };
 	template <> struct is_integral<unsigned long long> : public true_type { };
 
-	///enable_if
+	//  https://cplusplus.com/reference/type_traits/enable_if/?kw=enable_if
+	//  enable_if - SFINAE
+	//  "Substitution Failure Is Not An Error"
 	template <bool condition, class T = void>
 	struct enable_if {};
 
@@ -190,11 +194,11 @@ namespace ft {
 		return (lhs.first == rhs.first && lhs.second == rhs.second);
 	}
 	
-	template <class T1, class T2>
-	bool operator== (const std::pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
-	{
-		return (lhs.first == rhs.first && lhs.second == rhs.second);
-	}
+	// template <class T1, class T2>
+	// bool operator== (const std::pair<T1,T2>& lhs, const pair<T1,T2>& rhs)
+	// {
+	// 	return (lhs.first == rhs.first && lhs.second == rhs.second);
+	// }
 	
 	template <class T1, class T2>
 	bool operator!= (const pair<T1,T2>& lhs, const pair<T1,T2>& rhs)

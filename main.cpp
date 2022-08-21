@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:34 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/11 14:10:30 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/19 10:24:09 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ int	main(void)
 	myTimer.all.start = clock();
 
 	#if TEST_VECTOR || TEST_ALL
-		//test_vector(myTimer);
+		test_vector(myTimer);
 	#endif
 	#if TEST_STACK || TEST_ALL
-		//test_stack(myTimer);
+		test_stack(myTimer);
 	#endif
 	#if TEST_MAP || TEST_ALL
 		test_map(myTimer);
 	#endif
 	#if TEST_SET || TEST_ALL
-		//test_set(myTimer);
+		test_set(myTimer);
 	#endif
 	#if TEST_RBT
 		testRBT();

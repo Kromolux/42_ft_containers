@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/21 13:03:32 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/11 14:41:41 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 18:48:31 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ namespace ft
 		bool	isLeftChild;
 	};
 
-
+	// https://www.cs.usfca.edu/~galles/visualization/RedBlack.html
 	template <class T, class Compare = std::less<T>, class Alloc = std::allocator<T> >
 	class RBT
 	{
@@ -108,13 +108,15 @@ namespace ft
 		
 		RBT & operator= (const RBT & Copy)
 		{
-			if (this->mem_size > 0)
-				clearTree(this->root);
-			this->mem_compare = Copy.mem_compare;
-			this->mem_control = Copy.mem_control;
-			this->mem_node_control = Copy.mem_node_control;
-			this->mem_size = 0;
-			copyTree(Copy);
+			// if (this->mem_size > 0)
+			// 	clearTree(this->root);
+			// this->mem_compare = Copy.mem_compare;
+			// this->mem_control = Copy.mem_control;
+			// this->mem_node_control = Copy.mem_node_control;
+			// this->mem_size = 0;
+			// copyTree(Copy);
+			this->~RBT();
+			new (this) RBT(Copy);
 			return (*this);
 		}
 
@@ -339,7 +341,6 @@ namespace ft
 				{
 					#if DEBUG
 						std::cout << COLOR_YELLOW << "[RBT] case 2 works!\n" << COLOR_DEFAULT;
-						//printTree();
 					#endif
 					if (sibling)
 						sibling->isBlack = parent->isBlack;
@@ -349,10 +350,10 @@ namespace ft
 					leafNode = this->root;
 					break;
 				}
-				else if (niece && niece->isBlack == false)		//case 3
+				else if (niece && niece->isBlack == false)		//case 3 works
 				{
 					#if DEBUG
-						std::cout << COLOR_YELLOW << "[RBT] case 3 \n" << COLOR_DEFAULT;
+						std::cout << COLOR_YELLOW << "[RBT] case 3 works\n" << COLOR_DEFAULT;
 					#endif
 					niece->isBlack = true;
 					if (sibling)
@@ -367,7 +368,6 @@ namespace ft
 					if (sibling)
 						sibling->isBlack = false;
 					leafNode = leafNode->parent;
-					//break;
 				}
 				
 			}

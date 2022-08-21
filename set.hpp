@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:38:15 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/27 15:39:23 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 18:42:57 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 
 namespace ft
 {
+
+	// https://cplusplus.com/reference/set/set/?kw=set
+	// https://en.cppreference.com/w/cpp/container/set
 	template <	class T,							// set::key_type/value_type
 				class Compare = std::less<T>,		// set::key_compare/value_compare
 				class Alloc = std::allocator<T>		// set::allocator_type
@@ -70,12 +73,12 @@ namespace ft
 				this->c.addNode(*first);
 		}
 		
-		set (const set& x)
+		set (const set& Copy)
+		: c(Copy.c)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[set] copy constructor called.\n" << COLOR_DEFAULT;
 			#endif
-			*this = x;
 		}
 		
 		//(destructor) Set destructor (public member function )
@@ -84,17 +87,15 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_RED << "[set] deconstructor called.\n" << COLOR_DEFAULT;
 			#endif
-			//MEM_destroy(*this);
-			//mem_control.deallocate(mem_start, mem_cap);
 		}
 		
 		//operator=	Copy container content (public member function )
-		set& operator= (const set& x)
+		set& operator= (const set& Copy)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[set] assignement constructor called.\n" << COLOR_DEFAULT;
 			#endif
-			this->c = x.c;
+			this->c = Copy.c;
 			return (*this);
 		}
 		
@@ -272,14 +273,7 @@ namespace ft
 				#endif
 			}
 			for (size_t i = 0; i < elements; ++i)
-			{
-				//tmp = first++;
-				// #if DEBUG
-				// 	std::cout << COLOR_YELLOW << "[set] erase tmp: [" << *tmp << "]\n" << COLOR_DEFAULT;
-				// 	std::cout << COLOR_YELLOW << "[set] erase first: [" << *first << "]\n" << COLOR_DEFAULT;
-				// #endif
 				this->c.erase(elementsToDelete[i]);
-			}
 		}
 
 		//Swap content (public member function )
@@ -455,10 +449,22 @@ namespace ft
 			return !(*this < rhs);
 		}
 
-		void printTree(void)
-		{
-			this->c.printTree();
-		}
+		//additional functions for testing the red black tree
+		// int	height(void)
+		// {
+		// 	return (this->c.height());
+		// }
+
+		// int	blackNodes(void)
+		// {
+		// 	return (this->c.blackNodes());
+		// }
+		
+		// void printTree(void)
+		// {
+		// 	this->c.printTree();
+		// }
+
 	}; // class set
 
 } // namespace ft

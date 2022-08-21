@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 16:32:21 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/11 14:42:28 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/19 15:59:07 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,85 +42,40 @@ void	testRBT(void)
 
 	map content = [ 0:0 2:0 6:0 12:0 20:0 30:0 42:0 56:0 72:0 90:0 110:0 132:0 156:0 182:0 210:0 ]
 	*/
-	//displayMapContent(mp);
+	std::cout << "\n\n1. Testing [RBT] populating map with insert:\n";
+	displayMapContent(mp);
 	mp.printTree();
+	
+	std::cout << "\n\n2. Testing [RBT] deleting 6:\n";
 	mp.erase(6);
 	mp.printTree();
+	
+	std::cout << "\n\n3. Testing [RBT] deleting 12:\n";
 	mp.erase(12);
 	mp.printTree();
+	
+	std::cout << "\n\n4. Testing [RBT] deleting 20:\n";
 	mp.erase(20);
 	mp.printTree();
+
+	std::cout << "\n\n5. Testing [RBT] deleting 30:\n";
 	mp.erase(30);
 	mp.printTree();
+
+	std::cout << "\n\n6. Testing [RBT] deleting 42:\n";
 	mp.erase(42);
 	mp.printTree();
+
+	std::cout << "\n\n7. Testing [RBT] deleting 56:\n";
 	mp.erase(56);
 	mp.printTree();
+
+	std::cout << "\n\n8. Testing [RBT] deleting 72:\n";
 	mp.erase(72);
 	mp.printTree();
+
+	std::cout << "\n\n9. Testing [RBT] deleting 90:\n";
 	mp.erase(90);
 	mp.printTree();
-	// mp[5] = "1";
-	// mp[8] = "2";
-	// mp[15] = "3";
-	// mp[12] = "4";
-	// mp[19] = "5";
-	// mp[9] = "6";
-	// mp[13] = "7";
-	// mp[23] = "8";
-
-	// mp.printTree();
-	// mp.erase(5);
-	// mp.printTree();
-	// mp.erase(12);
-	// mp.printTree();
-	// mp.erase(19);
-	// mp.printTree();
-	// mp.erase(9);
-	// mp.printTree();
-	// mp[10] = "new";
-
-	// mp.printTree();
-	// //return;
-	// mp[42] = "lol";
-
-	// mp[50] = "mdr";
-	// mp[25] = "funny";
-
-
-	// mp[18] = "bee";
-	// mp[23] = "coconut";
-	// mp[28] = "diary";
-	// mp[35] = "fiesta";
-	// mp[44] = "hello";
-	// mp[48] = "world";
-	// mp[53] = "this is a test";
-	// mp[80] = "hey";
-
-	// mp[46] = "bunny";
-	// mp[21] = "fizz";
-	// mp[30] = "buzz";
-	// mp[55] = "fuzzy";
-
-
-	// mp[43] = "1";
-	// mp[45] = "2";
-	// mp[47] = "3";
-	// mp[49] = "4";
-	// mp[51] = "5";
-	// mp[54] = "6";
-	// mp[60] = "7";
-	// mp[90] = "8";
-
-	// mp[12] = "no";
-	// mp[20] = "idea";
-	// mp[22] = "123";
-	// mp[24] = "345";
-	// mp[27] = "27";
-	// mp[29] = "29";
-	// mp[33] = "33";
-	// mp[38] = "38";
-	//return ;
-	//printSize(mp);
-
+	displayMapContent(mp);
 }

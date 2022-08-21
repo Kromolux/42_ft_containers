@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 11:02:36 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/11 10:53:11 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 17:41:04 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 #include "stack.hpp"
 #include "vector.hpp"
 
-//#include "colors.h"
 #include <iostream>
 #include <typeinfo>
 
@@ -70,12 +69,6 @@ void	RelationalTest(T1 const & lhs1, T1 const & rhs1, T2 const & lhs2, T2 const 
 	isEqual(lhs1 >= rhs1, lhs2 >= rhs2);
 }
 
-// template<class V1, class V2>
-// void	BasicVectorComp(V1 const & vector1, V2 const & vector2)
-// {
-	
-// }
-
 template<class Iter1First, class Iter1Last, class Iter2First, class Iter2Last>
 void	IteratorTest(Iter1First my_it, Iter1Last my_ite, Iter2First std_it, Iter2Last std_ite)
 {
@@ -122,6 +115,17 @@ void	RBTIteratorTest(Iter1First my_it, Iter1Last my_ite, Iter2First std_it, Iter
 	isEqual((--my_ite)->second, (--std_ite)->second);
 	isEqual((my_ite--)->first, (std_ite--)->first);
 	isEqual((my_ite--)->second, (std_ite--)->second);
+}
+
+
+template<class Iter1First, class Iter1Last, class Iter2First, class Iter2Last>
+void	RBTSetIteratorTest(Iter1First my_it, Iter1Last my_ite, Iter2First std_it, Iter2Last std_ite)
+{
+	isEqual(*my_it, *std_it);
+	isEqual(*(my_it++), *(std_it++));
+	isEqual(*(++my_it), *(++std_it));
+	isEqual(*(--my_ite), *(--std_ite));
+	isEqual(*(my_ite--), *(std_ite--));
 }
 
 template <class T>

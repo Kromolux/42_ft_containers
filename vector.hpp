@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 21:06:27 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/28 15:44:46 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 18:19:37 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 namespace ft
 {
 
+	// https://cplusplus.com/reference/vector/vector/?kw=vector
+	// https://en.cppreference.com/w/cpp/container/vector
 	template <	class T, class Alloc = std::allocator<T> >
 	class vector
 	{
@@ -68,9 +70,8 @@ namespace ft
 
 		template <class InputIterator>
 		vector (InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
-		: mem_control(alloc)
+		: mem_control(alloc), mem_start(NULL), mem_size(0), mem_cap(0)
 		{
-			this->mem_size = 0;
 			for (InputIterator tmp = first; tmp != last; ++tmp, ++this->mem_size)
 				;
 			this->mem_cap = this->mem_size;
@@ -78,9 +79,7 @@ namespace ft
 
 			size_type	i = 0;
 			for (; first != last; ++first, ++i)
-			{
 				this->mem_control.construct(this->mem_start + i, *first);
-			}
 			this->mem_cap = this->mem_size;
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[vector] InputIterator constructor called. Size: " << this->mem_size << " Sizeof T: " << sizeof(*first) << " Pointer: " << this->mem_start << "\n" << COLOR_DEFAULT;
@@ -88,14 +87,11 @@ namespace ft
 		}
 		
 		vector (const vector & Copy)
-		: mem_control(Copy.mem_control), mem_start(NULL), mem_size(0), mem_cap(0)
+		: mem_control(Copy.mem_control), mem_start(NULL), mem_size(Copy.mem_size), mem_cap(Copy.mem_size) //  vector copy has only the cap of actual size!
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[vector] copy constructor called. Size: " << Copy.mem_size << " Sizeof T: " << sizeof(Copy[0]) << " Pointer: " << mem_start << "\n" << COLOR_DEFAULT;
 			#endif
-			this->mem_control = Copy.mem_control;
-			this->mem_size = Copy.mem_size;
-			this->mem_cap = Copy.mem_size; //x.mem_cap;
 			this->mem_start = this->mem_control.allocate(this->mem_cap);
 			for (size_t i = 0; i < this->mem_size; i++)
 				this->mem_control.construct(this->mem_start + i, Copy[i]);
@@ -117,16 +113,18 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[vector] assignement constructor called. Size: " << rhs.mem_size << " Sizeof T: " << sizeof(rhs[0]) << " Pointer: " << rhs.mem_start << "\n" << COLOR_DEFAULT;
 			#endif
-			if (this->mem_size > 0)
-				MEM_destroy(*this);
-			if (this->mem_cap > 0)
-				this->mem_control.deallocate(this->mem_start, this->mem_cap);
-			this->mem_control = rhs.mem_control;
-			this->mem_size = rhs.mem_size;
-			this->mem_cap = rhs.mem_cap;
-			this->mem_start = this->mem_control.allocate(this->mem_cap);
-			for (size_t i = 0; i < this->mem_size; i++)
-				this->mem_control.construct(this->mem_start + i, rhs[i]);
+			// if (this->mem_size > 0)
+			// 	MEM_destroy(*this);
+			// if (this->mem_cap > 0)
+			// 	this->mem_control.deallocate(this->mem_start, this->mem_cap);
+			// this->mem_control = rhs.mem_control;
+			// this->mem_size = rhs.mem_size;
+			// this->mem_cap = rhs.mem_cap;
+			// this->mem_start = this->mem_control.allocate(this->mem_cap);
+			// for (size_t i = 0; i < this->mem_size; i++)
+			// 	this->mem_control.construct(this->mem_start + i, rhs[i]);
+			this->~vector();
+			new (this) vector(rhs);
 			return (*this );
 		}
 
@@ -355,7 +353,6 @@ namespace ft
 		//Assign vector content (public member function )
 		void assign (size_type n, const value_type& val)
 		{
-			//size_type	tmp = static_cast<size_type>(n);
 			if (this->mem_size > 0)
 				MEM_destroy(*this);
 			if (n > this->mem_cap)
@@ -372,8 +369,8 @@ namespace ft
 		template <class InputIterator>
 		void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0)
 		{
-			size_type	tmp_cap = 0;
-			InputIterator tmp = first;
+			size_type		tmp_cap = 0;
+			InputIterator	tmp = first;
 			while (tmp != last)
 			{
 				++tmp_cap;
@@ -424,7 +421,7 @@ namespace ft
 		//Insert elements (public member function )
 		iterator insert (iterator position, const value_type& val)
 		{
-			size_t		returnPos = position - this->begin();
+			size_t		returnPos = position - iterator(this->mem_start); //this->begin();
 			this->insert(position, 1, val);
 			#if DEBUG
 				std::cout << COLOR_YELLOW << "[vector] insert iterator position value_type called.\n" << COLOR_DEFAULT;
@@ -588,7 +585,7 @@ namespace ft
 			return (this->mem_control);
 		}
 
-		protected:
+		private:
 		void	MEM_destroy(vector & x, size_type i = 0)
 		{
 			for (; i < x.mem_size; i++)

@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 16:30:35 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/11 15:30:37 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/19 10:34:00 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,6 @@ void test_map(t_testTime & myTimer)
 		}
 		BasicMapStats(myMap, stdMap);
 	}
-	// std::cout << "\n 1ft_";
-	// displayMapContent(myMap);
-	// std::cout << "\n1std_";
-	// displayMapContent(stdMap);
 	
 	std::cout << "\n\n3. Testing [Map] copy constructor:\n";
 	ft::map<myType, myType> myMap2(myMap);
@@ -82,11 +78,6 @@ void test_map(t_testTime & myTimer)
 	stdMap[10] = 1515;
 	stdMap[20] = 6000;
 
-	// std::cout << "\n 1ft_";
-	// displayMapContent(myMap);
-	// std::cout << "\n1std_";
-	// displayMapContent(stdMap);
-
 	{
 		ft::map<myType, myType>::iterator ft_it = myMap.begin();
 		ft::map<myType, myType>::iterator ft_ite = myMap.end();
@@ -100,7 +91,7 @@ void test_map(t_testTime & myTimer)
 		BasicMapStats(myMap, stdMap);
 	}
 
-	std::cout << "\n\n4. Testing [Map] assginement constructor:\n";
+	std::cout << "\n\n5. Testing [Map] assginement constructor:\n";
 	ft::map<myType, myType> myMap3 = myMap;
 	std::map<myType, myType> stdMap3 = stdMap;
 	
@@ -117,7 +108,7 @@ void test_map(t_testTime & myTimer)
 		BasicMapStats(myMap3, stdMap3);
 	}
 
-	std::cout << "\n\n5. Testing [Map] insert position, val:\n";
+	std::cout << "\n\n6. Testing [Map] insert position, val:\n";
 	{
 		ft::map<myType, myType>::iterator ft_it = myMap3.begin();
 		ft::map<myType, myType>::iterator ft_ite = myMap3.end();
@@ -146,15 +137,10 @@ void test_map(t_testTime & myTimer)
 			isEqual(ft_it->first, std_it->first);
 			isEqual(ft_it->second, std_it->second);
 		}
-		//isEqual(ft::equal(myMap3.begin(), myMap3.end(), stdMap3.begin()), true);
 		BasicMapStats(myMap3, stdMap3);
 	}
-	// std::cout << "\n 3ft_";
-	// displayMapContent(myMap3);
-	// std::cout << "\n3std_";
-	// displayMapContent(stdMap3);
 	
-	std::cout << "\n\n5. Testing [Map] range constructor:\n";
+	std::cout << "\n\n7. Testing [Map] range constructor:\n";
 	ft::map<myType, myType> myMap4(myMap.begin(), myMap.end());
 	std::map<myType, myType> stdMap4(stdMap.begin(), stdMap.end());
 
@@ -171,7 +157,7 @@ void test_map(t_testTime & myTimer)
 		BasicMapStats(myMap4, stdMap4);
 	}
 
-	std::cout << "\n\n5. Testing [Map] Iterator insert:\n";
+	std::cout << "\n\n8. Testing [Map] Iterator insert:\n";
 	{
 		ft::map<myType, myType>::iterator ft_it = myMap3.begin();
 		ft::map<myType, myType>::iterator ft_ite = myMap3.end();
@@ -188,11 +174,7 @@ void test_map(t_testTime & myTimer)
 		BasicMapStats(myMap, stdMap);
 	}
 	
-	std::cout << "\n\n6. Testing [Map] relational operators:\n";
-	// std::cout << "\n 4ft_";
-	// displayMapContent(myMap4);
-	// std::cout << "\n4std_";
-	// displayMapContent(stdMap4);
+	std::cout << "\n\n9. Testing [Map] relational operators:\n";
 
 	RelationalTest(myMap, myMap2, stdMap, stdMap2);
 	RelationalTest(myMap2, myMap3, stdMap2, stdMap3);
@@ -203,7 +185,7 @@ void test_map(t_testTime & myTimer)
 	RelationalTest(myMap4, myMap, stdMap4, stdMap);
 	
 	{
-		std::cout << "\n\n13. Testing [Map] iterators:\n";
+		std::cout << "\n\n10. Testing [Map] iterators:\n";
 		ft::map<myType, myType>::iterator my_it = myMap.begin();
 		ft::map<myType, myType>::iterator my_ite = myMap.end();
 
@@ -213,7 +195,7 @@ void test_map(t_testTime & myTimer)
 	}
 	
 	{
-		std::cout << "\n\n14. Testing [Map] const_iterators:\n";
+		std::cout << "\n\n11. Testing [Map] const_iterators:\n";
 		ft::map<myType, myType>::const_iterator my_it = myMap2.begin();
 		ft::map<myType, myType>::const_iterator my_ite = myMap2.end();
 
@@ -223,7 +205,7 @@ void test_map(t_testTime & myTimer)
 	}
 
 	{
-		std::cout << "\n\n15. Testing [Map] reverse_iterators rbegin and rend:\n";
+		std::cout << "\n\n12. Testing [Map] reverse_iterators rbegin and rend:\n";
 		ft::map<myType, myType>::reverse_iterator my_it = myMap3.rbegin();
 		ft::map<myType, myType>::reverse_iterator my_ite = myMap3.rend();
 
@@ -233,7 +215,7 @@ void test_map(t_testTime & myTimer)
 	}
 	
 	{
-		std::cout << "\n\n16. Testing [Map] const_reverse_iterators rbegin and rend:\n";
+		std::cout << "\n\n13. Testing [Map] const_reverse_iterators rbegin and rend:\n";
 		ft::map<myType, myType>::const_reverse_iterator my_it = myMap4.rbegin();
 		ft::map<myType, myType>::const_reverse_iterator my_ite = myMap4.rend();
 
@@ -243,7 +225,7 @@ void test_map(t_testTime & myTimer)
 	}
 
 	{
-		std::cout << "\n\n17. Testing [Map] compare iterators and const_iterators:\n";
+		std::cout << "\n\n14. Testing [Map] compare iterators and const_iterators:\n";
 		ft::map<myType, myType>::iterator my_it = myMap.begin();
 		ft::map<myType, myType>::const_iterator my_ite = myMap.end();
 
@@ -253,7 +235,7 @@ void test_map(t_testTime & myTimer)
 	}
 
 	{
-		std::cout << "\n\n18. Testing [Map] compare reverse_iterators and const_revese_iterators:\n";
+		std::cout << "\n\n15. Testing [Map] compare reverse_iterators and const_revese_iterators:\n";
 		ft::map<myType, myType>::reverse_iterator my_it = myMap4.rbegin();
 		ft::map<myType, myType>::const_reverse_iterator my_ite = myMap4.rend();
 
@@ -263,7 +245,7 @@ void test_map(t_testTime & myTimer)
 	}
 
 	{
-		std::cout << "\n\n19. Testing [Map] erase position and iterators:\n";
+		std::cout << "\n\n16. Testing [Map] erase position and iterators:\n";
 		ft::map<myType, myType>::iterator my_it = myMap.begin();
 		ft::map<myType, myType>::iterator my_ite = myMap.end();
 
@@ -290,12 +272,6 @@ void test_map(t_testTime & myTimer)
 
 		myMap3.erase(--(--my_ite));
 		stdMap3.erase(--(--std_ite));
-		
-		// std::cout << "\n 4ft_";
-		// displayMapContent(myMap4);
-		// std::cout << "my_it: " << myMap4.begin()->first << ":" << myMap4.begin()->second << "\n";
-		// std::cout << "\n4std_";
-		// displayMapContent(stdMap4);
 
 		my_it = myMap4.begin();
 		my_ite = myMap4.end();
@@ -304,14 +280,6 @@ void test_map(t_testTime & myTimer)
 	
 		myMap4.erase(my_it, my_ite);
 		stdMap4.erase(std_it, std_ite);
-		
-		// std::cout << "my_it: " << my_it->first << ":" << my_it->second << "\n";
-		// std::cout << "std_it: " << std_it->first << ":" << std_it->second << "\n";
-
-		// std::cout << "\n 4ft_";
-		// displayMapContent(myMap4);
-		// std::cout << "\n4std_";
-		// displayMapContent(stdMap4);
 	
 		BasicMapStats(myMap, stdMap);
 		BasicMapStats(myMap2, stdMap2);
@@ -322,10 +290,9 @@ void test_map(t_testTime & myTimer)
 		isEqual(ft::equal(myMap3.begin(), myMap3.end(), stdMap3.begin()), true);
 		isEqual(ft::equal(myMap4.begin(), myMap4.end(), stdMap4.begin()), true);
 	}
-	
-	//displayMapContent(myMap);
+
 	{
-		std::cout << "\n\nxxx. Testing [Map] find:\n";
+		std::cout << "\n\n17. Testing [Map] find:\n";
 		
 		ft::map<myType, myType>::iterator myFind;
 		ft::map<myType, myType>::const_iterator const_myFind;
@@ -375,7 +342,7 @@ void test_map(t_testTime & myTimer)
 		isEqual(const_myFind->first, const_stdFind->first);
 	}
 	
-	std::cout << "\n\nYYY. Testing [Map] count:\n";
+	std::cout << "\n\n18. Testing [Map] count:\n";
 	
 	isEqual(myMap.count(5), stdMap.count(5));
 	isEqual(myMap.count(20), stdMap.count(20));
@@ -384,7 +351,7 @@ void test_map(t_testTime & myTimer)
 	isEqual(myMap.count(4242), stdMap.count(4242));
 	
 	{
-		std::cout << "\n\n. Testing [Map] swap:\n";
+		std::cout << "\n\n19. Testing [Map] swap:\n";
 
 		ft::map<myType, myType>::iterator my_it = myMap.begin();
 		ft::map<myType, myType>::iterator my_ite = myMap.end();
@@ -397,14 +364,10 @@ void test_map(t_testTime & myTimer)
 		ft::map<myType, myType>::const_iterator my_ite3 = myMap3.end();
 	
 		std::map<myType, myType>::iterator std_it = stdMap.begin();
-		//std::map<myType, myType>::iterator std_ite = stdMap.end();
 		std::map<myType, myType>::iterator std_it4 = stdMap4.begin();
-		//std::map<myType, myType>::iterator std_ite5 = stdMap5.end();
 
 		std::map<myType, myType>::const_iterator std_it2 = stdMap2.begin();
-		//std::map<myType, myType>::const_iterator std_ite2 = stdMap2.end();
 		std::map<myType, myType>::const_iterator std_it3 = stdMap3.begin();
-		//std::map<myType, myType>::const_iterator std_ite3 = stdMap3.end();
 
 		myMap.swap(myMap4);
 		stdMap.swap(stdMap4);
@@ -420,10 +383,8 @@ void test_map(t_testTime & myTimer)
 		isEqual(ft::equal(my_it4, my_ite4, std_it4), true);
 	}
 	
-	//displayMapContent(myMap4);
-	
 	{
-		std::cout << "\n\nWWW. Testing [Map] lower_bound - upper_bound - equal_range\n";
+		std::cout << "\n\n20. Testing [Map] lower_bound - upper_bound - equal_range\n";
 		
 		ft::map<myType, myType>::iterator myLowerBound;
 		ft::map<myType, myType>::const_iterator const_myLowerBound;
@@ -465,10 +426,9 @@ void test_map(t_testTime & myTimer)
 		isEqual(myEqualRange.second->first, stdEqualRange.second->first);
 		isEqual(const_myEqualRange.first->first, const_stdEqualRange.first->first);
 		isEqual(const_myEqualRange.second->first, const_stdEqualRange.second->first);
-		
 	}
 	
-	std::cout << "\n\n. Testing [Map] clear:\n";
+	std::cout << "\n\n21. Testing [Map] clear:\n";
 	
 	myMap.clear();
 	stdMap.clear();
@@ -487,7 +447,7 @@ void test_map(t_testTime & myTimer)
 	isEqual(ft::equal(myMap3.begin(), myMap3.end(), stdMap3.begin()), true);
 	isEqual(ft::equal(myMap4.begin(), myMap4.end(), stdMap4.begin()), true);
 
-	std::cout << "\n\n. Testing [Map] default constructor different datatype with size, max_size, empty:\n";
+	std::cout << "\n\n22. Testing [Map] default constructor different datatype with size, max_size, empty:\n";
 	ft::map<char, myType> myMap11;
 	std::map<char, myType> stdMap11;
 
@@ -510,11 +470,10 @@ void test_map(t_testTime & myTimer)
 				isEqual(ft_it->first, std_it->first);
 				isEqual(ft_it->second, std_it->second);
 			}
-			//isEqual(ft::equal(myMap3.begin(), myMap3.end(), stdMap3.begin()), true);
 			BasicMapStats(myMap11, stdMap11);
 	}
 	
-	std::cout << "\n\n. Testing [Map] copy constructor different datatype:\n";
+	std::cout << "\n\n23. Testing [Map] copy constructor different datatype:\n";
 	ft::map<char, myType> myMap12(myMap11);
 	std::map<char, myType> stdMap12(stdMap11);
 	
@@ -530,312 +489,17 @@ void test_map(t_testTime & myTimer)
 				isEqual(ft_it->first, std_it->first);
 				isEqual(ft_it->second, std_it->second);
 			}
-			//isEqual(ft::equal(myMap3.begin(), myMap3.end(), stdMap3.begin()), true);
 			BasicMapStats(myMap12, stdMap12);
 	}
 	
-	std::cout << "\n\n. Testing [Map] relational operators different datatype:\n";
-	// std::cout << "\n 11ft_";
-	// displayMapContent(myMap11);
-	// std::cout << "\n11std_";
-	// displayMapContent(stdMap11);
-	// std::cout << "\n 12ft_";
-	// displayMapContent(myMap12);
-	// std::cout << "\n12std_";
-	// displayMapContent(stdMap12);
+	std::cout << "\n\n24. Testing [Map] relational operators different datatype:\n";
 
 	RelationalTest(myMap11, myMap12, stdMap11, stdMap12);
 	RelationalTest(myMap12, myMap11, stdMap12, stdMap11);
 	RelationalTest(myMap11, myMap11, stdMap11, stdMap11);
 	RelationalTest(myMap12, myMap12, stdMap12, stdMap12);
-	// RelationalTest(myMap2, myMap4, stdMap2, stdMap4);
-	// RelationalTest(myMap3, myMap, stdMap3, stdMap);
-	// RelationalTest(myMap4, myMap, stdMap4, stdMap);
 	
 	std::cout << "\n\n";
-	//displayMapInfo(myMap);
-	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	// myMap.insert(ft::pair<int, int>(50, 1));
-	// //std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	// myMap.insert(ft::pair<int, int>(30, 2));
-	// myMap.insert(ft::pair<int, int>(70, 3));
-	// //std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	// myMap.insert(ft::pair<int, int>(20, 4));
-	// myMap.insert(ft::pair<int, int>(80, 5));
-	// myMap.insert(ft::pair<int, int>(40, 6));
-	// myMap.insert(ft::pair<int, int>(60, 7));
-	// //std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	// myMap.insert(ft::pair<int, int>(31, 8));
-	// myMap.insert(ft::pair<int, int>(55, 9));
-	// myMap.insert(ft::pair<int, int>(75, 10));
-	// myMap.insert(ft::pair<int, int>(53, 11));
-	// //std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	// myMap.insert(ft::pair<int, int>(76, 12));
-	// myMap.insert(ft::pair<int, int>(35, 13));
-	// myMap.insert(ft::pair<int, int>(57, 14));
-	// std::cout << "insert 30\n";
-	// myMap.insert(ft::pair<int, int>(30, 1));
 
-	// std::cout << "insert 50\n";
-	// myMap.insert(ft::pair<int, int>(50, 1));
-
-	// myMap.printTree();
-	// std::cout << "insert 60\n";
-	// myMap.insert(ft::pair<int, int>(60, 1));
-
-	// myMap.printTree();
-	// //return ;
-	// std::cout << "insert 70\n";
-	// myMap.insert(ft::pair<int, int>(70, 1));
-	// myMap.printTree();
-	// std::cout << "erase 50\n";
-	// myMap.erase(50);
-
-	// myMap.printTree();
-	// //return ;
-	// std::cout << "insert 20\n";
-	// myMap.insert(ft::pair<int, int>(20, 1));
-	// myMap.printTree();
-	// std::cout << "erase 70\n";
-	// myMap.erase(70);
-	
-	// myMap.printTree();
-	// //return ;
-	// myMap.insert(ft::pair<int, int>(50, 1));
-	// std::cout << "insert 50\n";
-	// myMap.insert(ft::pair<int, int>(70, 1));
-	// std::cout << "insert 70\n";
-	// myMap.printTree();
-	// //return ;
-	// myMap.erase(20);
-	// std::cout << "erase 20\n";
-	// myMap.printTree();
-	// //return ;
-	// std::cout << "erase 60\n";
-	// myMap.erase(60);
-	// //return ;
-	// myMap.printTree();
-	// //return ;
-	// myMap.insert(ft::pair<int, int>(20, 1));
-	// std::cout << "insert 20\n";
-	// myMap.insert(ft::pair<int, int>(40, 1));
-	// std::cout << "insert 40\n";
-	// myMap.insert(ft::pair<int, int>(60, 1));
-	// std::cout << "insert 60\n";
-	// myMap.insert(ft::pair<int, int>(80, 1));
-	// std::cout << "insert 80\n";
-	// myMap.insert(ft::pair<int, int>(100, 1));
-	// std::cout << "insert 100\n";
-
-	// myMap.printTree();
-	// //return ;
-	// std::cout << "erase 70\n";
-	// myMap.erase(70);
-	// //return;
-	// //std::cout << "before print Tree\n";
-	// myMap.printTree();
-	//return ;
-	//std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
-	// myMap.insert(ft::pair<int, int>(50, 1));
-	// myMap.insert(ft::pair<int, int>(70, 2));
-	// myMap.insert(ft::pair<int, int>(80, 3));
-	// myMap.insert(ft::pair<int, int>(90, 4));
-	// myMap.insert(ft::pair<int, int>(100, 5));
-	// myMap.insert(ft::pair<int, int>(50, 1));
-	// myMap.insert(ft::pair<int, int>(40, 2));
-	// myMap.insert(ft::pair<int, int>(30, 3));
-	// myMap.insert(ft::pair<int, int>(20, 4));
-	// myMap.insert(ft::pair<int, int>(10, 5));
-	
-	// displayMapInfo(myMap);
-	// displayMapContent(myMap);
-	
-	// std::cout << "iterator created it begin\n";
-	// ft::map<int, int>::iterator it = myMap.begin();
-	// it->second = 666;
-	// std::cout << "iterator created ite end\n";
-	// ft::map<int, int>::iterator ite = myMap.end();
-	
-	// std::cout << "\ncopying map:\n";
-	// std::cout << "first using copy constructor\n";
-	// ft::map<int, int> myMap2(myMap);
-	// displayMapInfo(myMap2);
-	// displayMapContent(myMap2);
-	
-	// std::cout << "\ncopying map:\n";
-	// std::cout << "second using assingment constructor\n";
-	// ft::map<int, int> myMap3 = myMap;
-	// displayMapInfo(myMap3);
-	// displayMapContent(myMap3);
-
-	// std::cout << "\ncopying map:\n";
-	// std::cout << "third using iterator constructor\n";
-	
-	// ft::map<int, int> myMap4(it, ite);
-	// displayMapInfo(myMap4);
-	// displayMapContent(myMap4);
-	// std::cout << "\n\n";
-	
-	// myMap[50] = 42;
-
-	
-	// ft::pair<ft::map<int, int>::iterator, ft::map<int, int>::iterator> myRange = myMap.equal_range(75);
-	// std::cout << "lower_bound of 40 = " << myMap.lower_bound(40)->first << " upper_bound of 40 = " << myMap.upper_bound(40)->first << "\n";
-	// std::cout << "lower_bound of 50 = " << myMap.lower_bound(50)->first << " upper_bound of 50 = " << myMap.upper_bound(50)->first << "\n";
-	// std::cout << "equal_range of 75 = " << myRange.first->first << " = " << myRange.second->first << "\n";
-	// std::cout << "\n\niterator test start\n";
-	// std::cout << "printing with standard iterator forward\n";
-	
-	// while (it != ite)
-	// {
-	// 	std::cout << it->first << ":" << it->second << " ";
-	// 	++it;
-	// }
-	
-	// std::cout << "\nbackwards\n";
-	// // it = myMap.begin();
-	// // ++it;
-	// // ++it;
-	// // ++it;
-	// --it;
-	// while (it != ite)
-	// {
-	// 	std::cout << it->first << ":" << it->second << " ";
-	// 	--it;
-	// }
-
-	
-	// std::cout << "\n\nconst_iterator created cit begin\n";
-	// ft::map<int, int>::const_iterator cit = myMap.begin();
-	// std::cout << "const_iterator created cite end\n";
-	// ft::map<int, int>::const_iterator cite = myMap.end();
-	// //cit->second = 666; //compiler error because of const iterator
-	// while (cit != cite)
-	// {
-	// 	std::cout << cit->first << ":" << cit->second << " ";
-	// 	++cit;
-	// }
-	
-	// std::cout << "\nbackwards\n";
-	// cit = myMap.end();
-	// --cit;
-	// int mapSize = myMap.size();
-	// std::cout << "myMap.size()= " << mapSize << "\n";
-	// //std::cout << cit->first << ":" << cit->second << " ";
-	// for (int i = 1; i < mapSize; ++i)
-	// {
-	// 	std::cout << cit->first << ":" << cit->second << " ";
-	// 	++cit;
-	// }
-	// std::cout << cit->first << ":" << cit->second << " ";
-	// std::cout << "\n\n";
-	//--cit;
-	
-	// while (cit != cite)
-	// {
-	// 	std::cout << cit->first << ":" << cit->second << " ";
-	// 	--cit;
-	// }
-	
-	// std::cout << "\n\nreverse_iterator created rit begin\n";
-	// ft::map<int, int>::reverse_iterator rit = myMap.rbegin();
-	// std::cout << "reverse_iterator created rite end\n";
-	// ft::map<int, int>::reverse_iterator rite = myMap.rend();
-	// //cit->second = 666;
-	// while (rit != rite)
-	// {
-	// 	std::cout << rit->first << ":" << rit->second << " ";
-	// 	++rit;
-	// }
-	
-	// std::cout << "\nbackwards\n";
-	// --rit;
-	// while (rit != rite)
-	// {
-	// 	std::cout << rit->first << ":" << rit->second << " ";
-	// 	--rit;
-	// }
-
-	// std::cout << "\n\nconst_reverse_iterator created crit begin\n";
-	// ft::map<int, int>::const_reverse_iterator crit = myMap.rbegin();
-	// std::cout << "const_reverse_iterator created crite end\n";
-	// ft::map<int, int>::const_reverse_iterator crite = myMap.rend();
-	// //cit->second = 666;
-	// while (crit != crite)
-	// {
-	// 	std::cout << crit->first << ":" << crit->second << " ";
-	// 	++crit;
-	// }
-	//crit->second = 666;
-	// std::cout << "\nbackwards\n";
-	// --crit;
-	// while (crit != crite)
-	// {
-	// 	std::cout << crit->first << ":" << crit->second << " ";
-	// 	--crit;
-	// }
-	// std::cout << "\n";
-
-	
-	// myMap.erase(55);
-	// std::cout << "deleted number 55\n\n";
-	// std::cout << "lower_bound of 40 = " << myMap.lower_bound(40)->first << " upper_bound of 40 = " << myMap.upper_bound(40)->first << "\n";
-	// displayMapContent(myMap);
-	// ft::map<int, int>::iterator erase_it = myMap.find(75);
-	// myMap.erase(erase_it);
-	// std::cout << "erase key 75 with iterator\n";
-	// displayMapContent(myMap);
-	// std::cout << "iterator tests\n";
-	// it = myMap.begin();
-	// ite = myMap.end();
-	
-	//--ite;
-	// while (it != ite)
-	// {
-	// 	std::cout << it->first << ":" << it->second << " ";
-	// 	++it;
-	// }
-	//++it;
-	// std::cout << "\n using the same iterators by incrementing it again going forwards\n";
-	// while (it != ite)
-	// {
-	// 	std::cout << it->first << ":" << it->second << " ";
-	// 	++it;
-	// }
-	// --it;
-	//it = myMap.end();
-	// --it;
-	// std::cout << "\n";
-	// ite = myMap.begin();
-	// --ite;
-	// //std::cout << "\n using the same iterators by decremeting it againg going backwards\n";
-	// while (it != ite)
-	// {
-	// 	std::cout << it->first << ":" << it->second << " ";
-	// 	--it;
-	// }
-	// std::cout << "\ndone with iterators\n";
-	
-	//displayMapContent(myMap);
-
-	// it = myMap.begin();
-	// ite = myMap.end();
-	// ++it;
-	// ++it;
-	// //++it;
-	// //++it;
-	// --ite;
-	// --ite;
-	// std::cout << "deleting map content with iterators start: " << it->first << " end: " << ite->first << "\n";
-	// myMap.erase(it, ite);
-	// myMap.insert(ft::pair<int, int>(90, 99));
-	// // myMap.erase(it);
-	// // myMap.erase(60);
-	// // myMap.erase(70);
-	// // myMap.erase(80);
-	// displayMapContent(myMap);
-	// //myMap.insert(ft::pair<int, int>(5, 1));
-	// //displayMapContent(myMap);
-	// //std::cout << "height: " << myMap.height() << " blackNodes: " << myMap.blackNodes() << "\n";
 	myTimer.map.end = clock();
 }

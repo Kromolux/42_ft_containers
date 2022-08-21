@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/28 08:36:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/08/11 14:58:35 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 18:41:22 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 namespace ft
 {
 
+	// https://cplusplus.com/reference/map/map/?kw=map
+	// https://en.cppreference.com/w/cpp/container/map
 	template <	class Key,												// map::key_type
 				class T,												// map::mapped_type
 				class Compare = std::less<Key>,							// map::key_compare
@@ -45,8 +47,8 @@ namespace ft
 		typedef typename allocator_type::size_type						size_type;					//an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
 	
 		private:
-		tree_type c;
-		allocator_type mem_alloc;
+		tree_type		c;
+		allocator_type	mem_alloc;
 		
 		private:
 		//The comparison object returned is an object of the member type map::value_compare, 
@@ -92,12 +94,12 @@ namespace ft
 				this->c.addNode(*first);
 		}
 
-		map (const map& x)
+		map (const map& Copy)
+		: c(Copy.c), mem_alloc(Copy.mem_alloc)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[map] copy constructor called.\n" << COLOR_DEFAULT;
 			#endif
-			*this = x;
 		}
 
 		//(destructor)	Map destructor (public member function )
@@ -106,15 +108,14 @@ namespace ft
 			#if DEBUG
 				std::cout << COLOR_RED << "[map] deconstructor called.\n" << COLOR_DEFAULT;
 			#endif
-
 		}
 
-		map& operator= (const map& x)
+		map& operator= (const map& Copy)
 		{
 			#if DEBUG
 				std::cout << COLOR_GREEN << "[map] assignement constructor called.\n" << COLOR_DEFAULT;
 			#endif
-			this->c = x.c;
+			this->c = Copy.c;
 			return (*this);
 		}
 
@@ -313,6 +314,8 @@ namespace ft
 			}
 			for (size_t i = 0; i < SizeToDelete; ++i)
 				this->c.erase((ft::make_pair(KeysToDelete[i], mapped_type())));
+				
+			// //is not working in all cases because of the value swap before rebalancing
 			// iterator tmp = first;
 			// for (; first != last;)
 			// {
@@ -544,8 +547,5 @@ namespace ft
 		}
 	
 	}; // class map
-
-
-
 
 } // namespace ft

@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/16 17:49:13 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/29 15:06:33 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 18:23:06 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 namespace ft
 {
 
+	// https://cplusplus.com/reference/stack/stack/?kw=stack
+	// https://en.cppreference.com/w/cpp/container/stack
 	template <class T, class Container = ft::vector<T> >
 	class stack
 	{

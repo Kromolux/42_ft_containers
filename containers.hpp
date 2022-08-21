@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 16:50:49 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/28 19:14:44 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/21 17:52:54 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-//#include <deque>
 #include <limits.h>
 #include "template.hpp"
 
@@ -43,11 +42,6 @@
 #ifndef TEST_RBT
 # define TEST_RBT 0
 #endif
-
-// #if !TEST_STD
-// 	#include "Utils.hpp"
-// #endif
-
 
 //#if TEST //CREATE A REAL STL EXAMPLE
 	#include <map>
@@ -82,5 +76,4 @@ void test_vector(t_testTime & myTimer);
 void test_stack(t_testTime & myTimer);
 void test_map(t_testTime & myTimer);
 void test_set(t_testTime & myTimer);
-//void test_subject(int argc, char ** argv, t_testTime & myTimer);
 void testRBT(void);

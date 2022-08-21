@@ -6,7 +6,7 @@
 /*   By: rkaufman <rkaufman@student.42wolfsburg.de> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 16:29:54 by rkaufman          #+#    #+#             */
-/*   Updated: 2022/07/29 15:16:02 by rkaufman         ###   ########.fr       */
+/*   Updated: 2022/08/19 10:32:47 by rkaufman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,6 @@ void test_stack(t_testTime & myTimer)
 		isEqual(mySta3 != mySta2, stdSta3 != stdSta2);
 		isEqual(mySta3 == mySta2, stdSta3 == stdSta2);
 	}
-
 
 	{
 		std::cout << "\n\n13. Testing [Stack] default constructor with underlaying std::vector:\n";
